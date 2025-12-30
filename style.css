@@ -3,8 +3,8 @@
     padding: 0;
     box-sizing: border-box;
 }
-
 :root {
+    /* 原有的浅色模式变量 */
     --primary-color: #4361ee;
     --primary-dark: #3a56d4;
     --secondary-color: #7209b7;
@@ -29,6 +29,59 @@
     
     --progress-bg: #e9ecef;
     --progress-fill: linear-gradient(90deg, #2ecc71, #27ae60);
+    
+    /* 表格文字颜色 */
+    --table-text: #333333;
+    --note-text: #444444;
+    --button-text: #333333;
+}
+
+/* 深色模式 */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text-primary: #ffffff;
+        --text-secondary: #cccccc;
+        --text-light: #999999;
+        
+        --bg-primary: #1a1a1a;
+        --bg-secondary: #2d2d2d;
+        --bg-tertiary: #3d3d3d;
+        
+        --border-color: #444444;
+        --shadow-color: rgba(0, 0, 0, 0.5);
+        
+        --card-bg: #2d2d2d;
+        --modal-bg: #2d2d2d;
+        
+        --progress-bg: #3d3d3d;
+        --progress-fill: linear-gradient(90deg, #27ae60, #219653);
+        
+        /* 表格文字颜色 - 深色模式下改为白色 */
+        --table-text: #ffffff;
+        --note-text: #cccccc;
+        --button-text: #ffffff;
+    }
+    
+    /* 深色模式下的特殊调整 */
+    body {
+        background-color: #121212;
+    }
+    
+    /* 确保深色模式下图片和按钮更清晰 */
+    .photo-placeholder,
+    .photo-missing,
+    .file-placeholder,
+    .file-missing {
+        background-color: #3d3d3d;
+        border-color: #555555;
+    }
+    
+    .photo-placeholder div,
+    .photo-missing div,
+    .file-placeholder div,
+    .file-missing div {
+        color: #ffffff;
+    }
 }
 /* 数据管理按钮强制一行显示 */
 .import-export .button-grid {
@@ -727,6 +780,7 @@ body {
     height: auto !important;
     min-height: 36px !important;
     max-width: 120px;
+    color: var(--table-text);  /* 使用变量 */
 }
 
 .data-table th {
@@ -754,6 +808,7 @@ body {
     line-height: 1.4 !important;
     max-height: 60px;
     overflow-y: auto;
+    color: var(--table-text);  /* 使用变量 */
 }
 
 /* 操作按钮组 */
@@ -913,12 +968,13 @@ body {
     cursor: pointer;
     padding: 6px;
     border-radius: 6px;
-    color: var(--text-secondary);
-    font-size: 13px;
+        font-size: 13px;
     white-space: normal;
     word-break: break-word;
     background: var(--bg-primary);
     border: 1px solid transparent;
+    color: var(--note-text);  /* 使用变量 */
+   
     display: block;
 }
 
@@ -940,11 +996,110 @@ body {
     display: block;
     box-sizing: border-box;
 }
+/* 加载图片按钮文字 */
+.photo-placeholder button,
+.photo-missing button,
+.file-placeholder button,
+.file-missing button {
+    color: var(--button-text);  /* 使用变量 */
+    background-color: var(--bg-tertiary);  /* 使用变量 */
+    border: 1px solid var(--border-color);  /* 使用变量 */
+}
 
+.photo-placeholder button:hover,
+.photo-missing button:hover,
+.file-placeholder button:hover,
+.file-missing button:hover {
+    background-color: var(--border-color);  /* 使用变量 */
+}
+
+/* 经验总结内容 */
+.experience-content {
+    color: var(--table-text);  /* 使用变量 */
+}
+
+/* 进度条填充色 - 深色模式下调整 */
+@media (prefers-color-scheme: dark) {
+    .progress-fill {
+        color: #ffffff;  /* 深色模式下进度文字改为白色 */
+    }
+}
+/* 确保深色模式下所有文字都能正常显示 */
+@media (prefers-color-scheme: dark) {
+    /* 表格相关文字 */
+    .data-table th,
+    .data-table td,
+    .multi-line,
+    .note-display,
+    .date-display,
+    .experience-content,
+    .change-log-content,
+    .summary-value,
+    .total-quote-display div:last-child,
+    .addremove-summary div {
+        color: #ffffff !important;
+    }
+    
+    /* 按钮文字 */
+    .photo-placeholder button,
+    .photo-missing button,
+    .file-placeholder button,
+    .file-missing button {
+        color: #ffffff !important;
+        background-color: #555555 !important;
+    }
+    
+    /* 标签页文字 */
+    .tab {
+        color: #cccccc !important;
+    }
+    
+    .tab.active {
+        color: #ffffff !important;
+        border-bottom-color: #4361ee !important;
+    }
+    
+    /* 表单标签文字 */
+    .form-group label {
+        color: #cccccc !important;
+    }
+    
+    /* 工地卡片文字 */
+    .site-name,
+    .site-info > div {
+        color: #ffffff !important;
+    }
+    
+    .site-info > div {
+        background-color: #444444 !important;
+    }
+    
+    /* 头部文字 */
+    .header-left h1 {
+        color: #ffffff !important;
+    }
+}
+
+
+/* 确保配置管理按钮在需要时显示 */
+.header-top-buttons [onclick*="manageGithubConfig"] {
+    display: inline-flex !important;
+}
+
+
+
+
+
+/* 只有在有权限时才显示 */
+.has-permission .permission-manager-btn,
+.has-permission .change-log-btn {
+    display: inline-flex !important;
+}
 /* 日期显示 */
 .date-display {
     cursor: pointer;
     padding: 4px 8px;
+    color: var(--table-text);  /* 使用变量 */
     border-radius: 4px;
     transition: background-color 0.2s;
     display: inline-block;
@@ -1335,6 +1490,7 @@ body {
     .data-table td {
         padding: 3px 2px !important;
         min-height: 32px !important;
+        color: var(--table-text);  /* 使用变量 */
     }
     
     .image-preview {
