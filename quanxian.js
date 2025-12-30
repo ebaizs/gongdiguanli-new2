@@ -6,8 +6,8 @@ if (typeof window.ADMIN_USERS === 'undefined') {
 
 // 本地内置管理员账户
 const localAdminUser = {
-    "username": "qiyu",
-    "password": "8418", // 建议设置强密码
+    "username": "admin",
+    "password": "admin", // 建议设置强密码
     "name": "系统管理员",
     "isLocal": true,
     "isAdmin": true
@@ -1405,38 +1405,14 @@ async function uploadToCloudDirectly(content) {
         // 首先尝试从 localStorage 获取配置
         let savedConfig = localStorage.getItem('github_config');
         
-        // 如果 localStorage 中没有配置，尝试使用 yun.js 中的内置配置
         if (!savedConfig) {
-            // 检查是否已加载 yun.js 并包含内置配置
-            if (window.GIST_CONFIG && window.GIST_CONFIG.configLoaded) {
-                // 从 GIST_CONFIG 获取配置
-                const builtInConfig = {
-                    GIST_ID: window.GIST_CONFIG.GIST_ID,
-                    GITHUB_TOKEN: window.GIST_CONFIG.GITHUB_TOKEN
-                };
-                
-                // 保存到 localStorage 以便下次使用
-                localStorage.setItem('github_config', JSON.stringify(builtInConfig));
-                savedConfig = JSON.stringify(builtInConfig);
-                console.log('使用 yun.js 内置的 GitHub 配置');
-            } else {
-                // 尝试检查是否有 BUILT_IN_CONFIG
-                if (window.BUILT_IN_CONFIG && window.BUILT_IN_CONFIG.GIST_ID) {
-                    const builtInConfig = {
-                        GIST_ID: window.BUILT_IN_CONFIG.GIST_ID,
-                        GITHUB_TOKEN: window.BUILT_IN_CONFIG.GITHUB_TOKEN
-                    };
-                    
-                    localStorage.setItem('github_config', JSON.stringify(builtInConfig));
-                    savedConfig = JSON.stringify(builtInConfig);
-                    console.log('使用 BUILT_IN_CONFIG 内置配置');
-                }
+            // 如果没有配置，提示用户配置
+            const hasConfig = await promptForGithubToken();
+            if (!hasConfig) {
+                alert('请先配置GitHub同步！');
+                return;
             }
-        }
-        
-        if (!savedConfig) {
-            alert('请先配置GitHub同步！\n\n点击"配置管理"按钮进行配置。');
-            return;
+            savedConfig = localStorage.getItem('github_config');
         }
         
         const config = JSON.parse(savedConfig);
@@ -1446,6 +1422,7 @@ async function uploadToCloudDirectly(content) {
             alert('GitHub配置不完整，请重新配置！');
             return;
         }
+        
         
         const uploadingDiv = document.createElement('div');
         uploadingDiv.innerHTML = '正在上传到云端...';
