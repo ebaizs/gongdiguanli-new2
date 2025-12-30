@@ -67,24 +67,24 @@ document.addEventListener('DOMContentLoaded', async function() {
                 isLocal: true
             };
             
-           // 如果是测试用户登录，尝试加载云端配置
-console.log('测试用户登录，自动加载云端配置...');
-try {
-    await loadCloudUserData();
-    
-    // 重新查找用户
-    user = window.builtInUsers.find(u => u.username === username && u.password === password);
-    
-    if (user && !user.isLocal) {
-        console.log('云端账户加载成功，使用云端账户登录:', user.name);
-    } else {
-        // 保持测试用户登录
-        console.log('保持测试用户登录');
-    }
-} catch (error) {
-    console.warn('测试用户无法连接云端:', error);
-    showSimpleToast('无法连接到云端配置，请检查网络连接', 'warning');
-}
+            // 如果是测试用户登录，尝试加载云端配置
+            console.log('测试用户登录，自动加载云端配置...');
+            try {
+                await loadCloudUserData();
+                
+                // 重新查找用户
+                user = window.builtInUsers.find(u => u.username === username && u.password === password);
+                
+                if (user && !user.isLocal) {
+                    console.log('云端账户加载成功，使用云端账户登录:', user.name);
+                } else {
+                    // 保持测试用户登录
+                    console.log('保持测试用户登录');
+                }
+            } catch (error) {
+                console.warn('测试用户无法连接云端:', error);
+                showSimpleToast('无法连接到云端配置，请检查网络连接', 'warning');
+            }
         }
         
         if (user) {
@@ -116,7 +116,63 @@ try {
             autoLoadData();
             renderSiteList();
             addChangeLog('登录系统', '用户登录成功');
-            
+            // 在 app.js 的登录事件处理中，登录成功后添加：
+            if (user) {
+                currentUser = user;
+                document.getElementById('currentUser').textContent = `当前用户：${user.name}${user.isLocal ? ' (本地测试)' : ''}`;
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('mainContainer').classList.remove('hidden');
+                
+                localStorage.setItem('lastUser', JSON.stringify({
+                    username: user.username,
+                    password: user.password,
+                    name: user.name,
+                    loginTime: new Date().toISOString(),
+                    isLocal: user.isLocal || false
+                }));
+                
+                // 应用用户权限
+                if (typeof applyUserPermissions === 'function') {
+                    applyUserPermissions();
+                }
+                
+                // 更新顶部按钮权限（这个函数会检查并显示/隐藏权限按钮）
+                updateTopButtonsByPermission();
+                
+                // 加载并应用权限
+                if (typeof loadPermissionConfig === 'function') {
+                    loadPermissionConfig();
+                }
+                
+                autoLoadData();
+                renderSiteList();
+                addChangeLog('登录系统', '用户登录成功');
+                
+                // 如果是本地测试用户，显示提示
+                if (user.isLocal) {
+                    setTimeout(() => {
+                        showSimpleToast('测试用户登录成功，如需使用云端账户，请配置GitHub连接', 'warning');
+                    }, 1000);
+                }
+                
+                // 尝试加载GitHub配置
+                setTimeout(async () => {
+                    const hasConfig = await loadGithubConfig();
+                    if (!hasConfig && !user.isLocal) {
+                        console.log('GitHub配置未完成，同步功能不可用');
+                    }
+                }, 1000);
+                
+                // 移动端欢迎提示
+                if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                    setTimeout(() => {
+                        showSimpleToast(`欢迎回来，${user.name}！`);
+                    }, 500);
+                }
+                
+            } else {
+                // 登录失败处理
+            }
             // 如果是本地测试用户，显示提示
             if (user.isLocal) {
                 setTimeout(() => {
@@ -200,7 +256,23 @@ function updateTopButtonsLayout() {
         });
     }
 }
-
+function debugPermissionButtons() {
+    console.log('=== 权限按钮调试信息 ===');
+    console.log('当前用户:', currentUser);
+    console.log('canShowPermissionManager:', typeof canShowPermissionManager, canShowPermissionManager ? canShowPermissionManager() : '函数未定义');
+    console.log('canShowChangeLog:', typeof canShowChangeLog, canShowChangeLog ? canShowChangeLog() : '函数未定义');
+    console.log('isAdmin:', typeof isAdmin, isAdmin ? isAdmin() : '函数未定义');
+    
+    const permissionBtn = document.querySelector('.permission-manager-btn');
+    const changeLogBtn = document.querySelector('.change-log-btn');
+    
+    console.log('权限按钮元素:', {
+        permissionBtn: permissionBtn,
+        changeLogBtn: changeLogBtn,
+        permissionBtnDisplay: permissionBtn ? permissionBtn.style.display : '未找到',
+        changeLogBtnDisplay: changeLogBtn ? changeLogBtn.style.display : '未找到'
+    });
+}
 function initTabs() {
     const tabsContainer = document.getElementById('siteTabs');
     if (!tabsContainer) {
@@ -307,13 +379,59 @@ function renderSiteList() {
                 <div class="progress-fill" style="width: ${progress}%; font-size: 10px; line-height: 16px;">${progress}%</div>
             </div>
         `;
-
-        siteCard.onclick = () => {
-            if (canViewSite(site.id)) {
-                showSiteDetails(site.id);
-            } else {
-                alert('您没有权限查看此工地');
+siteCard.onclick = (e) => {
+    e.stopPropagation();
+    console.log('=== 工地卡片点击事件 ===');
+    console.log('工地ID:', site.id);
+    console.log('工地名称:', site.name);
+    console.log('所有工地:', sites.map(s => ({id: s.id, name: s.name})));
+    console.log('当前用户:', currentUser);
+    console.log('canViewSite函数:', typeof canViewSite);
+    
+    // 检查工地是否存在
+    const foundSite = sites.find(s => s.id === site.id);
+    if (!foundSite) {
+        console.error('错误：工地不存在于sites数组中');
+        alert('工地数据异常，请刷新页面重试');
+        return;
+    }
+    
+    // 检查权限
+    if (typeof canViewSite === 'function' && !canViewSite(site.id)) {
+        alert('您没有权限查看此工地');
+        return;
+    }
+    
+    // 检查模态框元素
+    const siteModal = document.getElementById('siteModal');
+    if (!siteModal) {
+        console.error('错误：siteModal元素不存在');
+        alert('页面加载异常，请刷新页面');
+        return;
+    }
+    
+    // 显示工地详情
+    showSiteDetails(site.id);
+};
+        // 修复：确保正确绑定点击事件
+        siteCard.onclick = (e) => {
+            e.stopPropagation();
+            console.log('点击工地卡片，ID:', site.id, '名称:', site.name);
+            
+            // 检查工地是否存在
+            const foundSite = sites.find(s => s.id === site.id);
+            if (!foundSite) {
+                console.error('工地不存在，ID:', site.id);
+                alert('工地不存在！');
+                return;
             }
+            
+            if (canViewSite && !canViewSite(site.id)) {
+                alert('您没有权限查看此工地');
+                return;
+            }
+            
+            showSiteDetails(site.id);
         };
         siteList.appendChild(siteCard);
     });
@@ -348,10 +466,21 @@ function clearAllLists() {
     updateAddRemoveSummary(site);
 }
 function showSiteDetails(siteId) {
+    console.log('显示工地详情，ID:', siteId);
+    
+    // 先确保模态框元素存在
+    const siteModal = document.getElementById('siteModal');
+    if (!siteModal) {
+        console.error('siteModal 元素不存在');
+        alert('页面元素加载异常，请刷新页面重试');
+        return;
+    }
+    
     currentSiteId = siteId;
     const site = sites.find(s => s.id === siteId);
 
     if (!site) {
+        console.error('工地不存在，ID:', siteId, '所有工地ID:', sites.map(s => s.id));
         alert('工地不存在！');
         return;
     }
@@ -360,29 +489,35 @@ function showSiteDetails(siteId) {
     const modalTitle = document.getElementById('modalTitle');
     if (!modalTitle) {
         console.error('modalTitle 元素不存在');
-        return;
+        // 尝试通过其他方式查找
+        const modalHeader = siteModal.querySelector('.modal-header h3');
+        if (modalHeader) {
+            modalHeader.textContent = `工地详情 - ${site.name}`;
+        } else {
+            alert('页面元素加载异常，请刷新页面重试');
+            return;
+        }
+    } else {
+        modalTitle.textContent = `工地详情 - ${site.name}`;
     }
     
-    const siteModal = document.getElementById('siteModal');
-    if (!siteModal) {
-        console.error('siteModal 元素不存在');
-        return;
-    }
-
-    modalTitle.textContent = `工地详情 - ${site.name}`;
+    // 显示模态框
     siteModal.style.display = 'block';
     document.body.style.overflow = 'hidden';
 
+    // 加载工地数据
     loadSiteData(site);
     switchTab('progressTab');
     
+    // 移动端优化
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         setTimeout(() => {
             optimizeMobileTables();
         }, 100);
     }
+    
+    console.log('工地详情已显示:', site.name);
 }
-
 function clearSiteForm() {
     document.getElementById('siteName').value = '';
     document.getElementById('startDate').value = '';
@@ -638,7 +773,6 @@ function addRequirement() {
     addChangeLog('添加客户要求', `添加了客户要求：${content.substring(0, 12)}...（类型：${type === 'need' ? '需要' : '排除'}）`);
     alert('客户要求添加成功！');
 }
-
 function addRepair() {
     if (!currentSiteId) {
         alert('请先保存工地基本信息！');
@@ -673,6 +807,7 @@ function addRepair() {
     site.repairs.push(repair);
     saveData();
 
+    // 清空表单
     document.getElementById('repairContent').value = '';
     document.getElementById('repairNote').value = '';
     document.getElementById('repairPhoto').value = '';
@@ -974,106 +1109,10 @@ function saveWorkerTime(workerId, newTime, type) {
     }
 }
 
-// ==================== 图片和文件处理函数 ====================
-function previewRepairPhoto(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    if (!file.type.startsWith('image/')) {
-        alert('请选择图片文件！');
-        event.target.value = '';
-        return;
-    }
-
-    if (file.size > 10 * 1024 * 1024) {
-        alert('图片太大，请选择小于10MB的图片！');
-        event.target.value = '';
-        return;
-    }
-
-    resizeImage(file, 500, function (resizedDataUrl) {
-        const preview = document.getElementById('repairPhotoPreview');
-        preview.innerHTML = `
-            <div style="text-align: center; padding: 10px;">
-                <img src="${resizedDataUrl}" class="image-preview" onclick="viewImage('${resizedDataUrl}')">
-                <div style="margin-top: 5px; font-size: 12px; color: #666;">
-                    ${file.name}<br>
-                    <small>已压缩: 最大边500px, 质量0.6</small>
-                </div>
-            </div>
-        `;
-        preview.dataset.originalData = resizedDataUrl;
-        preview.dataset.fileName = file.name;
-    });
-}
-
-function previewDrawing(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const preview = document.getElementById('drawingPreview');
-    const reader = new FileReader();
-
-    reader.onload = function (e) {
-        const dataUrl = e.target.result;
-
-        preview.dataset.originalData = dataUrl;
-        preview.dataset.fileName = file.name;
-        preview.dataset.fileType = file.type;
-        preview.dataset.fileSize = file.size;
-
-        if (file.type.startsWith('image/')) {
-            resizeImage(file, 500, function (resizedDataUrl) {
-                preview.innerHTML = `
-                    <div style="text-align: center; padding: 10px;">
-                        <img src="${resizedDataUrl}" class="image-preview" onclick="viewImage('${resizedDataUrl}')">
-                        <div style="margin-top: 5px; font-size: 12px; color: #666;">
-                            ${file.name} (${(file.size / 1024).toFixed(1)} KB)
-                            <br><small>已压缩: 最大边500px, 质量0.6</small>
-                        </div>
-                    </div>
-                `;
-                preview.dataset.originalData = resizedDataUrl;
-            });
-        } else {
-            let icon = '📄';
-            let typeText = '文档';
-
-            if (file.type.includes('pdf')) {
-                icon = '📕';
-                typeText = 'PDF文件';
-            } else if (file.type.includes('excel') || file.type.includes('sheet')) {
-                icon = '📊';
-                typeText = 'Excel文件';
-            } else if (file.type.includes('word')) {
-                icon = '📝';
-                typeText = 'Word文件';
-            } else if (file.type.includes('csv')) {
-                icon = '📋';
-                typeText = 'CSV文件';
-            }
-
-            preview.innerHTML = `
-                <div style="text-align: center; padding: 10px;">
-                    <div style="font-size: 48px; color: #667eea;">${icon}</div>
-                    <div style="font-weight: bold; margin: 10px 0;">${typeText}</div>
-                    <div style="word-break: break-all;">${file.name}</div>
-                    <div style="font-size: 12px; color: #666; margin-top: 5px;">
-                        ${(file.size / 1024).toFixed(1)} KB
-                    </div>
-                </div>
-            `;
-        }
-    };
-
-    reader.readAsDataURL(file);
-}
-
 function changeRepairPhoto(repairId, button) {
     const fileInput = button.parentElement.querySelector('.repair-photo-input');
     fileInput.click();
 }
-
 function uploadNewRepairPhoto(repairId, fileInput) {
     const file = fileInput.files[0];
     if (!file) return;
@@ -1083,7 +1122,8 @@ function uploadNewRepairPhoto(repairId, fileInput) {
         return;
     }
 
-    resizeImage(file, 500, function (resizedDataUrl) {
+    // 使用宽度不超过500像素的压缩
+    resizeImage(file, 500, function(resizedDataUrl) {
         const site = sites.find(s => s.id === currentSiteId);
         if (!site) return;
 
@@ -1128,21 +1168,23 @@ function uploadNewDrawingFile(drawingId, fileInput) {
     const oldFileName = drawing.fileName || '未命名';
 
     if (file.type.startsWith('image/')) {
-        console.log('处理图片文件');
-        resizeImage(file, 500, function (resizedDataUrl) {
-            console.log('图片压缩完成，开始更新图纸数据');
-            
-            drawing.file = resizedDataUrl;
-            drawing.fileName = file.name;
-            drawing.fileType = file.type;
-            drawing.fileSize = file.size;
+    console.log('处理图片文件');
+    // 使用宽度不超过500像素的压缩
+    resizeImage(file, 500, function(resizedDataUrl) {
+        console.log('图片压缩完成，开始更新图纸数据');
+        
+        drawing.file = resizedDataUrl;
+        drawing.fileName = file.name;
+        drawing.fileType = file.type;
+        drawing.fileSize = file.size;
 
-            saveData();
-            renderDrawingList(site);
-            addChangeLog('更换图纸文件', `更换了${getDrawingTypeText(drawing.type)}图纸：${oldFileName} → ${file.name}`);
-            console.log('图纸文件更换成功！');
-            alert('图纸文件更换成功！');
-        });
+        saveData();
+        renderDrawingList(site);
+        addChangeLog('更换图纸文件', `更换了${getDrawingTypeText(drawing.type)}图纸：${oldFileName} → ${file.name}`);
+        console.log('图纸文件更换成功！');
+        alert('图纸文件更换成功！');
+    });
+
     } else {
         console.log('处理非图片文件');
         const reader = new FileReader();
@@ -1169,7 +1211,59 @@ function uploadNewDrawingFile(drawingId, fileInput) {
         reader.readAsDataURL(file);
     }
 }
-
+// 替换原来的 resizeImage 函数
+function resizeImage(file, maxDimension, callback) {
+    if (!maxDimension) maxDimension = 500; // 默认最大宽度500像素
+    
+    const reader = new FileReader();
+    
+    reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+            const originalWidth = img.width;
+            const originalHeight = img.height;
+            const scaleRatio = maxDimension / Math.max(originalWidth, originalHeight);
+            
+            // 如果图片小于最大尺寸，直接使用原图
+            if (scaleRatio >= 1) {
+                callback(e.target.result);
+                return;
+            }
+            
+            const newWidth = Math.round(originalWidth * scaleRatio);
+            const newHeight = Math.round(originalHeight * scaleRatio);
+            
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = newWidth;
+            canvas.height = newHeight;
+            
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, newWidth, newHeight);
+            ctx.drawImage(img, 0, 0, newWidth, newHeight);
+            
+            let dataUrl;
+            const mimeType = file.type || 'image/jpeg';
+            
+            // 统一使用0.6的质量
+            if (mimeType === 'image/jpeg') {
+                dataUrl = canvas.toDataURL('image/jpeg', 0.6);
+            } else if (mimeType === 'image/png') {
+                dataUrl = canvas.toDataURL('image/png');
+            } else if (mimeType === 'image/webp') {
+                dataUrl = canvas.toDataURL('image/webp', 0.6);
+            } else {
+                dataUrl = canvas.toDataURL('image/jpeg', 0.6);
+            }
+            
+            callback(dataUrl);
+        };
+        
+        img.src = e.target.result;
+    };
+    
+    reader.readAsDataURL(file);
+}
 // ==================== 报价管理函数 ====================
 function saveQuote() {
     if (!currentSiteId) {
@@ -1520,45 +1614,119 @@ function downloadDrawing(drawingId) {
         addChangeLog('下载图纸', `下载了${getDrawingTypeText(drawing.type)}图纸：${fileName}`);
     }
 }
-
-async function tryLoadMissingFile(filePath) {
+// 修改 app.js 中的 tryLoadMissingFile 函数
+function tryLoadMissingFile(filePath) {
     const input = document.createElement('input');
     input.type = 'file';
-    input.accept = '.jpg,.jpeg,.png,.gif,.pdf,.xls,.xlsx,.doc,.docx,.csv';
+    
+    // 根据文件路径判断接受什么类型的文件
+    if (filePath.includes('repairs')) {
+        input.accept = 'image/*';
+    } else if (filePath.includes('drawings')) {
+        input.accept = '.pdf,.jpg,.jpeg,.png,.xls,.xlsx,.doc,.docx,.csv,.txt,.json';
+    } else {
+        input.accept = '.jpg,.jpeg,.png,.gif,.pdf,.xls,.xlsx,.doc,.docx,.csv';
+    }
+    
     input.onchange = async function (event) {
         const file = event.target.files[0];
         if (!file) return;
 
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            updateFileData(filePath, e.target.result);
-        };
-        reader.readAsDataURL(file);
+        try {
+            // 如果是图片文件，使用 resizeImage 压缩
+            if (file.type.startsWith('image/')) {
+                // 使用修改后的 resizeImage 函数，最大宽度500像素，质量0.6
+                resizeImage(file, 500, function (compressedDataUrl) {
+                    updateFileData(filePath, compressedDataUrl);
+                });
+            } else {
+                // 非图片文件直接读取
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    updateFileData(filePath, e.target.result);
+                };
+                reader.onerror = function (e) {
+                    console.error('文件读取失败:', e);
+                    alert('文件读取失败，请重试');
+                };
+                reader.readAsDataURL(file);
+            }
+        } catch (error) {
+            console.error('加载文件失败:', error);
+            alert('加载文件失败：' + error.message);
+        }
     };
     input.click();
 }
 
+// 确保 updateFileData 函数也能正确处理压缩后的图片
 function updateFileData(filePath, base64Data) {
     let updated = false;
+    let siteUpdated = false;
 
     sites.forEach(site => {
+        // 处理维修图片
         if (site.repairs) {
             site.repairs.forEach(repair => {
                 if (repair.photo && repair.photo.includes(filePath)) {
-                    repair.photo = base64Data;
-                    delete repair.photoMissing;
-                    updated = true;
-                    console.log(`已更新维修图片: ${filePath}`);
+                    // 确保图片已经压缩过
+                    if (base64Data.startsWith('data:image/')) {
+                        // 检查是否需要压缩（判断宽度是否超过500像素）
+                        const img = new Image();
+                        img.onload = function() {
+                            // 如果宽度超过500像素，进行压缩
+                            if (img.width > 500) {
+                                const canvas = document.createElement('canvas');
+                                const ctx = canvas.getContext('2d');
+                                
+                                // 计算新的尺寸
+                                const ratio = 500 / img.width;
+                                canvas.width = 500;
+                                canvas.height = img.height * ratio;
+                                
+                                // 绘制并压缩
+                                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                                const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.6);
+                                
+                                repair.photo = compressedDataUrl;
+                            } else {
+                                repair.photo = base64Data;
+                            }
+                            
+                            delete repair.photoMissing;
+                            updated = true;
+                            siteUpdated = true;
+                            console.log(`已更新维修图片: ${filePath}`);
+                            
+                            // 保存数据并刷新显示
+                            saveData();
+                            if (currentSiteId && siteUpdated) {
+                                const currentSite = sites.find(s => s.id === currentSiteId);
+                                if (currentSite) {
+                                    loadSiteData(currentSite);
+                                }
+                            }
+                        };
+                        img.src = base64Data;
+                    } else {
+                        repair.photo = base64Data;
+                        delete repair.photoMissing;
+                        updated = true;
+                        siteUpdated = true;
+                        console.log(`已更新维修图片: ${filePath}`);
+                    }
                 }
             });
         }
 
+        // 处理图纸文件
         if (site.drawings) {
             site.drawings.forEach(drawing => {
                 if (drawing.file && drawing.file.includes(filePath)) {
                     drawing.file = base64Data;
                     delete drawing.fileMissing;
                     updated = true;
+                    siteUpdated = true;
                     console.log(`已更新图纸文件: ${filePath}`);
                 }
             });
@@ -1567,7 +1735,7 @@ function updateFileData(filePath, base64Data) {
 
     if (updated) {
         saveData();
-        if (currentSiteId) {
+        if (currentSiteId && siteUpdated) {
             const site = sites.find(s => s.id === currentSiteId);
             if (site) loadSiteData(site);
         }
@@ -1576,7 +1744,6 @@ function updateFileData(filePath, base64Data) {
         showSimpleToast('未找到对应的文件路径', 'error');
     }
 }
-
 // ==================== 退出和模态框管理 ====================
 function closeSiteModal() {
     document.getElementById('siteModal').style.display = 'none';
@@ -2000,20 +2167,21 @@ function addPhotoToRepair(repairId) {
     const input = document.getElementById(`addPhotoInput_${repairId}`);
     if (input) input.click();
 }
-
+// 修改 uploadPhotoForRepair 函数
 function uploadPhotoForRepair(repairId, fileInput) {
     const file = fileInput.files[0];
     if (!file) return;
-
+    
     if (!file.type.startsWith('image/')) {
         alert('请选择图片文件！');
         return;
     }
-
-    resizeImage(file, 500, function (resizedDataUrl) {
+    
+    // 使用修改后的 resizeImage 函数
+    resizeImage(file, 500, function(resizedDataUrl) {
         const site = sites.find(s => s.id === currentSiteId);
         if (!site) return;
-
+        
         const repair = site.repairs.find(r => r.id === repairId);
         if (repair) {
             repair.photo = resizedDataUrl;
@@ -2282,17 +2450,18 @@ function uploadFileForDrawing(drawingId, fileInput) {
     if (!drawing) return;
 
     if (file.type.startsWith('image/')) {
-        resizeImage(file, 500, function (resizedDataUrl) {
-            drawing.file = resizedDataUrl;
-            drawing.fileName = file.name;
-            drawing.fileType = file.type;
-            drawing.fileSize = file.size;
-
-            saveData();
-            renderDrawingList(site);
-            addChangeLog('添加图纸文件', `为图纸"${drawing.fileName || '未命名'}"添加了文件`);
-            alert('文件添加成功！');
-        });
+    // 使用修改后的 resizeImage 函数
+    resizeImage(file, 500, function(resizedDataUrl) {
+        drawing.file = resizedDataUrl;
+        drawing.fileName = file.name;
+        drawing.fileType = file.type;
+        drawing.fileSize = file.size;
+        
+        saveData();
+        renderDrawingList(site);
+        addChangeLog('添加图纸文件', `为图纸"${drawing.fileName || '未命名'}"添加了文件`);
+        alert('文件添加成功！');
+    });
     } else {
         const reader = new FileReader();
         reader.onload = function (e) {
@@ -2510,7 +2679,17 @@ function saveTime(id, newTime, timeField = 'time') {
     }
     return false;
 }
+// 确保管理员变量已初始化
+if (typeof window.ADMIN_USERS === 'undefined') {
+    window.ADMIN_USERS = ['admin', 'qiyu'];
+}
 
+// 如果当前登录的是管理员，确保 isAdmin 属性正确
+if (currentUser) {
+    if (window.ADMIN_USERS.includes(currentUser.username) && !currentUser.isAdmin) {
+        currentUser.isAdmin = true;
+    }
+}
 function deleteItem(itemId, collectionName) {
     if (!canDelete()) {
         alert('只有管理员可以删除数据！');
@@ -2624,25 +2803,23 @@ function renderSiteList() {
     });
 }
 
-// ==================== 权限相关函数 ====================
 function updateTopButtonsByPermission() {
     const topButtons = document.querySelector('.header-top-buttons');
     if (!topButtons) return;
     
-    // 查找权限管理和更改日志按钮
+    // 查找或创建权限管理按钮
     let permissionBtn = topButtons.querySelector('.permission-manager-btn');
-    let changeLogBtn = topButtons.querySelector('.change-log-btn');
-    
-    // 如果按钮不存在，创建它们
     if (!permissionBtn) {
         permissionBtn = document.createElement('button');
         permissionBtn.className = 'top-btn btn-danger permission-manager-btn';
         permissionBtn.onclick = showPermissionManager;
-        permissionBtn.title = '权限管理';
         permissionBtn.textContent = '权限管理';
+        permissionBtn.title = '权限管理';
         topButtons.appendChild(permissionBtn);
     }
     
+    // 查找或创建更改日志按钮
+    let changeLogBtn = topButtons.querySelector('.change-log-btn');
     if (!changeLogBtn) {
         changeLogBtn = document.createElement('button');
         changeLogBtn.className = 'top-btn btn-primary change-log-btn';
@@ -2652,23 +2829,28 @@ function updateTopButtonsByPermission() {
     }
     
     // 根据权限显示/隐藏按钮
-    permissionBtn.style.display = (typeof canShowPermissionManager === 'function' && canShowPermissionManager()) ? '' : 'none';
-    changeLogBtn.style.display = (typeof canShowChangeLog === 'function' && canShowChangeLog()) ? '' : 'none';
+    if (typeof window.canShowPermissionManager === 'function') {
+        permissionBtn.style.display = window.canShowPermissionManager() ? '' : 'none';
+    }
     
-    console.log('权限按钮状态:', {
-        permissionBtn: permissionBtn.style.display,
-        changeLogBtn: changeLogBtn.style.display,
-        currentUser: currentUser,
-        isAdmin: isAdmin ? isAdmin() : false,
-        canShowPermissionManager: canShowPermissionManager ? canShowPermissionManager() : false,
-        canShowChangeLog: canShowChangeLog ? canShowChangeLog() : false
+    if (typeof window.canShowChangeLog === 'function') {
+        changeLogBtn.style.display = window.canShowChangeLog() ? '' : 'none';
+    }
+    
+    console.log('按钮状态更新完成:', {
+        permissionBtnVisible: permissionBtn.style.display !== 'none',
+        changeLogBtnVisible: changeLogBtn.style.display !== 'none'
     });
 }
-
 // 然后在登录成功后调用这个函数
 // 在 app.js 的登录事件处理中，登录成功后添加：
 // updateTopButtonsByPermission();
 // 暴露到全局
+// 暴露函数到全局
+window.saveToJsFile = saveToJsFile;
+window.loadFromJsFile = loadFromJsFile;
+window.restoreFilesFromZip = restoreFilesFromZip;
+
 window.saveSiteInfo = saveSiteInfo;
 window.addTodo = addTodo;
 window.addExpense = addExpense;
