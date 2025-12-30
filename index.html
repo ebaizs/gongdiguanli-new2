@@ -36,52 +36,42 @@
                 <h1>立诺装饰项目管理系统</h1>
                 <span>清扬 15662061321</span>
             </div>
-            <div class="header-top-buttons">
-                <!-- 云端同步功能 -->
-                <button class="top-btn btn-info" onclick="saveToGitHub()" title="手动同步到GitHub">
-                    保存至云端
-                </button>
-                <button class="top-btn btn-warning" onclick="loadFromGitHub()" title="从GitHub加载">
-                    从云端加载
-                </button>
-                
-                <!-- 权限管理（仅管理员可见） -->
-                <button class="top-btn btn-danger permission-manager-btn" onclick="showPermissionManager()" title="权限管理">
-                    权限管理
-                </button>
-                
-                <!-- 更改日志（仅管理员可见） -->
-                <button class="top-btn btn-primary change-log-btn" onclick="showChangeLog()">更改日志</button>
-            </div>
-
-
-
-
-
-        </div>
-
+  <!-- 在 index.html 的顶部按钮部分，确保配置管理按钮存在 -->
+<div class="header-top-buttons">
+    <!-- 单一云端备份按钮 -->
+    <button class="top-btn btn-success" onclick="saveToGitHub()" title="备份完整数据到云端（包含图片）">
+        备份至云端
+    </button>
+    
+    <!-- 云端加载按钮 -->
+    <button class="top-btn btn-warning" onclick="loadFromGitHub()" title="从云端加载数据（合并）">
+        从云端加载
+    </button>
+    
+    <!-- 本地备份按钮 -->
+    <button class="top-btn btn-danger" onclick="saveToJsFile()" title="备份完整数据到本地ZIP文件">
+        备份完整数据
+    </button>
+    
+    <!-- 本地加载按钮 -->
+    <button class="top-btn btn-info" onclick="loadFromJsFile()" title="从ZIP文件加载数据（覆盖）">
+        从文件加载
+    </button>
+    
+    
+    
+    <!-- 权限管理（仅管理员可见） -->
+    <button class="top-btn btn-danger permission-manager-btn" onclick="showPermissionManager()" title="权限管理">
+        权限管理
+    </button>
+    
+    <!-- 更改日志（仅管理员可见） -->
+    <button class="top-btn btn-primary change-log-btn" onclick="showChangeLog()">更改日志</button>
+</div>
         <!-- 主内容区 -->
         <div class="main-content" id="mainContent">
-            <!-- 导入导出 -->
-            <!-- 导入导出 -->
-<div class="import-export">
-    <h3>数据管理</h3>
-    <div class="button-grid">
-        <button class="btn btn-warning" onclick="saveToJsFile()" title="保存为可直接加载的shuju.js文件">
-            备份完整数据
-        </button>
-        <button class="btn btn-primary" onclick="downloadJsonData()" title="下载JSON格式数据">
-            下载JSON数据
-        </button>
-        <button class="btn btn-info" onclick="loadFromJsFile()" title="从JSON/JS/ZIP文件加载数据">
-            从文件加载
-        </button>
-        <button class="btn btn-success" onclick="loadImagesZipOnly()" 
-                title="仅加载图片数据包（不覆盖文本）">
-            加载图片包
-        </button>
-    </div>
-</div>
+           
+      
 
             <!-- 用户信息和退出按钮 -->
             <div class="user-info-section">
