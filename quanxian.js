@@ -1,3 +1,17 @@
+// ==================== 管理员配置 ====================
+// 管理员用户名列表（可以根据需要扩展）
+if (typeof window.ADMIN_USERS === 'undefined') {
+    window.ADMIN_USERS = ['admin', 'qiyu'];
+}
+
+// 本地内置管理员账户
+const localAdminUser = {
+    "username": "qiyu",
+    "password": "8418", // 建议设置强密码
+    "name": "系统管理员",
+    "isLocal": true,
+    "isAdmin": true
+};
 // ==================== 全局变量定义 ====================
 // 确保这些变量只在全局声明一次
 if (typeof window.builtInUsers === 'undefined') {
@@ -20,10 +34,11 @@ const localBuiltInUsers = [
         "username": "1",
         "password": "1234",
         "name": "测试",
-        "isLocal": true
-    }
+        "isLocal": true,
+        "isAdmin": false
+    },
+    localAdminUser  // 添加本地管理员
 ];
-
 // 云端管理员账户（会在加载云端时自动添加）
 window.adminUser = null;
 
@@ -116,11 +131,16 @@ if (cloudData.builtInUsers && Array.isArray(cloudData.builtInUsers)) {
     window.builtInUsers.push(...newUsers);
     console.log('添加了', newUsers.length, '个新用户:', newUsers.map(u => u.username));
     
-    // 保存云端管理员引用
-    const adminUser = newUsers.find(u => u.username === 'admin' || u.username === 'qiyu');
-    if (adminUser) {
-        window.adminUser = adminUser;
-    }
+    
+   // 保存云端管理员引用
+const adminUser = newUsers.find(u => 
+    u.isAdmin === true || window.ADMIN_USERS.includes(u.username)
+);
+if (adminUser) {
+    window.adminUser = adminUser;
+    // 确保管理员标志
+    if (!adminUser.isAdmin) adminUser.isAdmin = true;
+}
 }
             
             // 合并权限配置
@@ -227,8 +247,7 @@ try {
 //////////////////////以上可能可删除//////////////////////////////////////////////
 // 确保管理员有所有权限
 function ensureAdminPermissions() {
-    const adminUsernames = ['admin', 'qiyu'];
-    
+    // 从 ADMIN_USERS 获取管理员列表
     adminUsernames.forEach(username => {
         if (PERMISSION_CONFIG.userPermissions[username]) {
             const perms = PERMISSION_CONFIG.userPermissions[username].permissions;
@@ -253,28 +272,59 @@ function ensureAdminPermissions() {
             perms.exportData = true;
             perms.importData = true;
             perms.cloudSync = true;
+            // 添加管理员标志
+            perms.isAdmin = true;
+        }
+    });
+    // 另外检查所有 isAdmin 属性为 true 的用户
+    Object.keys(PERMISSION_CONFIG.userPermissions).forEach(username => {
+        const userPerms = PERMISSION_CONFIG.userPermissions[username];
+        if (userPerms && userPerms.permissions && userPerms.permissions.isAdmin === true) {
+            // 确保这些用户也有所有权限
+            const perms = userPerms.permissions;
+            perms.refreshCloudUsers = true;
+            perms.showPermissionManager = true;
+            // ... 设置所有权限为 true ...
         }
     });
 }
-
-// 修改 hasPermission 函数，让管理员自动通过所有权限检查
+// 修改 hasPermission 函数，确保它能在所有地方正确工作
 function hasPermission(permissionName) {
-    if (!currentUser) return false;
+    if (!currentUser) {
+        console.log('hasPermission: 没有当前用户');
+        return false;
+    }
     
-    // 如果是管理员，直接返回 true
-    if (currentUser.username === 'admin' || currentUser.username === 'qiyu') {
+    // 确保 currentUser 对象存在
+    if (!currentUser.username) {
+        console.log('hasPermission: 当前用户没有用户名');
+        return false;
+    }
+    
+    // 使用新的 isAdmin 函数检查是否为管理员
+    if (isAdmin()) {
+        console.log(`hasPermission: ${currentUser.username} 是管理员，直接返回true`);
         return true;
     }
     
+    // 获取用户权限
     const userPerms = PERMISSION_CONFIG.userPermissions[currentUser.username];
     if (!userPerms) {
         console.warn(`用户 ${currentUser.username} 没有权限配置`);
         return false;
     }
     
-    return userPerms.permissions[permissionName] || false;
+    const result = userPerms.permissions[permissionName] || false;
+    console.log(`hasPermission: ${currentUser.username} 的 ${permissionName} 权限: ${result}`);
+    return result;
 }
 
+// 确保 canShowPermissionManager 函数正确
+function canShowPermissionManager() {
+    const result = hasPermission('showPermissionManager');
+    console.log(`canShowPermissionManager: ${result} (用户: ${currentUser ? currentUser.username : '无'})`);
+    return result;
+}
 // 在DOMContentLoaded事件中调用
 document.addEventListener('DOMContentLoaded', function() {
     // 等待主应用初始化完成后再初始化权限系统
@@ -286,15 +336,34 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }, 300);
 });
-
+// 添加 isAdmin 函数到全局
+function isAdmin() {
+    if (!currentUser) return false;
+    
+    // 方法1：检查用户对象的 isAdmin 属性
+    if (currentUser.isAdmin === true) {
+        return true;
+    }
+    
+    // 方法2：检查用户名是否在管理员列表中（向后兼容）
+    if (window.ADMIN_USERS && window.ADMIN_USERS.includes(currentUser.username)) {
+        return true;
+    }
+    
+    // 方法3：检查权限配置中的管理员标志
+    const userPerms = PERMISSION_CONFIG.userPermissions[currentUser.username];
+    if (userPerms && userPerms.permissions && userPerms.permissions.isAdmin === true) {
+        return true;
+    }
+    
+    return false;
+}
 // ==================== 新增权限检查函数 ====================
 function canRefreshCloudUsers() {
     return hasPermission('refreshCloudUsers');
 }
 
-function canShowPermissionManager() {
-    return hasPermission('showPermissionManager');
-}
+
 
 function canSaveToJsFile() {
     return hasPermission('saveToJsFile');
@@ -399,6 +468,7 @@ function getTemplateByType(templateType, username) {
             description: '所有权限',
             permissions: {
                 // 1. 刷新云端账户，权限管理，更改日志
+                isAdmin: true,  // 添加这一行
                 refreshCloudUsers: true,
                 showPermissionManager: true,
                 showChangeLog: true,
@@ -1166,9 +1236,17 @@ function renderPermissionControls(username, permissions) {
         { id: 'addItems', label: '添加项目' }
     ];
     
-    let html = '<h4>详细权限设置</h4>';
+   let html = '<h4>详细权限设置</h4>';
     html += '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px;">';
-    
+     // 添加管理员选项
+    html += `
+        <label style="display: flex; align-items: center; gap: 5px; padding: 5px; background: #f5f5f5; border-radius: 4px; color: #d32f2f; font-weight: bold;">
+            <input type="checkbox" name="isAdmin" 
+                ${permissions.permissions.isAdmin ? 'checked' : ''}
+                onchange="updatePermissionValue('${username}', 'isAdmin', this.checked)">
+            设为系统管理员
+        </label>
+    `;
     controls.forEach(control => {
         html += `
             <label style="display: flex; align-items: center; gap: 5px; padding: 5px; background: #f5f5f5; border-radius: 4px;">
@@ -1321,10 +1399,41 @@ const builtInUsers = ${JSON.stringify(builtInUsers, null, 2)};
     // 只保留导出到云端功能
     uploadToCloudDirectly(yonghuJsContent);
 }
-
+// 修改 quanxian.js 中的 uploadToCloudDirectly 函数
 async function uploadToCloudDirectly(content) {
     try {
-        const savedConfig = localStorage.getItem('github_config');
+        // 首先尝试从 localStorage 获取配置
+        let savedConfig = localStorage.getItem('github_config');
+        
+        // 如果 localStorage 中没有配置，尝试使用 yun.js 中的内置配置
+        if (!savedConfig) {
+            // 检查是否已加载 yun.js 并包含内置配置
+            if (window.GIST_CONFIG && window.GIST_CONFIG.configLoaded) {
+                // 从 GIST_CONFIG 获取配置
+                const builtInConfig = {
+                    GIST_ID: window.GIST_CONFIG.GIST_ID,
+                    GITHUB_TOKEN: window.GIST_CONFIG.GITHUB_TOKEN
+                };
+                
+                // 保存到 localStorage 以便下次使用
+                localStorage.setItem('github_config', JSON.stringify(builtInConfig));
+                savedConfig = JSON.stringify(builtInConfig);
+                console.log('使用 yun.js 内置的 GitHub 配置');
+            } else {
+                // 尝试检查是否有 BUILT_IN_CONFIG
+                if (window.BUILT_IN_CONFIG && window.BUILT_IN_CONFIG.GIST_ID) {
+                    const builtInConfig = {
+                        GIST_ID: window.BUILT_IN_CONFIG.GIST_ID,
+                        GITHUB_TOKEN: window.BUILT_IN_CONFIG.GITHUB_TOKEN
+                    };
+                    
+                    localStorage.setItem('github_config', JSON.stringify(builtInConfig));
+                    savedConfig = JSON.stringify(builtInConfig);
+                    console.log('使用 BUILT_IN_CONFIG 内置配置');
+                }
+            }
+        }
+        
         if (!savedConfig) {
             alert('请先配置GitHub同步！\n\n点击"配置管理"按钮进行配置。');
             return;
@@ -1381,12 +1490,31 @@ async function uploadToCloudDirectly(content) {
         } else {
             const error = await response.text();
             console.error('上传失败:', error);
-            alert(`上传失败：${response.status} ${response.statusText}\n\n请检查GitHub配置是否正确。`);
+            
+            // 检查是否是 token 过期或无效
+            if (response.status === 401) {
+                alert('GitHub Token 已过期或无效！\n\n请重新配置GitHub Token。');
+                // 清除无效配置
+                localStorage.removeItem('github_config');
+            } else {
+                alert(`上传失败：${response.status} ${response.statusText}\n\n请检查GitHub配置是否正确。`);
+            }
         }
         
     } catch (error) {
         console.error('上传异常:', error);
-        alert('上传失败：' + error.message);
+        
+        // 显示更友好的错误信息
+        let errorMsg = '上传失败：';
+        if (error.message.includes('Failed to fetch')) {
+            errorMsg = '网络连接失败，请检查网络连接。';
+        } else if (error.message.includes('token')) {
+            errorMsg = 'GitHub Token 无效，请重新配置。';
+        } else {
+            errorMsg += error.message;
+        }
+        
+        alert(errorMsg);
         
         const uploadingDiv = document.querySelector('div[style*="position: fixed; top: 50%"]');
         if (uploadingDiv && uploadingDiv.parentNode) {
@@ -1611,7 +1739,48 @@ function getDefaultTemplate(username) {
         }
     };
 }
+// ==================== 管理员管理函数 ====================
+function addToAdminList(username) {
+    if (!window.ADMIN_USERS.includes(username)) {
+        window.ADMIN_USERS.push(username);
+        console.log(`已将用户 ${username} 添加到管理员列表`);
+    }
+}
 
+function removeFromAdminList(username) {
+    const index = window.ADMIN_USERS.indexOf(username);
+    if (index > -1) {
+        window.ADMIN_USERS.splice(index, 1);
+        console.log(`已将用户 ${username} 从管理员列表移除`);
+    }
+}
+
+function setUserAsAdmin(username, isAdmin = true) {
+    const user = builtInUsers.find(u => u.username === username);
+    if (user) {
+        user.isAdmin = isAdmin;
+        
+        // 更新权限配置
+        if (PERMISSION_CONFIG.userPermissions[username]) {
+            PERMISSION_CONFIG.userPermissions[username].permissions.isAdmin = isAdmin;
+        }
+        
+        // 更新管理员列表
+        if (isAdmin && !window.ADMIN_USERS.includes(username)) {
+            window.ADMIN_USERS.push(username);
+        } else if (!isAdmin) {
+            removeFromAdminList(username);
+        }
+        
+        savePermissionConfig();
+        console.log(`已将用户 ${username} 设置为管理员: ${isAdmin}`);
+    }
+}
+
+// 暴露到全局
+window.addToAdminList = addToAdminList;
+window.removeFromAdminList = removeFromAdminList;
+window.setUserAsAdmin = setUserAsAdmin;
 // 暴露函数到全局
 window.showPermissionManager = showPermissionManager;
 window.exportPermissionConfig = exportPermissionConfig;
