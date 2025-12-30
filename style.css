@@ -1110,7 +1110,21 @@ body {
 .date-display:hover {
     background-color: var(--bg-secondary);
 }
+/* GitHub Token 输入框样式 */
+#githubTokenInput {
+    letter-spacing: 1px;
+    font-family: 'Courier New', monospace;
+}
 
+/* 模态框样式 */
+.modal {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
 .date-edit {
     width: 100%;
     padding: 6px 8px;
