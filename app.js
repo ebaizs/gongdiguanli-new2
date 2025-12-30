@@ -148,12 +148,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 renderSiteList();
                 addChangeLog('登录系统', '用户登录成功');
                 
-                // 如果是本地测试用户，显示提示
-                if (user.isLocal) {
-                    setTimeout(() => {
-                        showSimpleToast('测试用户登录成功，如需使用云端账户，请配置GitHub连接', 'warning');
-                    }, 1000);
-                }
+                
                 
                 // 尝试加载GitHub配置
                 setTimeout(async () => {
@@ -180,13 +175,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 }, 1000);
             }
             
-            // 尝试加载GitHub配置
-            setTimeout(async () => {
-                const hasConfig = await loadGithubConfig();
-                if (!hasConfig && !user.isLocal) {
-                    console.log('GitHub配置未完成，同步功能不可用');
-                }
-            }, 1000);
+           
             
             // 移动端欢迎提示
             if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
