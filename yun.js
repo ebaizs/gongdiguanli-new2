@@ -27,15 +27,12 @@ checkAndWrapFunction('canShowChangeLog', function() {
 });
 // ==================== 内置GitHub配置 ====================
 const BUILT_IN_CONFIG = {
-    GIST_ID: '097f8adbb3790f3a95ba586a0867699b',
-    GITHUB_TOKEN: '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', // 这里替换为你的实际token
-    configLoaded: true
+    GIST_ID: '097f8adbb3790f3a95ba586a0867699b', // Gist ID 保持内置
+    GITHUB_TOKEN: '', // Token 改为空，需要用户输入
+    configLoaded: false // 初始状态为未加载
 };
 
-// 初始化时直接使用内置配置
-GIST_CONFIG.GIST_ID = BUILT_IN_CONFIG.GIST_ID;
-GIST_CONFIG.GITHUB_TOKEN = BUILT_IN_CONFIG.GITHUB_TOKEN;
-GIST_CONFIG.configLoaded = true;
+// 不再自动初始化配置
 
 // 在yun.js开头添加
 if (typeof window.currentUser === 'undefined') {
@@ -73,7 +70,18 @@ async function saveToJsFile() {
 }
 
 
-
+// 重新配置 GitHub Token
+function resetGithubConfig() {
+    localStorage.removeItem('github_config');
+    GIST_CONFIG.configLoaded = false;
+    GIST_CONFIG.GITHUB_TOKEN = '';
+    
+    promptForGithubToken().then((success) => {
+        if (success) {
+            showSimpleToast('GitHub 配置已重置并重新配置');
+        }
+    });
+}
 
 // 修改所有权限检查函数，先检查管理员权限
 function canDelete() { 
@@ -126,7 +134,6 @@ Token: ${GIST_CONFIG.GITHUB_TOKEN.substring(0, 8)}...
 
 
 // ==================== 配置管理 ====================
-// 在 yun.js 的 loadGithubConfig 函数中确保内置配置被保存
 async function loadGithubConfig() {
     console.log('开始加载 GitHub 配置...');
     
@@ -137,7 +144,7 @@ async function loadGithubConfig() {
         try {
             const config = JSON.parse(savedConfig);
             GIST_CONFIG.GIST_ID = config.GIST_ID || BUILT_IN_CONFIG.GIST_ID;
-            GIST_CONFIG.GITHUB_TOKEN = config.GITHUB_TOKEN || BUILT_IN_CONFIG.GITHUB_TOKEN;
+            GIST_CONFIG.GITHUB_TOKEN = config.GITHUB_TOKEN;
             GIST_CONFIG.configLoaded = true;
             console.log('已从 localStorage 加载 GitHub 配置');
             return true;
@@ -147,24 +154,8 @@ async function loadGithubConfig() {
         }
     }
     
-    // 使用内置配置
-    console.log('使用内置 GitHub 配置');
-    
-    // 确保内置配置被保存到 localStorage，以便权限模块使用
-    const configToSave = {
-        GIST_ID: BUILT_IN_CONFIG.GIST_ID,
-        GITHUB_TOKEN: BUILT_IN_CONFIG.GITHUB_TOKEN,
-        configLoaded: true
-    };
-    
-    localStorage.setItem('github_config', JSON.stringify(configToSave));
-    
-    GIST_CONFIG.GIST_ID = BUILT_IN_CONFIG.GIST_ID;
-    GIST_CONFIG.GITHUB_TOKEN = BUILT_IN_CONFIG.GITHUB_TOKEN;
-    GIST_CONFIG.configLoaded = true;
-    
-    console.log('内置 GitHub 配置已保存到 localStorage');
-    return true;
+    // 如果没有保存的配置，弹出输入框要求用户输入
+    return await promptForGithubToken();
 }
 // 在 quanxian.js 中添加一个检查 GitHub 配置的函数
 function checkGitHubConfig() {
@@ -198,6 +189,126 @@ function checkGitHubConfig() {
     }
     
     return null;
+}
+
+// ==================== Token 输入函数 ====================
+async function promptForGithubToken() {
+    return new Promise((resolve) => {
+        // 创建输入模态框
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.style.cssText = `
+            display: flex;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            justify-content: center;
+            align-items: center;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        `;
+        
+        modal.innerHTML = `
+            <div style="background: white; padding: 30px; border-radius: 10px; width: 90%; max-width: 500px; box-shadow: 0 5px 30px rgba(0,0,0,0.3);">
+                <h3 style="margin: 0 0 20px 0; color: #333;">秘钥配置</h3>
+                <p style="color: #666; font-size: 14px; line-height: 1.5; margin-bottom: 20px;">
+                                   
+                <div style="margin-bottom: 15px;">
+                    
+                    <input type="password" 
+                           id="githubTokenInput" 
+                           style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; box-sizing: border-box;"
+                           placeholder="请输入秘钥，如：ghp_xxxxxxxxxxxxxxxxxxxx"
+                           autocomplete="off">
+                </div>
+                
+                
+                
+                <div style="display: flex; justify-content: space-between; margin-top: 25px;">
+                    <button id="saveTokenBtn" 
+                            style="padding: 12px 24px; background: #28a745; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; flex: 1; margin-right: 10px;">
+                        保存并继续
+                    </button>
+                    <button id="skipTokenBtn" 
+                            style="padding: 12px 24px; background: #6c757d; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; flex: 1; margin-left: 10px;">
+                        暂不使用云端
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        const tokenInput = document.getElementById('githubTokenInput');
+        const saveBtn = document.getElementById('saveTokenBtn');
+        const skipBtn = document.getElementById('skipTokenBtn');
+        
+        // 聚焦输入框
+        setTimeout(() => tokenInput.focus(), 100);
+        
+        // 保存按钮事件
+        saveBtn.onclick = () => {
+            const token = tokenInput.value.trim();
+            
+            if (!token) {
+                alert('请输入 GitHub Token');
+                return;
+            }
+            
+            // 验证 Token 格式（基本检查）
+            if (!token.startsWith('ghp_') && !token.startsWith('github_pat_')) {
+                if (!confirm('警告：Token 格式看起来不正确！\n\n正确的 Token 通常以 "ghp_" 或 "github_pat_" 开头。\n是否继续使用此 Token？')) {
+                    return;
+                }
+            }
+            
+            // 保存配置
+            GIST_CONFIG.GIST_ID = BUILT_IN_CONFIG.GIST_ID;
+            GIST_CONFIG.GITHUB_TOKEN = token;
+            GIST_CONFIG.configLoaded = true;
+            
+            // 保存到 localStorage
+            localStorage.setItem('github_config', JSON.stringify({
+                GIST_ID: BUILT_IN_CONFIG.GIST_ID,
+                GITHUB_TOKEN: token,
+                configLoaded: true,
+                lastUpdated: new Date().toISOString()
+            }));
+            
+            modal.remove();
+            showSimpleToast('GitHub Token 已保存！');
+            resolve(true);
+        };
+        
+        // 跳过按钮事件
+        skipBtn.onclick = () => {
+            GIST_CONFIG.GIST_ID = BUILT_IN_CONFIG.GIST_ID;
+            GIST_CONFIG.GITHUB_TOKEN = '';
+            GIST_CONFIG.configLoaded = false;
+            
+            modal.remove();
+            showSimpleToast('已跳过云端配置，部分功能不可用。');
+            resolve(false);
+        };
+        
+        // 回车键保存
+        tokenInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                saveBtn.click();
+            }
+        });
+        
+        // ESC键跳过
+        document.addEventListener('keydown', function escHandler(e) {
+            if (e.key === 'Escape') {
+                document.removeEventListener('keydown', escHandler);
+                skipBtn.click();
+            }
+        });
+    });
 }
 
 // 修改 exportPermissionConfig 函数，添加配置检查
