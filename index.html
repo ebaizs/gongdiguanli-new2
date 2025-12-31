@@ -50,7 +50,7 @@
     
     <!-- 本地备份按钮 -->
     <button class="top-btn btn-danger" onclick="saveToJsFile()" title="备份完整数据到本地ZIP文件">
-        备份完整数据
+        备份数据至本地
     </button>
     
     <!-- 本地加载按钮 -->
@@ -124,9 +124,11 @@
                             <label>当前进度: <span id="progressValue">0</span>%</label>
                             <input type="range" id="progress" min="0" max="100" value="0" oninput="updateProgressValue(this.value)">
                         </div>
+                        
                         <div class="progress-bar">
                             <div class="progress-fill" id="progressFill" style="width: 0%">0%</div>
                         </div>
+                       <br />
                         <button class="btn btn-primary" onclick="saveSiteInfo()">保存工地信息</button>
                     </div>
 
