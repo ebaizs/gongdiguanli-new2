@@ -1,1636 +1,1777 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+// ==================== 管理员配置 ====================
+// 管理员用户名列表（可以根据需要扩展）
+if (typeof window.ADMIN_USERS === 'undefined') {
+    window.ADMIN_USERS = ['admin', 'qiyu'];
 }
-:root {    
-    --primary-color: #4361ee;
-    --primary-dark: #3a56d4;
-    --secondary-color: #7209b7;
-    --success-color: #2ecc71;
-    --warning-color: #f39c12;
-    --danger-color: #e74c3c;
-    --info-color: #3498db;
-    
-    --text-primary: #333333;
-    --text-secondary: #666666;
-    --text-light: #999999;
-    
-    --bg-primary: #ffffff;
-    --bg-secondary: #f8f9fa;
-    --bg-tertiary: #e9ecef;
-    
-    --border-color: #dee2e6;
-    --shadow-color: rgba(0, 0, 0, 0.1);
-    
-    --card-bg: #ffffff;
-    --modal-bg: #ffffff;
-    
-    --progress-bg: #e9ecef;
-    --progress-fill: linear-gradient(90deg, #2ecc71, #27ae60);
-    
-    /* 表格文字颜色 */
-    --table-text: #333333;
-    --note-text: #444444;
-    --button-text: #333333;
+
+// 本地内置管理员账户
+const localAdminUser = {
+    "username": "admin",
+    "password": "admin", // 建议设置强密码
+    "name": "系统管理员",
+    "isLocal": true,
+    "isAdmin": true
+};
+// ==================== 全局变量定义 ====================
+// 确保这些变量只在全局声明一次
+if (typeof window.builtInUsers === 'undefined') {
+    window.builtInUsers = [];
+}
+if (typeof window.PERMISSION_CONFIG === 'undefined') {
+    window.PERMISSION_CONFIG = {
+        userPermissions: {},
+        availableTabs: []
+    };
+}
+if (typeof window.currentUser === 'undefined') {
+    window.currentUser = null;
 }
 
 
-/* 数据管理按钮强制一行显示 */
-.import-export .button-grid {
-    display: flex;
-    flex-wrap: nowrap !important; /* 强制不换行 */
-    gap: 5px !important; /* 缩小间距 */
-    overflow-x: auto; /* 允许横向滚动 */
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
+// ==================== 内置测试账户 ====================
+const localBuiltInUsers = [
+    {
+        "username": "1",
+        "password": "1234",
+        "name": "测试",
+        "isLocal": true,
+        "isAdmin": false
+    },
+    localAdminUser  // 添加本地管理员
+];
+// 云端管理员账户（会在加载云端时自动添加）
+window.adminUser = null;
+
+// 初始化内置用户列表
+window.builtInUsers = [...localBuiltInUsers];
+
+// 初始化权限配置
+    
+window.PERMISSION_CONFIG.userPermissions['1'] = {
+    name: '测试',
+    description: '默认权限',
+    permissions: {
+        refreshCloudUsers: false,
+        showPermissionManager: false,
+        showChangeLog: false,  
+        viewAllSites: false,
+        addSite: false,
+        deleteSite: false,
+        editAll: true,
+        exportData: false,
+        importData: false,
+        viewLogs: false,
+        cloudSync: true,
+        editQuote: true,
+        deleteItems: false,
+        viewAllTabs: true,
+        addItems: true,
+        allowedSites: ['site001'],
+        allowedTabs: []
+    }
+};
+
+window.PERMISSION_CONFIG.availableTabs = [
+    { id: "progressTab", name: "进度" },
+    { id: "todoTab", name: "待办" },
+    { id: "expenseTab", name: "支出" },
+    { id: "requirementTab", name: "客户要求" },
+    { id: "repairTab", name: "待维修" },
+    { id: "workerTab", name: "工人" },
+    { id: "quoteTab", name: "报价" },
+    { id: "addRemoveTab", name: "增减项" },
+    { id: "drawingTab", name: "图纸" },
+    { id: "experienceTab", name: "经验总结" }
+];
+
+// 添加简单的提示函数
+if (typeof showSimpleToast === 'undefined') {
+    window.showSimpleToast = function(message, type = 'info') {
+        console.log(`${type}: ${message}`);
+        alert(message);
+    };
 }
 
-.import-export .button-grid::-webkit-scrollbar {
-    display: none;
-}
 
-.import-export .button-row {
-    display: flex;
-    flex: 1;
-    min-width: 0;
-    gap: 5px !important;
+// ==================== 云端用户数据加载(用户账号及密码登录信息，指定至-/raw/yonghu.js) ====================
+async function loadCloudUserData() {
+    try {
+        const url = 'https://gist.githubusercontent.com/ebaizs/097f8adbb3790f3a95ba586a0867699b/raw/yonghu.js';
+        
+        console.log('正在从云端加载用户数据:', url);
+        
+        const response = await fetch(url, { 
+            cache: 'no-cache',
+            mode: 'cors'
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const content = await response.text();
+        console.log('云端数据加载成功，大小:', content.length);
+        
+        // 方法1: 使用Function构造函数创建独立作用域
+        try {
+            const parseCloudData = new Function(content + '\nreturn { builtInUsers, PERMISSION_CONFIG };');
+            const cloudData = parseCloudData();
+            
+            console.log('成功解析云端数据:', {
+                userCount: cloudData.builtInUsers ? cloudData.builtInUsers.length : 0,
+                permissionCount: cloudData.PERMISSION_CONFIG ? Object.keys(cloudData.PERMISSION_CONFIG.userPermissions || {}).length : 0
+            });
+           // 合并用户数据
+if (cloudData.builtInUsers && Array.isArray(cloudData.builtInUsers)) {
+    const existingUsernames = new Set(window.builtInUsers.map(u => u.username));
+    const newUsers = cloudData.builtInUsers.filter(user => 
+        user && user.username && !existingUsernames.has(user.username)
+    );
+    
+    window.builtInUsers.push(...newUsers);
+    console.log('添加了', newUsers.length, '个新用户:', newUsers.map(u => u.username));
+    
+    
+   // 保存云端管理员引用
+const adminUser = newUsers.find(u => 
+    u.isAdmin === true || window.ADMIN_USERS.includes(u.username)
+);
+if (adminUser) {
+    window.adminUser = adminUser;
+    // 确保管理员标志
+    if (!adminUser.isAdmin) adminUser.isAdmin = true;
 }
-
-.import-export .button-row .btn {
-    flex: 1;
-    min-width: 0;
-    min-height: 36px !important; /* 减小高度 */
-    font-size: 12px !important; /* 缩小字体 */
-    padding: 8px 4px !important; /* 减小内边距 */
-    font-weight: 500;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    line-height: 1.2;
-    border-radius: 4px !important;
 }
-
-/* 移动端进一步优化 */
-@media (max-width: 768px) {
-    .import-export .button-row .btn {
-        font-size: 11px !important;
-        padding: 6px 2px !important;
-        min-height: 32px !important;
+            
+            // 合并权限配置
+            if (cloudData.PERMISSION_CONFIG && cloudData.PERMISSION_CONFIG.userPermissions) {
+                for (const [username, config] of Object.entries(cloudData.PERMISSION_CONFIG.userPermissions)) {
+                    if (!window.PERMISSION_CONFIG.userPermissions[username]) {
+                        window.PERMISSION_CONFIG.userPermissions[username] = config;
+                    }
+                }
+                console.log('合并了权限配置，现有权限用户:', Object.keys(window.PERMISSION_CONFIG.userPermissions));
+            }
+            
+            return true;
+            
+        } catch (parseError) {
+            console.warn('方法1解析失败:', parseError);
+            return false;
+        }
+        
+    } catch (error) {
+        console.warn('加载云端用户数据失败:', error);
+        throw error;
     }
 }
 
-/* 隐藏特定的按钮 */
-.header-top-buttons [onclick*="refreshCloudUsers"],
-.header-top-buttons [onclick*="manageGithubConfig"] {
-    display: none !important;
-}
-
-
-/* 基础布局 */
-html, body {
-    height: 100%;
-    width: 100%;
-    overflow-x: hidden;
-    -webkit-text-size-adjust: 100%;
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
-}
-
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    min-height: 100vh;
-    padding: 0;
-    margin: 0;
-    line-height: 1.4;
-}
-
-.container {
-    width: 100%;
-    min-height: 100vh;
-    background: var(--bg-secondary);
-    position: relative;
-}
-
-/* 登录页面 */
-.login-page {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-    padding: 20px;
-}
-
-.login-box {
-    background: var(--modal-bg);
-    padding: 30px 20px;
-    border-radius: 12px;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-    width: 100%;
-    max-width: 400px;
-    border: 1px solid var(--border-color);
-}
-
-.login-box h2 {
-    text-align: center;
-    margin-bottom: 25px;
-    color: var(--text-primary);
-    font-size: 20px;
-}
-
-.login-box input {
-    width: 100%;
-    padding: 16px 14px;
-    margin-bottom: 16px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    font-size: 16px;
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    transition: border-color 0.3s;
-    height: 52px;
-}
-
-.login-box input:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
-}
-
-.login-box button {
-    width: 100%;
-    padding: 16px;
-    background: var(--primary-color);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 17px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.3s;
-    height: 52px;
-}
-
-.login-box button:hover {
-    background: var(--primary-dark);
-}
-
-.login-error {
-    color: var(--danger-color);
-    text-align: center;
-    margin-top: 12px;
-    display: none;
-    font-size: 14px;
-}
-
-/* 头部 */
-.header {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-    color: white;
-    padding: 12px 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    width: 100%; /* 确保宽度100% */
-    box-sizing: border-box; /* 确保内边距包含在宽度内 */
-}
-
-.header-left {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-}
-
-.header-left h1 {
-    font-size: 16px;
-    font-weight: 600;
-    line-height: 1.3;
-    flex: 1;
-}
-
-.header-left > span {
-    font-size: 12px;
-    opacity: 0.9;
-    white-space: nowrap;
-    margin-left: 10px;
-}
-
-/* 顶部按钮 */
-.header-top-buttons {
-    display: flex;
-    gap: 8px;
-    width: 100%; /* 确保宽度100% */
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 2px;
-    scrollbar-width: none;
-    box-sizing: border-box; /* 确保内边距包含在宽度内 */
-}
-
-.header-top-buttons::-webkit-scrollbar {
-    display: none;
-}
-
-.top-btn {
-    padding: 10px 12px !important;
-    font-size: 12px !important;
-    min-width: max-content;
-    flex-shrink: 0;
-    flex: 1;
-    min-height: 36px !important;
-    border-radius: 6px !important;
-    font-weight: 500 !important;
-    white-space: nowrap;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s;
-    text-align: center;
-}
-
-.top-btn:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
-}
-/* 隐藏特定的按钮 */
-.header-top-buttons [onclick*="refreshCloudUsers"],
-.header-top-buttons [onclick*="manageGithubConfig"] {
-    display: none !important;
-}
-.top-btn.btn-info { background: var(--info-color) !important; color: white !important; }
-.top-btn.btn-warning { background: var(--warning-color) !important; color: white !important; }
-.top-btn.btn-secondary { background: var(--text-light) !important; color: white !important; }
-.top-btn.btn-primary { background: var(--primary-color) !important; color: white !important; }
-.top-btn.btn-danger { background: var(--danger-color) !important; color: white !important; }
-
-/* 主内容区 */
-.main-content {
-    padding: 6x;
-    width: 100%; /* 确保宽度100% */
-    box-sizing: border-box; /* 确保内边距包含在宽度内 */
-}
-
-/* 导入导出区域 */
-.import-export {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
-    padding: 16px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 8px var(--shadow-color);
-}
-
-.import-export h3 {
-    margin: 0 0 16px 0;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--border-color);
-    font-weight: 600;
-    color: var(--text-primary);
-    font-size: 16px;
-}
-
-/* 按钮网格布局 */
-.button-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    width: 100%;
-}
-
-/* 按钮行 - 修改：移除 display: none */
-.button-row {
-    display: flex;
-    gap: 10px;
-    width: 100%;
-}
-
-.button-row .btn {
-    flex: 1;
-    min-width: 0;
-    min-height: 44px;
-    font-size: 14px;
-    padding: 12px 8px;
-    font-weight: 500;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    line-height: 1.2;
-}
-
-/* 按钮样式 */
-.btn {
-    padding: 14px 16px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 15px;
-    font-weight: 600;
-    transition: all 0.3s;
-    text-align: center;
-    min-height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    width: 100%;
-    touch-action: manipulation;
-    box-sizing: border-box;
-}
-
-.btn-primary { background: var(--primary-color); color: white; }
-.btn-success { background: var(--success-color); color: white; }
-.btn-danger { background: var(--danger-color); color: white; }
-.btn-warning { background: var(--warning-color); color: white; }
-.btn-info { background: var(--info-color); color: white; }
-.btn-secondary { background: var(--text-light); color: white; }
-
-.btn:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
-}
-
-.btn:active {
-    transform: translateY(0);
-}
-
-/* 用户信息区域 */
-.user-info-section {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: var(--card-bg);
-    padding: 12px 16px;
-    border-radius: 8px;
-    margin-bottom: 16px;
-    border: 1px solid var(--border-color);
-    width: 100%; /* 添加宽度100% */
-    box-sizing: border-box; /* 确保内边距包含在宽度内 */
-}
-
-#currentUser {
-    font-weight: 500;
-    font-size: 14px;
-    color: var(--text-primary);
-}
-
-.logout-btn {
-    background: var(--danger-color);
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 500;
-    min-height: 36px;
-    cursor: pointer;
-}
-
-/* 添加工地按钮 */
-.add-site-btn {
-    background: var(--success-color);
-    color: white;
-    border: none;
-    padding: 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 20px;
-    width: 100%; /* 确保宽度100% */
-    transition: all 0.3s;
-    min-height: 50px;
-    display: block;
-    box-sizing: border-box;
-}
-
-.add-site-btn:hover {
-    background: #27ae60;
-}
-
-/* 工地卡片 */
-.site-list {
-    margin-bottom: 20px;
-    width: 100%; /* 确保宽度100% */
-}
-
-.site-card {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
-    padding: 16px;
-    margin-bottom: 12px;
-    cursor: pointer;
-    transition: all 0.3s;
-    box-shadow: 0 2px 8px var(--shadow-color);
-    position: relative;
-    display: block;
-    width: 100%; /* 确保宽度100% */
-    box-sizing: border-box; /* 确保内边距包含在宽度内 */
-}
-
-.site-card:active {
-    background: var(--bg-tertiary);
-    transform: scale(0.99);
-}
-
-.site-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 12px;
-}
-
-.site-name {
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--text-primary);
-    flex: 1;
-    padding-right: 10px;
-    word-break: break-word;
-}
-
-.site-card-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.site-status {
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-size: 11px;
-    font-weight: 500;
-    color: white;
-    white-space: nowrap;
-}
-
-.status-active { background: var(--success-color); }
-.status-delayed { background: var(--warning-color); }
-.status-completed { background: var(--text-light); }
-
-.site-delete-btn {
-    background: var(--danger-color);
-    color: white;
-    border: none;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-.site-info {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-    font-size: 13px;
-    color: var(--text-secondary);
-    margin-bottom: 12px;
-}
-
-.site-info > div {
-    background: var(--bg-tertiary);
-    padding: 6px 8px;
-    border-radius: 6px;
-    text-align: center;
-}
-
-/* 进度条 */
-.progress-bar {
-    width: 100%;
-    height: 20px;
-    background: var(--progress-bg);
-    border-radius: 10px;
-    overflow: hidden;
-    border: 1px solid var(--border-color);
-}
-
-.progress-fill {
-    height: 100%;
-    background: var(--progress-fill);
-    transition: width 0.3s ease-in-out;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 11px;
-    font-weight: 600;
-}
-
-/* 模态框 */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--bg-primary);
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    touch-action: pan-y;
-}
-
-.modal-content {
-    background: var(--modal-bg);
-    min-height: 100vh;
-    padding: 0;
-    position: relative;
-}
-
-.modal-header {
-    position: sticky;
-    top: 0;
-    background: var(--bg-primary);
-    padding: 16px;
-    border-bottom: 1px solid var(--border-color);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    z-index: 10;
-}
-
-.modal-header h3 {
-    color: var(--text-primary);
-    font-size: 18px;
-    font-weight: 600;
-    margin: 0;
-}
-
-.close-btn {
-    background: none;
-    border: none;
-    font-size: 28px;
-    cursor: pointer;
-    color: var(--text-light);
-    padding: 4px;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* 标签页 */
-.tabs-container {
-    position: sticky;
-    top: 56px;
-    background: var(--bg-primary);
-    z-index: 9;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.tabs-scroll-wrapper {
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    touch-action: pan-x;
-}
-
-.tabs-scroll-wrapper::-webkit-scrollbar {
-    display: none;
-}
-
-#siteTabs {
-    display: flex;
-    min-width: max-content;
-    padding: 0 16px;
-    background: var(--bg-primary);
-}
-
-.tab {
-    padding: 14px 16px;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text-secondary);
-    white-space: nowrap;
-    position: relative;
-    flex-shrink: 0;
-    border-bottom: 3px solid transparent;
-    transition: all 0.3s;
-    min-height: 48px;
-}
-
-.tab.active {
-    color: var(--primary-color);
-    border-bottom-color: var(--primary-color);
-    font-weight: 600;
-}
-
-.tab-content-wrapper {
-    padding: 16px;
-    padding-bottom: 30px;
-}
-
-.tab-content {
-    display: none;
-    padding: 0;
-    margin: 0;
-}
-
-.tab-content.active {
-    display: block;
-    animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-/* 表单组 */
-.form-group {
-    margin-bottom: 20px;
-    width: 100%;
-    display: block;
-    flex: 1;
-    min-width: 0;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: var(--text-primary);
-    font-size: 14px;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    font-size: 16px;
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    transition: border-color 0.3s;
-    min-height: 48px;
-    box-sizing: border-box;
-    display: block;
-    font-family: inherit;
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.1);
-}
-
-.form-group textarea {
-    resize: vertical;
-    min-height: 100px;
-}
-
-/* 表格优化 */
-.data-table-container {
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    margin-top: 20px;
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
-    position: relative;
-    background: var(--bg-primary);
-    display: block;
-}
-
-.data-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 12px;
-    min-width: 500px;
-    display: table;
-}
-
-.data-table th,
-.data-table td {
-    border-bottom: 1px solid var(--border-color);
-    text-align: left;
-    white-space: nowrap;
-    display: table-cell;
-    vertical-align: middle !important;
-    padding: 4px 3px !important;
-    height: auto !important;
-    min-height: 36px !important;
-    max-width: 120px;
-    color: var(--table-text);  /* 使用变量 */
-}
-
-.data-table th {
-    background: var(--bg-tertiary);
-    font-weight: 600;
-    color: var(--text-primary);
-    border-bottom: 2px solid var(--border-color);
-    position: sticky;
-    top: 0;
-    z-index: 1;
-}
-
-.data-table tr:last-child td {
-    border-bottom: none;
-}
-
-.data-table tr:hover td {
-    background: var(--bg-secondary);
-}
-
-/* 多行文本 */
-.multi-line {
-    white-space: normal !important;
-    word-break: break-word !important;
-    line-height: 1.4 !important;
-    max-height: 60px;
-    overflow-y: auto;
-    color: var(--table-text);  /* 使用变量 */
-}
-
-/* 操作按钮组 */
-.action-btns {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-}
-
-.action-btn {
-    padding: 6px 10px;
-    font-size: 12px;
-    font-weight: 500;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.3s;
-    white-space: nowrap;
-    min-height: 32px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.btn-success { background: var(--success-color); color: white; }
-.delete-btn { background: var(--danger-color); color: white; }
-.btn-primary { background: var(--primary-color); color: white; }
-
-.compact .action-btn {
-    padding: 4px 8px;
-    font-size: 11px;
-    min-height: 28px;
-}
-
-/* 图片预览 */
-.image-preview {
-    max-width: 80px;
-    max-height: 60px;
-    border-radius: 6px;
-    cursor: pointer;
-    border: 1px solid var(--border-color);
-    object-fit: cover;
-    display: block;
-}
-
-/* 文件上传 */
-.file-upload {
-    position: relative;
-    display: block;
-    cursor: pointer;
-    width: 100%;
-}
-
-.file-upload input[type=file] {
-    position: absolute;
-    opacity: 0;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-}
-
-.file-upload-label {
-    display: block;
-    padding: 20px;
-    background: var(--bg-primary);
-    border: 2px dashed var(--border-color);
-    border-radius: 8px;
-    text-align: center;
-    color: var(--text-secondary);
-    font-weight: 500;
-    font-size: 14px;
-    transition: all 0.3s;
-    min-height: 100px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.file-upload:hover .file-upload-label {
-    border-color: var(--primary-color);
-    color: var(--primary-color);
-    background: var(--bg-secondary);
-}
-
-/* 报价汇总 */
-.summary-section {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 16px;
-    margin-top: 20px;
-    display: block;
-}
-
-.summary-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 12px;
-    margin-top: 12px;
-}
-
-.summary-item {
-    text-align: center;
-    padding: 12px;
-    background: var(--bg-primary);
-    border-radius: 6px;
-    border: 1px solid var(--border-color);
-    display: block;
-}
-
-.summary-label {
-    font-size: 12px;
-    color: var(--text-secondary);
-    margin-bottom: 6px;
-    font-weight: 500;
-}
-
-.summary-value {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--text-primary);
-}
-
-.total-quote-display {
-    margin-top: 15px;
-    padding: 12px;
-    background: #e3f2fd;
-    border-radius: 8px;
-    text-align: center;
-}
-
-.total-quote-display div:first-child {
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.total-quote-display div:last-child {
-    font-size: 20px;
-    font-weight: bold;
-    color: #333;
-}
-
-/* 备注行 */
-.note-row {
-    background: var(--bg-tertiary) !important;
-}
-
-.note-cell {
-    padding: 12px !important;
-    border-top: 1px dashed var(--border-color) !important;
-}
-
-.note-display {
-    cursor: pointer;
-    padding: 6px;
-    border-radius: 6px;
-        font-size: 13px;
-    white-space: normal;
-    word-break: break-word;
-    background: var(--bg-primary);
-    border: 1px solid transparent;
-    color: var(--note-text);  /* 使用变量 */
-   
-    display: block;
-}
-
-.note-display:hover {
-    border-color: var(--border-color);
-}
-
-.note-edit-auto {
-    width: 100% !important;
-    padding: 10px !important;
-    border: 1px solid var(--primary-color) !important;
-    border-radius: 6px !important;
-    font-size: 14px !important;
-    line-height: 1.4 !important;
-    min-height: 60px !important;
-    background: var(--bg-primary) !important;
-    color: var(--text-primary) !important;
-    resize: vertical !important;
-    display: block;
-    box-sizing: border-box;
-}
-/* 加载图片按钮文字 */
-.photo-placeholder button,
-.photo-missing button,
-.file-placeholder button,
-.file-missing button {
-    color: var(--button-text);  /* 使用变量 */
-    background-color: var(--bg-tertiary);  /* 使用变量 */
-    border: 1px solid var(--border-color);  /* 使用变量 */
-}
-
-.photo-placeholder button:hover,
-.photo-missing button:hover,
-.file-placeholder button:hover,
-.file-missing button:hover {
-    background-color: var(--border-color);  /* 使用变量 */
-}
-
-/* 经验总结内容 */
-.experience-content {
-    color: var(--table-text);  /* 使用变量 */
-}
-
-/* 进度条填充色 - 深色模式下调整 */
-@media (prefers-color-scheme: dark) {
-    .progress-fill {
-        color: #ffffff;  /* 深色模式下进度文字改为白色 */
+// ==================== 权限系统初始化 ====================
+function initPermissionSystem() {
+    // 先加载本地权限配置
+    loadPermissionConfig();
+    
+    // 尝试从本地存储加载缓存的云端数据
+try {
+    const cachedData = localStorage.getItem('cloudUserData');
+    if (cachedData) {
+        const data = JSON.parse(cachedData);
+        const cacheTime = new Date(data.timestamp);
+        const now = new Date();
+        const hoursDiff = (now - cacheTime) / (1000 * 60 * 60);
+        
+        // 如果缓存是12小时内的，使用缓存
+        if (hoursDiff < 12) {
+            console.log('使用缓存的云端用户数据（12小时内）');
+            
+            // 只接受完整的yonghu.js格式数据
+            if (data.builtInUsers && data.PERMISSION_CONFIG) {
+                const cloudUsers = data.builtInUsers;
+                const localUsers = window.builtInUsers.filter(u => u.isLocal);
+                window.builtInUsers = [...localUsers, ...cloudUsers];
+                
+                window.PERMISSION_CONFIG = {
+                    ...data.PERMISSION_CONFIG,
+                    userPermissions: {
+                        ...data.PERMISSION_CONFIG.userPermissions
+                    }
+                };
+            }
+        } else {
+            console.log('缓存过期，需要重新加载云端数据');
+            localStorage.removeItem('cloudUserData');
+        }
     }
+} catch (e) {
+    console.warn('加载缓存用户数据失败:', e);
+    localStorage.removeItem('cloudUserData');
 }
-/* 确保深色模式下所有文字都能正常显示 */
-@media (prefers-color-scheme: dark) {
-    /* 表格相关文字 */
-    .data-table th,
-    .data-table td,
-    .multi-line,
-    .note-display,
-    .date-display,
-    .experience-content,
-    .change-log-content,
-    .summary-value,
-    .total-quote-display div:last-child,
-    .addremove-summary div {
-        color: #ffffff !important;
+    
+ 
+
+//////////////////////以下可能可删除///////////////////////////////////////////
+
+// 异步尝试从云端加载最新数据
+    setTimeout(async () => {
+        try {
+            console.log('开始异步加载云端用户数据...');
+            const loaded = await loadCloudUserData();
+            
+            if (loaded) {
+                console.log('云端账户数据已加载，可用账户:', window.builtInUsers.map(u => u.name));
+                
+                // 保存到本地存储
+                const cloudUsers = window.builtInUsers.filter(u => !u.isLocal);
+                localStorage.setItem('cloudUserData', JSON.stringify({
+                    builtInUsers: cloudUsers,
+                    PERMISSION_CONFIG: window.PERMISSION_CONFIG,
+                    timestamp: new Date().toISOString()
+                }));
+                
+                // 如果当前是测试用户登录，提示刷新
+                if (window.currentUser && window.currentUser.username === '1') {
+                    setTimeout(() => {
+                        if (confirm('云端账户数据已加载成功！\n\n是否刷新页面使用云端账户登录？')) {
+                            location.reload();
+                        }
+                    }, 2000);
+                }
+            } else {
+                console.log('云端数据加载失败，继续使用本地账户');
+            }
+        } catch (e) {
+            console.warn('异步加载云端数据失败:', e);
+        }
+    }, 3000);
+}
+//////////////////////以上可能可删除//////////////////////////////////////////////
+// 确保管理员有所有权限
+function ensureAdminPermissions() {
+    // 从 ADMIN_USERS 获取管理员列表
+    adminUsernames.forEach(username => {
+        if (PERMISSION_CONFIG.userPermissions[username]) {
+            const perms = PERMISSION_CONFIG.userPermissions[username].permissions;
+            // 确保管理员有所有权限
+            perms.refreshCloudUsers = true;
+            perms.showPermissionManager = true;
+            perms.viewLogs = true;
+            perms.showChangeLog = true;
+            perms.saveToJsFile = true;
+            perms.downloadJsonData = true;
+            perms.loadFromJsFile = true;
+            perms.loadImagesZipOnly = true;
+            perms.viewAllSites = true;
+            perms.deleteSite = true;
+            perms.addSite = true;
+            perms.addItems = true;
+            perms.deleteItems = true;
+            perms.editAll = true;
+            perms.editQuote = true;
+            perms.editTime = true;
+            perms.editStatus = true;
+            perms.exportData = true;
+            perms.importData = true;
+            perms.cloudSync = true;
+            // 添加管理员标志
+            perms.isAdmin = true;
+        }
+    });
+    // 另外检查所有 isAdmin 属性为 true 的用户
+    Object.keys(PERMISSION_CONFIG.userPermissions).forEach(username => {
+        const userPerms = PERMISSION_CONFIG.userPermissions[username];
+        if (userPerms && userPerms.permissions && userPerms.permissions.isAdmin === true) {
+            // 确保这些用户也有所有权限
+            const perms = userPerms.permissions;
+            perms.refreshCloudUsers = true;
+            perms.showPermissionManager = true;
+            // ... 设置所有权限为 true ...
+        }
+    });
+}
+// 修改 hasPermission 函数，确保它能在所有地方正确工作
+function hasPermission(permissionName) {
+    if (!currentUser) {
+        console.log('hasPermission: 没有当前用户');
+        return false;
     }
     
-    /* 按钮文字 */
-    .photo-placeholder button,
-    .photo-missing button,
-    .file-placeholder button,
-    .file-missing button {
-        color: #ffffff !important;
-        background-color: #555555 !important;
+    // 确保 currentUser 对象存在
+    if (!currentUser.username) {
+        console.log('hasPermission: 当前用户没有用户名');
+        return false;
     }
     
-    /* 标签页文字 */
-    .tab {
-        color: #cccccc !important;
+    // 使用新的 isAdmin 函数检查是否为管理员
+    if (isAdmin()) {
+        console.log(`hasPermission: ${currentUser.username} 是管理员，直接返回true`);
+        return true;
     }
     
-    .tab.active {
-        color: #ffffff !important;
-        border-bottom-color: #4361ee !important;
+    // 获取用户权限
+    const userPerms = PERMISSION_CONFIG.userPermissions[currentUser.username];
+    if (!userPerms) {
+        console.warn(`用户 ${currentUser.username} 没有权限配置`);
+        return false;
     }
     
-    /* 表单标签文字 */
-    .form-group label {
-        color: #cccccc !important;
+    const result = userPerms.permissions[permissionName] || false;
+    console.log(`hasPermission: ${currentUser.username} 的 ${permissionName} 权限: ${result}`);
+    return result;
+}
+
+// 确保 canShowPermissionManager 函数正确
+function canShowPermissionManager() {
+    const result = hasPermission('showPermissionManager');
+    console.log(`canShowPermissionManager: ${result} (用户: ${currentUser ? currentUser.username : '无'})`);
+    return result;
+}
+// 在DOMContentLoaded事件中调用
+document.addEventListener('DOMContentLoaded', function() {
+    // 等待主应用初始化完成后再初始化权限系统
+    setTimeout(function() {
+        if (typeof initPermissionSystem === 'function') {
+            initPermissionSystem();
+            // 确保管理员权限
+            setTimeout(ensureAdminPermissions, 1000);
+        }
+    }, 300);
+});
+// 添加 isAdmin 函数到全局
+function isAdmin() {
+    if (!currentUser) return false;
+    
+    // 方法1：检查用户对象的 isAdmin 属性
+    if (currentUser.isAdmin === true) {
+        return true;
     }
     
-    /* 工地卡片文字 */
-    .site-name,
-    .site-info > div {
-        color: #ffffff !important;
+    // 方法2：检查用户名是否在管理员列表中（向后兼容）
+    if (window.ADMIN_USERS && window.ADMIN_USERS.includes(currentUser.username)) {
+        return true;
     }
     
-    .site-info > div {
-        background-color: #444444 !important;
+    // 方法3：检查权限配置中的管理员标志
+    const userPerms = PERMISSION_CONFIG.userPermissions[currentUser.username];
+    if (userPerms && userPerms.permissions && userPerms.permissions.isAdmin === true) {
+        return true;
     }
     
-    /* 头部文字 */
-    .header-left h1 {
-        color: #ffffff !important;
-    }
+    return false;
 }
-
-
-/* 确保配置管理按钮在需要时显示 */
-.header-top-buttons [onclick*="manageGithubConfig"] {
-    display: inline-flex !important;
+// ==================== 新增权限检查函数 ====================
+function canRefreshCloudUsers() {
+    return hasPermission('refreshCloudUsers');
 }
 
 
 
-
-
-/* 只有在有权限时才显示 */
-.has-permission .permission-manager-btn,
-.has-permission .change-log-btn {
-    display: inline-flex !important;
-}
-/* 日期显示 */
-.date-display {
-    cursor: pointer;
-    padding: 4px 8px;
-    color: var(--table-text);  /* 使用变量 */
-    border-radius: 4px;
-    transition: background-color 0.2s;
-    display: inline-block;
-    min-width: 80px;
-    font-size: 13px;
+function canSaveToJsFile() {
+    return hasPermission('saveToJsFile');
 }
 
-.date-display:hover {
-    background-color: var(--bg-secondary);
-}
-/* GitHub Token 输入框样式 */
-#githubTokenInput {
-    letter-spacing: 1px;
-    font-family: 'Courier New', monospace;
+function canDownloadJsonData() {
+    return hasPermission('downloadJsonData');
 }
 
-/* 模态框样式 */
-.modal {
-    animation: fadeIn 0.3s ease;
+function canLoadFromJsFile() {
+    return hasPermission('loadFromJsFile');
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-.date-edit {
-    width: 100%;
-    padding: 6px 8px;
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    font-family: inherit;
-    font-size: 14px;
-    box-sizing: border-box;
-    display: inline-block;
+function canLoadImagesZipOnly() {
+    return hasPermission('loadImagesZipOnly');
 }
 
-/* 更改日志页面 */
-.change-log-page {
-    display: none;
-    position: relative;
-    width: 100%;
-    background: var(--bg-primary);
-    padding-bottom: 20px;
-}
+// 暴露到全局
+window.canRefreshCloudUsers = canRefreshCloudUsers;
+window.canShowPermissionManager = canShowPermissionManager;
+window.canSaveToJsFile = canSaveToJsFile;
+window.canDownloadJsonData = canDownloadJsonData;
+window.canLoadFromJsFile = canLoadFromJsFile;
+window.canLoadImagesZipOnly = canLoadImagesZipOnly;
 
-.change-log-content {
-    padding: 16px;
-    padding-bottom: 30px;
-}
-
-.change-log-item {
-    background: var(--card-bg);
-    border-left: 4px solid var(--primary-color);
-    padding: 12px;
-    margin-bottom: 12px;
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
-    display: block;
-    max-width: 100%;
-    word-break: break-word;
-}
-
-.change-log-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 6px;
-    font-weight: 600;
-    color: var(--text-primary);
-    font-size: 13px;
-}
-
-.change-log-time {
-    color: var(--text-light);
-    font-size: 11px;
-    font-weight: 500;
-}
-
-/* 经验总结项 */
-.experience-item {
-    background: var(--card-bg);
-    border-left: 4px solid var(--primary-color);
-    padding: 10px 12px;
-    margin-bottom: 8px;
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    min-height: auto;
-    max-height: none;
-}
-
-.experience-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 5px;
-    font-weight: 600;
-    color: var(--text-primary);
-    font-size: 13px;
-    flex: 1;
-}
-
-.experience-content {
-    color: var(--text-secondary);
-    line-height: 1.4;
-    white-space: pre-wrap;
-    font-size: 12px;
-    display: block;
-    padding: 0;
-    max-height: 60px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    flex: 1;
-    margin-right: 10px;
-}
-
-.experience-time {
-    color: var(--text-light);
-    font-size: 11px;
-    margin-left: 10px;
-}
-
-.experience-item .delete-btn {
-    padding: 4px 8px;
-    font-size: 11px;
-    min-height: 24px;
-    margin-left: 8px;
-}
-
-/* 增减项汇总 */
-.addremove-summary {
-    margin-top: 20px;
-    padding: 12px;
-    background: #f8f9fa;
-    border-radius: 8px;
-}
-
-.addremove-summary h5 {
-    margin-bottom: 8px;
-}
-
-.addremove-summary div {
-    font-size: 18px;
-    font-weight: bold;
-    color: #333;
-    text-align: center;
-}
-
-/* 图片查看器 */
-.image-viewer {
-    display: none;
-    position: fixed;
-    z-index: 2000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.95);
-    cursor: pointer;
-}
-
-.image-viewer img {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    max-width: 95%;
-    max-height: 95%;
-    border-radius: 8px;
-    object-fit: contain;
-    display: block;
-}
-
-.close-viewer {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    color: white;
-    font-size: 36px;
-    cursor: pointer;
-    z-index: 2001;
-    width: 44px;
-    height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* 手势返回锁定 */
-.back-gesture-lock {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: linear-gradient(135deg, #4361ee, #7209b7);
-    color: white;
-    padding: 12px 24px;
-    border-radius: 25px;
-    font-size: 12px;
-    font-weight: 500;
-    z-index: 9999;
-    display: none;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 6px 20px rgba(67, 97, 238, 0.3);
-}
-
-.back-gesture-lock.show {
-    display: block;
-    animation: fadeInOut 2s ease-in-out;
-}
-
-@keyframes fadeInOut {
-    0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
-    20% { opacity: 1; transform: translateX(-50%) translateY(0); }
-    80% { opacity: 1; transform: translateX(-50%) translateY(0); }
-    100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
-}
-
-/* 加载状态 */
-.loading {
-    text-align: center;
-    padding: 40px 20px;
-    color: var(--text-light);
-    font-size: 14px;
-    display: block;
-}
-
-.hidden {
-    display: none !important;
-}
-
-/* 状态下拉菜单 */
-.todo-status-select,
-.requirement-status-select,
-.repair-status-select {
-    padding: 4px 8px;
-    border-radius: 6px;
-    border: 1px solid var(--border-color);
-    font-size: 12px;
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    cursor: pointer;
-    min-width: 70px;
-    box-sizing: border-box;
-    display: inline-block;
-}
-
-/* 特殊列宽 */
-.status-col {
-    min-width: 70px;
-    max-width: 90px;
-}
-
-.unit-col {
-    min-width: 50px;
-    max-width: 70px;
-}
-
-.action-col {
-    min-width: 80px;
-    max-width: 120px;
-}
-
-/* 表单行布局 */
-.form-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    align-items: flex-end;
-    margin-bottom: 15px;
-    width: 100%;
-}
-
-.form-row .form-group {
-    flex: 1;
-    min-width: 0;
-    margin-bottom: 0;
-}
-
-.quote-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    align-items: flex-end;
-    margin-bottom: 15px;
-    width: 100%;
-}
-
-.quote-row .form-group {
-    flex: 1;
-    min-width: 0;
-    margin-bottom: 0;
-}
-
-/* 图片容器样式 */
-.photo-placeholder,
-.photo-missing,
-.file-placeholder,
-.file-missing {
-    text-align: center;
-    padding: 15px;
-    background: #f5f5f5;
-    border-radius: 8px;
-    height: 100px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.photo-missing,
-.file-missing {
-    background: #fff3e0;
-    border: 2px dashed #ff9800;
-}
-
-.file-missing {
-    background: #e3f2fd;
-    border: 2px dashed #2196f3;
-}
-
-.photo-container,
-.file-container {
-    position: relative;
-    width: 100%;
-    height: 100px;
-}
-
-.photo-container img,
-.file-container img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    border-radius: 6px;
-    background: #f5f5f5;
-    cursor: pointer;
-}
-
-.file-container.non-image {
-    background: #f5f5f5;
-    border-radius: 8px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
-}
-
-.image-change-btn {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    padding: 3px 6px;
-    font-size: 10px;
-    background: rgba(255, 152, 0, 0.9);
-    color: white;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-    z-index: 10;
-}
-
-/* ==================== 移动端特定优化 ==================== */
-@media (max-width: 768px) {
-    .header-left > span {
-        display: none;
+// 检查工地访问权限
+function canViewSite(siteId) {
+    if (!currentUser) return false;
+    
+    if (hasPermission('viewAllSites')) {
+        return true;
     }
     
-    .header-top-buttons {
-        gap: 6px;
+    const userPerms = PERMISSION_CONFIG.userPermissions[currentUser.username];
+    if (!userPerms) return false;
+    
+    return userPerms.permissions.allowedSites?.includes(siteId) || false;
+}
+
+// 检查标签页访问权限
+function canViewTab(tabId) {
+    if (!currentUser) return false;
+    
+    if (hasPermission('viewAllTabs')) {
+        return true;
     }
     
-    .top-btn {
-        padding: 8px 10px !important;
-        font-size: 11px !important;
-        min-height: 32px !important;
+    const userPerms = PERMISSION_CONFIG.userPermissions[currentUser.username];
+    if (!userPerms) return false;
+    
+    return userPerms.permissions.allowedTabs?.includes(tabId) || false;
+}
+
+// 获取用户可访问的标签页
+function getAllowedTabs() {
+    if (!currentUser) return [];
+    
+    if (hasPermission('viewAllTabs')) {
+        return PERMISSION_CONFIG.availableTabs;
     }
     
-    .button-row .btn {
-        font-size: 13px;
-        padding: 10px 6px;
-        min-height: 40px;
+    const userPerms = PERMISSION_CONFIG.userPermissions[currentUser.username];
+    if (!userPerms || !userPerms.permissions.allowedTabs) {
+        return [];
     }
     
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-        font-size: 16px;
-        padding: 12px;
-    }
-    
-    .data-table {
-        font-size: 11px;
-        min-width: 450px;
-    }
-    
-    .data-table th,
-    .data-table td {
-        padding: 3px 2px !important;
-        min-height: 32px !important;
-        color: var(--table-text);  /* 使用变量 */
-    }
-    
-    .image-preview {
-        max-width: 60px;
-        max-height: 45px;
-    }
-    
-    .tab {
-        padding: 12px 14px;
-        font-size: 13px;
-    }
-    
-    .action-btn {
-        padding: 5px 8px;
-        font-size: 11px;
-        min-height: 30px;
-    }
-    
-    .progress-bar {
-        height: 18px;
-    }
-    
-    .site-info {
-        grid-template-columns: repeat(2, 1fr);
-        font-size: 12px;
-    }
-    
-    .file-upload-label {
-        padding: 16px;
-        font-size: 13px;
-        min-height: 80px;
-    }
-    
-    .import-export h3 {
-        font-size: 15px;
-    }
-    
-    /* 支出页面响应式 */
-    .expense-row {
-        flex-wrap: wrap;
-    }
-    
-    .expense-row .form-group {
-        flex: 0 0 calc(50% - 4px) !important;
-    }
-    
-    /* 表单行响应式 */
-    .form-row,
-    .quote-row {
-        flex-wrap: wrap;
-    }
-    
-    .form-row .form-group {
-        flex: 0 0 calc(50% - 5px);
-    }
-    
-    .quote-row .form-group {
-        flex: 0 0 calc(50% - 5px);
-    }
-    
-    /* 经验总结移动端优化 */
-    .experience-item {
-        padding: 8px 10px;
-        margin-bottom: 6px;
-    }
-    
-    .experience-header {
-        font-size: 12px;
-        margin-bottom: 4px;
-    }
-    
-    .experience-content {
-        font-size: 11px;
-        line-height: 1.3;
-        max-height: 50px;
-    }
-    
-    .experience-time {
-        font-size: 10px;
-    }
-    
-    .experience-item .delete-btn {
-        padding: 3px 6px;
-        font-size: 10px;
-        min-height: 22px;
+    return PERMISSION_CONFIG.availableTabs.filter(tab => 
+        userPerms.permissions.allowedTabs.includes(tab.id)
+    );
+}
+
+// ==================== 权限配置管理 ====================
+function loadPermissionConfig() {
+    try {
+        const savedConfig = localStorage.getItem('permission_config');
+        if (savedConfig) {
+            const config = JSON.parse(savedConfig);
+            PERMISSION_CONFIG.userPermissions = config.userPermissions || {};
+            console.log('权限配置已加载');
+        }
+    } catch (e) {
+        console.warn('加载权限配置失败:', e);
     }
 }
 
-/* 平板优化 */
-@media (min-width: 769px) and (max-width: 1024px) {
-    .container {
-        max-width: 100%;
-        margin: 0 auto;
+function savePermissionConfig() {
+    try {
+        localStorage.setItem('permission_config', JSON.stringify({
+            userPermissions: PERMISSION_CONFIG.userPermissions,
+            lastModified: new Date().toISOString()
+        }));
+    } catch (e) {
+        console.error('保存权限配置失败:', e);
+    }
+}
+// ==================== 权限模板 ====================
+function getTemplateByType(templateType, username) {
+    const templates = {
+        // 超级管理员：全部权限
+        'admin': {
+            name: '超级管理员',
+            description: '所有权限',
+            permissions: {
+                // 1. 刷新云端账户，权限管理，更改日志
+                isAdmin: true,  // 添加这一行
+                refreshCloudUsers: true,
+                showPermissionManager: true,
+                showChangeLog: true,
+                
+                // 2. 备份完整数据，下载json数据
+                saveToJsFile: true,
+                downloadJsonData: true,
+                
+                // 3. 从文件加载，加载图片包
+                loadFromJsFile: true,
+                loadImagesZipOnly: true,
+                
+                // 4. 所有工地删除
+                deleteSite: true,
+                deleteItems: true,
+                
+                // 5. 所有工地增加
+                addSite: true,
+                
+                // 6. 所有项目的添加
+                addItems: true,
+                
+                // 7. 所有项目的删除和状态变更
+                deleteItems: true,
+                editAll: true,
+                
+                // 8. 指定页面的打开权限 (通过allowedTabs控制)
+                viewAllSites: true,
+                viewAllTabs: true,
+                
+                // 10. 导入数据
+                importData: true,
+                
+                // 11. 导出数据
+                exportData: true,
+                
+                // 12. 云端同步
+                cloudSync: true,
+                
+                allowedSites: [],
+                allowedTabs: ['progressTab', 'todoTab', 'expenseTab', 'requirementTab', 'repairTab', 
+                             'workerTab', 'quoteTab', 'addRemoveTab', 'drawingTab', 'experienceTab']
+            }
+        },
+        
+        // 项目经理/监理
+        'manager': {
+            name: '项目经理',
+            description: '项目管理权限',
+            permissions: {
+                // 1. 刷新云端账户，权限管理，更改日志
+                refreshCloudUsers: false,
+                showPermissionManager: false,
+                showChangeLog: false,
+                
+                // 2. 备份完整数据，下载json数据
+                saveToJsFile: false,
+                downloadJsonData: false,
+                
+                // 3. 从文件加载，加载图片包
+                loadFromJsFile: true,
+                loadImagesZipOnly: true,
+                
+                // 4. 所有工地删除
+                deleteSite: false,
+                deleteItems: false,
+                
+                // 5. 所有工地增加
+                addSite: true,
+                
+                // 6. 所有项目的添加
+                addItems: true,
+                
+                // 7. 所有项目的删除和状态变更
+                deleteItems: false,
+                editAll: false,
+                
+                // 8. 指定页面的打开权限
+                viewAllSites: false,
+                viewAllTabs: false,
+                allowedSites: [],
+                allowedTabs: ['progressTab', 'todoTab', 'expenseTab', 'requirementTab', 'repairTab', 
+                             'workerTab', 'addRemoveTab', 'drawingTab', 'experienceTab'],
+                
+                // 10. 导入数据
+                importData: true,
+                
+                // 11. 导出数据
+                exportData: false,
+                
+                // 12. 云端同步
+                cloudSync: true
+            }
+        },
+        
+        // 财务
+        'accountant': {
+            name: '财务',
+            description: '财务权限',
+            permissions: {
+                // 1. 刷新云端账户，权限管理，更改日志
+                refreshCloudUsers: false,
+                showPermissionManager: false,
+                showChangeLog: false,
+                
+                // 2. 备份完整数据，下载json数据
+                saveToJsFile: false,
+                downloadJsonData: false,
+                
+                // 3. 从文件加载，加载图片包
+                loadFromJsFile: true,
+                loadImagesZipOnly: true,
+                
+                // 4. 所有工地删除
+                deleteSite: false,
+                deleteItems: false,
+                
+                // 5. 所有工地增加
+                addSite: false,
+                
+                // 6. 所有项目的添加
+                addItems: true,
+                
+                // 7. 所有项目的删除和状态变更
+                deleteItems: false,
+                editAll: false,
+                
+                // 8. 指定页面的打开权限
+                viewAllSites: false,
+                viewAllTabs: false,
+                allowedSites: [],
+                allowedTabs: ['progressTab', 'expenseTab', 'workerTab', 'quoteTab', 'addRemoveTab', 'drawingTab'],
+                
+                // 10. 导入数据
+                importData: true,
+                
+                // 11. 导出数据
+                exportData: false,
+                
+                // 12. 云端同步
+                cloudSync: true
+            }
+        },
+        
+        // 工人代表
+        'worker': {
+            name: '工人',
+            description: '工人权限',
+            permissions: {
+                // 1. 刷新云端账户，权限管理，更改日志
+                refreshCloudUsers: false,
+                showPermissionManager: false,
+                showChangeLog: false,
+                
+                // 2. 备份完整数据，下载json数据
+                saveToJsFile: false,
+                downloadJsonData: false,
+                
+                // 3. 从文件加载，加载图片包
+                loadFromJsFile: true,
+                loadImagesZipOnly: true,
+                
+                // 4. 所有工地删除
+                deleteSite: false,
+                deleteItems: false,
+                
+                // 5. 所有工地增加
+                addSite: false,
+                
+                // 6. 所有项目的添加
+                addItems: false,
+                
+                // 7. 所有项目的删除和状态变更
+                deleteItems: false,
+                editAll: false,
+                
+                // 8. 指定页面的打开权限
+                viewAllSites: false,
+                viewAllTabs: false,
+                allowedSites: [],
+                allowedTabs: ['progressTab', 'requirementTab', 'workerTab'],
+                
+                // 10. 导入数据
+                importData: true,
+                
+                // 11. 导出数据
+                exportData: false,
+                
+                // 12. 云端同步
+                cloudSync: true
+            }
+        },
+        
+        // 客户
+        'kehu': {
+            name: '客户',
+            description: '客户查看权限',
+            permissions: {
+                // 1. 刷新云端账户，权限管理，更改日志
+                refreshCloudUsers: false,
+                showPermissionManager: false,
+                showChangeLog: false,
+                
+                // 2. 备份完整数据，下载json数据
+                saveToJsFile: false,
+                downloadJsonData: false,
+                
+                // 3. 从文件加载，加载图片包
+                loadFromJsFile: true,
+                loadImagesZipOnly: true,
+                
+                // 4. 所有工地删除
+                deleteSite: false,
+                deleteItems: false,
+                
+                // 5. 所有工地增加
+                addSite: false,
+                
+                // 6. 所有项目的添加
+                addItems: true,
+                
+                // 7. 所有项目的删除和状态变更
+                deleteItems: false,
+                editAll: false,
+                
+                // 8. 指定页面的打开权限
+                viewAllSites: false,
+                viewAllTabs: false,
+                allowedSites: [],
+                allowedTabs: ['progressTab','todoTab', 'requirementTab','repairTab', 'drawingTab'],
+                
+                // 10. 导入数据
+                importData: true,
+                
+                // 11. 导出数据
+                exportData: false,
+                
+                // 12. 云端同步
+                cloudSync: true
+            }
+        },
+        
+        // 测试用户/默认用户
+        'test': {
+            name: '测试用户',
+            description: '测试权限',
+            permissions: {
+                // 1. 刷新云端账户，权限管理，更改日志
+                refreshCloudUsers: false,
+                showPermissionManager: false,
+                showChangeLog: false,
+                
+                // 2. 备份完整数据，下载json数据
+                saveToJsFile: false,
+                downloadJsonData: false,
+                
+                // 3. 从文件加载，加载图片包
+                loadFromJsFile: true,
+                loadImagesZipOnly: true,
+                
+                // 4. 所有工地删除
+                deleteSite: false,
+                deleteItems: false,
+                
+                // 5. 所有工地增加
+                addSite: false,
+                
+                // 6. 所有项目的添加
+                addItems: true,
+                
+                // 7. 所有项目的删除和状态变更
+                deleteItems: false,
+                editAll: false,
+                
+                // 8. 指定页面的打开权限（只能访问site001）
+                viewAllSites: false,
+                viewAllTabs: false,
+                allowedSites: ['site001'],
+                allowedTabs: ['progressTab', 'todoTab', 'expenseTab', 'requirementTab', 'repairTab', 
+                             'workerTab', 'quoteTab', 'addRemoveTab', 'drawingTab', 'experienceTab'],
+                
+                // 10. 导入数据
+                importData: true,
+                
+                // 11. 导出数据
+                exportData: false,
+                
+                // 12. 云端同步
+                cloudSync: false
+            }
+        }
+    };
+    
+    return templates[templateType] || templates['test']; // 默认使用测试用户权限
+}
+// ==================== 权限管理界面 ====================
+function showPermissionManager() {
+    if (!isAdmin()) {
+        alert('只有管理员可以管理权限！');
+        return;
     }
     
-    .modal-content {
-        max-width: 90%;
-        margin: 40px auto;
-        max-height: 90vh;
-        min-height: auto;
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.style.cssText = `
+        display: flex;
+        position: fixed;
+        z-index: 2000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.7);
+        justify-content: center;
+        align-items: center;
+    `;
+    
+    modal.innerHTML = `
+        <div class="modal-content" style="width: 900px; max-height: 90vh; overflow-y: auto;">
+            <div class="modal-header">
+                <h3>用户权限管理</h3>
+                <button class="close-btn" onclick="this.closest('.modal').remove()">&times;</button>
+            </div>
+            <div style="padding: 20px;">
+                <div style="margin-bottom: 20px;">
+                    <h4>权限配置操作</h4>
+                    <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
+                        <button class="btn btn-primary" id="exportPermissionBtn">导出/上传权限配置</button>
+                        <button class="btn btn-success" id="addUserBtn">添加用户</button>
+                        <button class="btn btn-info" onclick="refreshCloudUsers()">刷新云端账户</button>
+                    </div>
+                    <p style="color: #666; font-size: 14px; margin-top: 10px;">
+                        <strong>导出/上传权限配置：</strong>
+                        - 可选择上传到云端直接替换 yonghu.js<br>
+                        - 或下载到本地备份<br>
+                        - 文件包含所有用户和权限配置
+                    </p>
+                </div>
+                
+                <div id="permissionUserList" style="margin-bottom: 20px;">
+                    <!-- 用户列表会动态生成 -->
+                </div>
+                
+                <div style="text-align: right;">
+                    <button class="btn btn-secondary" id="closePermissionManager">关闭</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    renderPermissionUserList();
+    
+    // 绑定按钮事件
+    document.getElementById('exportPermissionBtn').addEventListener('click', exportPermissionConfig);
+    document.getElementById('addUserBtn').addEventListener('click', showAddUserModal);
+    document.getElementById('closePermissionManager').addEventListener('click', () => {
+        modal.remove();
+    });
+}
+
+function renderPermissionUserList() {
+    const container = document.getElementById('permissionUserList');
+    if (!container) return;
+    
+    let html = '<h4>用户权限配置</h4>';
+    html += '<div style="overflow-x: auto;">';
+    html += '<table style="width: 100%; border-collapse: collapse;">';
+    html += '<thead><tr>';
+    html += '<th style="padding: 10px; border: 1px solid #ddd;">用户名</th>';
+    html += '<th style="padding: 10px; border: 1px solid #ddd;">姓名</th>';
+    html += '<th style="padding: 10px; border: 1px solid #ddd;">权限模板</th>';
+    html += '<th style="padding: 10px; border: 1px solid #ddd;">可访问工地</th>';
+    html += '<th style="padding: 10px; border: 1px solid #ddd;">操作</th>';
+    html += '</tr></thead><tbody>';
+    
+    window.builtInUsers.forEach(user => {
+        const userPerms = window.PERMISSION_CONFIG.userPermissions[user.username] || getDefaultTemplate(user.username);
+        
+        html += `<tr>
+            <td style="padding: 10px; border: 1px solid #ddd;">${user.username}</td>
+            <td style="padding: 10px; border: 1px solid #ddd;">${user.name}</td>
+            <td style="padding: 10px; border: 1px solid #ddd;">${userPerms.name || '自定义'}</td>
+            <td style="padding: 10px; border: 1px solid #ddd;">
+                ${userPerms.permissions.allowedSites ? userPerms.permissions.allowedSites.length + '个限制工地' : '所有工地'}
+            </td>
+            <td style="padding: 10px; border: 1px solid #ddd;">
+                <button class="btn btn-sm btn-primary" onclick="editUserPermissions('${user.username}')" style="margin-left: 0px;margin-left: 1px;">编辑</button>
+                ${user.username !== 'qiyu' ? `<button class="btn btn-sm btn-danger" onclick="deleteUser('${user.username}')" style="margin-left: 1px;">删除</button>` : ''}
+            </td>
+        </tr>`;
+    });
+    
+    html += '</tbody></table></div>';
+    container.innerHTML = html;
+}
+
+function showAddUserModal() {
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.style.cssText = `
+        display: flex;
+        position: fixed;
+        z-index: 2002;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.7);
+        justify-content: center;
+        align-items: center;
+    `;
+    
+    modal.innerHTML = `
+        <div class="modal-content" style="width: 500px; max-height: 90vh; overflow-y: auto;">
+            <div class="modal-header">
+                <h3>添加新用户</h3>
+                <button class="close-btn" onclick="this.closest('.modal').remove()">&times;</button>
+            </div>
+            <div style="padding: 20px;">
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">用户名：</label>
+                    <input type="text" id="newUsername" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;" 
+                           placeholder="只能使用字母、数字和下划线">
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">姓名：</label>
+                    <input type="text" id="newName" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;" 
+                           placeholder="显示姓名">
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">密码：</label>
+                    <input type="password" id="newPassword" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;" 
+                           placeholder="最少4位">
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">确认密码：</label>
+                    <input type="password" id="confirmPassword" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">权限模板：</label>
+                    <select id="userTemplate" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                        <option value="manager">项目经理</option>
+                        <option value="supervisor">监理</option>
+                        <option value="designer">设计师</option>
+                        <option value="accountant">财务</option>
+                        <option value="worker">工人</option>
+                        <option value="kehu">客户</option>
+                        <option value="custom">自定义</option>
+                    </select>
+                </div>
+                
+                <div id="customPermissions" style="display: none; margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 5px;">
+                    <h5 style="margin-bottom: 10px;">自定义权限</h5>
+                    <div style="margin-bottom: 10px;">
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="perm_viewAllSites">
+                            查看所有工地
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="perm_addSite">
+                            添加工地
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="perm_deleteSite">
+                            删除工地
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="perm_editAll">
+                            编辑所有内容
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="perm_exportData">
+                            导出数据
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="perm_importData">
+                            导入数据
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="perm_viewLogs">
+                            查看日志
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="perm_cloudSync">
+                            云端同步
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="perm_editQuote">
+                            编辑报价
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="perm_deleteItems">
+                            删除分页项目
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="perm_viewAllTabs">
+                            查看所有标签页
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="perm_addItems">
+                            添加分页项目
+                        </label>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px; text-align: right;">
+                    <button class="btn btn-primary" onclick="saveNewUser()">保存用户</button>
+                    <button class="btn btn-secondary" onclick="this.closest('.modal').remove()">取消</button>
+                </div>
+                
+                <div id="addUserError" style="color: #dc3545; margin-top: 10px; display: none;"></div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    document.getElementById('userTemplate').addEventListener('change', function() {
+        const customDiv = document.getElementById('customPermissions');
+        if (this.value === 'custom') {
+            customDiv.style.display = 'block';
+        } else {
+            customDiv.style.display = 'none';
+        }
+    });
+}
+
+function saveNewUser() {
+    const username = document.getElementById('newUsername').value.trim();
+    const name = document.getElementById('newName').value.trim();
+    const password = document.getElementById('newPassword').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    const template = document.getElementById('userTemplate').value;
+    const errorDiv = document.getElementById('addUserError');
+    
+    // 验证输入
+    if (!username || !name || !password) {
+        errorDiv.textContent = '请填写所有必填项！';
+        errorDiv.style.display = 'block';
+        return;
     }
     
-    .tabs-container {
-        position: static;
+    if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+        errorDiv.textContent = '用户名只能包含字母、数字和下划线！';
+        errorDiv.style.display = 'block';
+        return;
     }
     
-    .top-btn {
-        padding: 10px 14px !important;
-        font-size: 13px !important;
+    if (builtInUsers.find(u => u.username === username)) {
+        errorDiv.textContent = '用户名已存在！';
+        errorDiv.style.display = 'block';
+        return;
+    }
+    
+    if (password.length < 4) {
+        errorDiv.textContent = '密码最少需要4位！';
+        errorDiv.style.display = 'block';
+        return;
+    }
+    
+    if (password !== confirmPassword) {
+        errorDiv.textContent = '两次输入的密码不一致！';
+        errorDiv.style.display = 'block';
+        return;
+    }
+    
+    // 添加用户到 builtInUsers
+    builtInUsers.push({
+        username: username,
+        password: password,
+        name: name
+    });
+    
+    // 设置权限配置
+    if (template === 'custom') {
+        // 自定义权限...
+    } else {
+        const templatePermissions = getTemplateByType(template, username);
+        PERMISSION_CONFIG.userPermissions[username] = {
+            name: name,
+            description: templatePermissions.description,
+            permissions: { ...templatePermissions.permissions }
+        };
+    }
+    
+    savePermissionConfig();
+    document.querySelector('.modal').remove();
+    
+    const userListModal = document.querySelector('.modal');
+    if (userListModal) {
+        renderPermissionUserList();
+    }
+    
+    showSimpleToast('用户添加成功！');
+}
+
+function deleteUser(username) {
+    if (!isAdmin()) {
+        alert('只有管理员可以删除用户！');
+        return;
+    }
+    
+    if (username === 'qiyu') {
+        alert('不能删除管理员账户！');
+        return;
+    }
+    
+    const user = builtInUsers.find(u => u.username === username);
+    if (!user) return;
+    
+    if (!confirm(`确定要删除用户 "${user.name} (${username})" 吗？此操作不可恢复！`)) {
+        return;
+    }
+    
+    // 从 builtInUsers 中删除
+    const userIndex = builtInUsers.findIndex(u => u.username === username);
+    if (userIndex > -1) {
+        builtInUsers.splice(userIndex, 1);
+    }
+    
+    // 从权限配置中删除
+    if (PERMISSION_CONFIG.userPermissions[username]) {
+        delete PERMISSION_CONFIG.userPermissions[username];
+    }
+    
+    // 如果当前用户被删除，强制登出
+    if (currentUser && currentUser.username === username) {
+        logout();
+    }
+    
+    savePermissionConfig();
+    
+    const modal = document.querySelector('.modal');
+    if (modal) {
+        renderPermissionUserList();
+    }
+    
+    showSimpleToast('用户删除成功！');
+}
+// ==================== 权限管理界面 ====================
+function editUserPermissions(username) {
+    const user = builtInUsers.find(u => u.username === username);
+    if (!user) return;
+    
+    const userPerms = PERMISSION_CONFIG.userPermissions[username] || getDefaultTemplate(username);
+    
+    // 删除或注释掉这行代码
+    // loadSitesFromStorage(); // 这行有问题，直接删除或注释掉
+    
+    // 直接使用已有的工地数据逻辑
+    // 尝试从多个来源获取工地数据
+    let siteList = [];
+    
+    // 来源1：全局变量 window.sites
+    if (window.sites && Array.isArray(window.sites)) {
+        siteList = window.sites;
+    } 
+    // 来源2：从 localStorage 加载
+    else {
+        try {
+            const savedSites = localStorage.getItem('constructionSites');
+            if (savedSites) {
+                siteList = JSON.parse(savedSites);
+            }
+        } catch (e) {
+            console.warn('从localStorage加载工地数据失败:', e);
+        }
+    }
+    
+    // 如果有工地数据，继续显示模态框
+    const modal = document.createElement('div');
+    
+    modal.className = 'modal';
+    modal.style.cssText = `
+        display: flex;
+        position: fixed;
+        z-index: 2001;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.7);
+        justify-content: center;
+        align-items: center;
+    `;
+    
+    modal.innerHTML = `
+        <div class="modal-content" style="width: 800px; max-height: 90vh; overflow-y: auto;">
+            <div class="modal-header">
+                <h3>编辑权限 - ${user.name} (${username})</h3>
+                <button class="close-btn" onclick="this.closest('.modal').remove()">&times;</button>
+            </div>
+            <div style="padding: 20px;">
+                <div style="margin-bottom: 20px;">
+                    <h4>用户权限配置</h4>
+                    <p style="color: #666; font-size: 14px; margin-top: 5px;">
+                        当前用户：${user.name} (${username})<br>
+                        每个用户都有独立的权限配置
+                    </p>
+                </div>
+                
+                <div id="permissionControls" style="margin-bottom: 20px;"></div>
+                
+                <div id="siteSelection" style="margin-bottom: 20px; display: ${userPerms.permissions.viewAllSites ? 'none' : 'block'}">
+                    <h4>选择可访问工地</h4>
+                    <p style="color: #666; font-size: 12px; margin-bottom: 10px;">
+                        选择该用户可以访问的工地。如果未选中任何工地，则无法查看任何工地。
+                    </p>
+                    <div style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; border-radius: 5px; background: #f9f9f9;">
+                        <div id="siteCheckboxes"></div>
+                    </div>
+                </div>
+                
+                <div id="tabSelection" style="margin-bottom: 20px; display: ${userPerms.permissions.viewAllTabs ? 'none' : 'block'}">
+                    <h4>选择可访问标签页</h4>
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px; border: 1px solid #ddd; padding: 10px; border-radius: 5px;">
+                        ${PERMISSION_CONFIG.availableTabs.map(tab => `
+                            <label style="display: flex; align-items: center; gap: 5px; padding: 5px 10px; background: #f5f5f5; border-radius: 4px;">
+                                <input type="checkbox" name="allowedTabs" value="${tab.id}" 
+                                    ${userPerms.permissions.allowedTabs?.includes(tab.id) ? 'checked' : ''}>
+                                ${tab.name}
+                            </label>
+                        `).join('')}
+                    </div>
+                </div>
+                
+                <div style="text-align: right; margin-top: 20px;">
+                    <button class="btn btn-primary" onclick="saveUserPermissions('${username}')">保存</button>
+                    <button class="btn btn-secondary" onclick="this.closest('.modal').remove()">取消</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // 等待DOM渲染完成后渲染控件
+    setTimeout(() => {
+        renderPermissionControls(username, userPerms);
+        renderSiteCheckboxes(username, userPerms);
+    }, 50);
+}
+
+function renderPermissionControls(username, permissions) {
+    const container = document.getElementById('permissionControls');
+    if (!container) return;
+    
+    const controls = [
+        { id: 'viewAllSites', label: '查看所有工地' },
+        { id: 'addSite', label: '添加工地' },
+        { id: 'deleteSite', label: '删除工地' },
+        { id: 'editAll', label: '编辑所有内容' },
+        { id: 'exportData', label: '导出数据' },
+        { id: 'importData', label: '导入数据' },
+        { id: 'viewLogs', label: '查看日志' },
+        { id: 'cloudSync', label: '云端同步' },
+        { id: 'editQuote', label: '编辑报价' },
+        { id: 'deleteItems', label: '删除项目' },
+        { id: 'viewAllTabs', label: '查看所有标签页' },
+        { id: 'addItems', label: '添加项目' }
+    ];
+    
+   let html = '<h4>详细权限设置</h4>';
+    html += '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px;">';
+     // 添加管理员选项
+    html += `
+        <label style="display: flex; align-items: center; gap: 5px; padding: 5px; background: #f5f5f5; border-radius: 4px; color: #d32f2f; font-weight: bold;">
+            <input type="checkbox" name="isAdmin" 
+                ${permissions.permissions.isAdmin ? 'checked' : ''}
+                onchange="updatePermissionValue('${username}', 'isAdmin', this.checked)">
+            设为系统管理员
+        </label>
+    `;
+    controls.forEach(control => {
+        html += `
+            <label style="display: flex; align-items: center; gap: 5px; padding: 5px; background: #f5f5f5; border-radius: 4px;">
+                <input type="checkbox" name="${control.id}" 
+                    ${permissions.permissions[control.id] ? 'checked' : ''}
+                    onchange="updatePermissionValue('${username}', '${control.id}', this.checked)">
+                ${control.label}
+            </label>
+        `;
+    });
+    
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+function updatePermissionValue(username, permission, value) {
+    if (!PERMISSION_CONFIG.userPermissions[username]) {
+        PERMISSION_CONFIG.userPermissions[username] = JSON.parse(JSON.stringify(getDefaultTemplate(username)));
+    }
+    
+    PERMISSION_CONFIG.userPermissions[username].permissions[permission] = value;
+    
+    const siteSelection = document.getElementById('siteSelection');
+    const tabSelection = document.getElementById('tabSelection');
+    
+    if (permission === 'viewAllSites' && siteSelection) {
+        siteSelection.style.display = value ? 'none' : 'block';
+    }
+    
+    if (permission === 'viewAllTabs' && tabSelection) {
+        tabSelection.style.display = value ? 'none' : 'block';
+    }
+}
+function renderSiteCheckboxes(username, permissions) {
+    const container = document.getElementById('siteCheckboxes');
+    if (!container) return;
+    
+    // 尝试从多个来源获取工地数据
+    let siteList = [];
+    
+    // 来源1：全局变量 window.sites
+    if (window.sites && Array.isArray(window.sites)) {
+        siteList = window.sites;
+    } 
+    // 来源2：从 localStorage 加载
+    else {
+        try {
+            const savedSites = localStorage.getItem('constructionSites');
+            if (savedSites) {
+                siteList = JSON.parse(savedSites);
+            }
+        } catch (e) {
+            console.warn('从localStorage加载工地数据失败:', e);
+        }
+    }
+    
+    // 如果还是没有数据，显示提示
+    if (siteList.length === 0) {
+        container.innerHTML = `
+            <div style="text-align: center; padding: 20px; color: #666;">
+                <div style="margin-bottom: 10px;">暂无工地数据</div>
+                <small style="font-size: 12px;">
+                    请先添加工地，或刷新页面后重试
+                </small>
+            </div>
+        `;
+        return;
+    }
+    
+    // 渲染工地复选框
+    let html = '<div style="display: flex; flex-direction: column; gap: 5px;">';
+    
+    siteList.forEach(site => {
+        const isChecked = permissions.permissions.allowedSites?.includes(site.id) || false;
+        const siteName = site.name || `未命名工地 (${site.id})`;
+        
+        html += `
+            <label style="display: flex; align-items: center; gap: 8px; padding: 5px 10px; border: 1px solid #eee; border-radius: 4px; cursor: pointer;">
+                <input type="checkbox" name="allowedSites" value="${site.id}" 
+                    ${isChecked ? 'checked' : ''}
+                    style="margin: 0;">
+                <span style="flex: 1; font-size: 14px;">${siteName}</span>
+                <span style="font-size: 12px; color: #666;">${site.id}</span>
+            </label>
+        `;
+    });
+    
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+function saveUserPermissions(username) {
+    if (!PERMISSION_CONFIG.userPermissions[username]) {
+        PERMISSION_CONFIG.userPermissions[username] = {
+            name: builtInUsers.find(u => u.username === username)?.name || username,
+            description: '独立权限配置',
+            permissions: {
+                viewAllSites: false,
+                addSite: false,
+                deleteSite: false,
+                editAll: false,
+                exportData: false,
+                importData: false,
+                viewLogs: false,
+                cloudSync: false,
+                editQuote: false,
+                deleteItems: false,
+                viewAllTabs: false,
+                addItems: false,
+                allowedSites: [],
+                allowedTabs: []
+            }
+        };
+    }
+    
+    const siteCheckboxes = document.querySelectorAll('input[name="allowedSites"]:checked');
+    PERMISSION_CONFIG.userPermissions[username].permissions.allowedSites = Array.from(siteCheckboxes).map(cb => cb.value);
+    
+    const tabCheckboxes = document.querySelectorAll('input[name="allowedTabs"]:checked');
+    PERMISSION_CONFIG.userPermissions[username].permissions.allowedTabs = Array.from(tabCheckboxes).map(cb => cb.value);
+    
+    savePermissionConfig();
+    document.querySelector('.modal').remove();
+    
+    setTimeout(() => {
+        const userListModal = document.querySelector('.modal');
+        if (userListModal) {
+            renderPermissionUserList();
+        }
+    }, 100);
+    
+    showSimpleToast('权限已保存');
+}
+
+// ==================== 权限导出 ====================
+function exportPermissionConfig() {
+    if (!isAdmin()) {
+        alert('只有管理员可以导出权限配置！');
+        return;
+    }
+    
+    const yonghuJsContent = `// 权限配置数据结构
+const PERMISSION_CONFIG = ${JSON.stringify(PERMISSION_CONFIG, null, 4)};
+
+// ==================== 权限管理系统 ====================
+// 内置用户列表
+const builtInUsers = ${JSON.stringify(builtInUsers, null, 2)};
+`;
+    
+    // 只保留导出到云端功能
+    uploadToCloudDirectly(yonghuJsContent);
+}
+// 修改 quanxian.js 中的 uploadToCloudDirectly 函数
+async function uploadToCloudDirectly(content) {
+    try {
+        // 首先尝试从 localStorage 获取配置
+        let savedConfig = localStorage.getItem('github_config');
+        
+        if (!savedConfig || !savedConfig.GITHUB_TOKEN) {
+            // 如果没有配置，提示用户配置（只在上传时需要）
+            const hasConfig = await promptForGithubToken();
+            if (!hasConfig) {
+                alert('上传权限配置需要GitHub Token，请先配置！');
+                return;
+            }
+            savedConfig = localStorage.getItem('github_config');
+        }
+        
+        const config = JSON.parse(savedConfig);
+        const { GIST_ID, GITHUB_TOKEN } = config;
+        
+        if (!GIST_ID || !GITHUB_TOKEN) {
+            alert('GitHub配置不完整，请重新配置！');
+            return;
+        }
+        
+        const uploadingDiv = document.createElement('div');
+        uploadingDiv.innerHTML = '正在上传到云端...';
+        uploadingDiv.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 10px;
+            z-index: 9999;
+            text-align: center;
+            min-width: 200px;
+        `;
+        document.body.appendChild(uploadingDiv);
+        
+        const response = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+            method: 'PATCH',
+            headers: {
+                'Authorization': `token ${GITHUB_TOKEN}`,
+                'Content-Type': 'application/json',
+                'Accept': 'application/vnd.github.v3+json'
+            },
+            body: JSON.stringify({
+                description: `权限配置文件更新 - ${new Date().toLocaleString()}`,
+                files: {
+                    'yonghu.js': {
+                        content: content
+                    }
+                }
+            })
+        });
+        
+        if (uploadingDiv.parentNode) {
+            uploadingDiv.remove();
+        }
+        
+        if (response.ok) {
+            alert('✅ 权限配置已成功上传到云端！');
+        } else {
+            const error = await response.text();
+            console.error('上传失败:', error);
+            
+            if (response.status === 401) {
+                alert('GitHub Token已过期或无效！\n\n请重新配置GitHub Token。');
+                localStorage.removeItem('github_config');
+                GIST_CONFIG.GITHUB_TOKEN = '';
+                GIST_CONFIG.configLoaded = false;
+            } else {
+                alert(`上传失败：${response.status} ${response.statusText}`);
+            }
+        }
+        
+    } catch (error) {
+        console.error('上传异常:', error);
+        let errorMsg = '上传失败：';
+        if (error.message.includes('Failed to fetch')) {
+            errorMsg = '网络连接失败，请检查网络连接。';
+        } else if (error.message.includes('token')) {
+            errorMsg = 'GitHub Token无效，请重新配置。';
+        } else {
+            errorMsg += error.message;
+        }
+        alert(errorMsg);
     }
 }
 
-/* 桌面优化 */
-@media (min-width: 1025px) {
-    .container {
-        max-width: 1200px;
-        margin: 20px auto;
-        border-radius: 12px;
-        box-shadow: 0 4px 20px var(--shadow-color);
-        min-height: auto;
-    }
+function downloadToLocal(content) {
+    const blob = new Blob([content], { type: 'application/javascript;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `yonghu_${new Date().toLocaleDateString('zh-CN').replace(/\//g, '-')}.js`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
     
-    .modal {
-        background: rgba(0,0,0,0.5);
-        backdrop-filter: blur(4px);
-    }
+    alert(`权限配置文件已下载！\n\n文件名：${a.download}\n\n您可以将此文件上传到云端替换原来的 yonghu.js 文件。`);
     
-    .modal-content {
-        max-width: 800px;
-        margin: 40px auto;
-        min-height: auto;
-        max-height: 90vh;
-        border-radius: 12px;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-    }
-    
-    .tabs-container {
-        position: static;
-    }
-    
-    .top-btn {
-        padding: 12px 16px !important;
-        font-size: 14px !important;
-    }
-    
-    /* 经验总结桌面端优化 */
-    .experience-item {
-        padding: 12px 15px;
-        margin-bottom: 10px;
-    }
-    
-    .experience-content {
-        max-height: 70px;
+    try {
+        navigator.clipboard.writeText(content).then(() => {
+            showSimpleToast('权限配置已复制到剪贴板');
+        }).catch(e => {
+            console.log('复制失败:', e);
+        });
+    } catch (e) {
+        console.log('剪贴板API不可用');
     }
 }
 
-/* 防止点击高亮 */
-button, a, input, select, textarea {
-    -webkit-tap-highlight-color: transparent;
+// ==================== 权限应用 ====================
+function applyUserPermissions() {
+    if (!currentUser) return;
+    
+    console.log('应用用户权限:', currentUser.username);
+    
+    updateTopButtonsByPermission();
+    updateTabsByPermission();
+    updateSiteListByPermission();
+    updateAddButtonByPermission();
+    updateDataManagementByPermission();
+    updateModalPermissions();
+    
+    // 应用新的权限检查
+    applyNewPermissions();
 }
 
-/* 添加旋转动画 */
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+function applyNewPermissions() {
+    // 应用数据管理按钮权限
+    updateDataManagementButtons();
+    
+    // 应用顶部按钮权限
+    updateTopButtonsVisibility();
 }
+
+function updateDataManagementButtons() {
+    const dataManagement = document.querySelector('.import-export');
+    if (!dataManagement) return;
+    
+    // 备份完整数据
+    const saveToJsFileBtn = dataManagement.querySelector('[onclick*="saveToJsFile"]');
+    if (saveToJsFileBtn) {
+        saveToJsFileBtn.style.display = canSaveToJsFile() ? '' : 'none';
+    }
+    
+    // 下载JSON数据
+    const downloadJsonDataBtn = dataManagement.querySelector('[onclick*="downloadJsonData"]');
+    if (downloadJsonDataBtn) {
+        downloadJsonDataBtn.style.display = canDownloadJsonData() ? '' : 'none';
+    }
+    
+    // 从文件加载
+    const loadFromJsFileBtn = dataManagement.querySelector('[onclick*="loadFromJsFile"]');
+    if (loadFromJsFileBtn) {
+        loadFromJsFileBtn.style.display = canLoadFromJsFile() ? '' : 'none';
+    }
+    
+    // 加载图片包
+    const loadImagesBtn = dataManagement.querySelector('[onclick*="loadImagesZipOnly"]');
+    if (loadImagesBtn) {
+        loadImagesBtn.style.display = canLoadImagesZipOnly() ? '' : 'none';
+    }
+}
+
+function updateTopButtonsVisibility() {
+    // 权限管理按钮
+    const permissionBtn = document.querySelector('.permission-manager-btn');
+    if (permissionBtn) {
+        permissionBtn.style.display = canShowPermissionManager() ? '' : 'none';
+    }
+    
+    // 更改日志按钮
+    const changeLogBtn = document.querySelector('.change-log-btn');
+    if (changeLogBtn) {
+        changeLogBtn.style.display = hasPermission('viewLogs') ? '' : 'none';
+    }
+}
+
+function updateTabsByPermission() {
+    const tabsContainer = document.getElementById('siteTabs');
+    if (!tabsContainer) return;
+    
+    const allowedTabs = getAllowedTabs();
+    const currentTabs = Array.from(tabsContainer.querySelectorAll('.tab'));
+    
+    currentTabs.forEach(tab => {
+        const tabId = tab.getAttribute('data-tab');
+        const isAllowed = allowedTabs.some(allowed => allowed.id === tabId);
+        tab.style.display = isAllowed ? '' : 'none';
+    });
+    
+    const activeTab = tabsContainer.querySelector('.tab.active');
+    if (activeTab && activeTab.style.display === 'none') {
+        const firstVisibleTab = tabsContainer.querySelector('.tab[style=""]');
+        if (firstVisibleTab) {
+            switchTab(firstVisibleTab.getAttribute('data-tab'));
+        }
+    }
+}
+
+function updateSiteListByPermission() {
+    if (!hasPermission('viewAllSites')) {
+        const userPerms = PERMISSION_CONFIG.userPermissions[currentUser.username];
+        if (userPerms && userPerms.permissions.allowedSites) {
+            const siteCards = document.querySelectorAll('.site-card');
+            siteCards.forEach(card => {
+                const siteElement = card.closest('.site-card');
+                if (siteElement && siteElement.onclick) {
+                    const match = siteElement.onclick.toString().match(/showSiteDetails\('([^']+)'\)/);
+                    if (match) {
+                        const siteId = match[1];
+                        const canView = userPerms.permissions.allowedSites.includes(siteId);
+                        card.style.display = canView ? '' : 'none';
+                    }
+                }
+            });
+        }
+    }
+}
+
+function updateAddButtonByPermission() {
+    const addButton = document.querySelector('.add-site-btn');
+    if (addButton) {
+        addButton.style.display = hasPermission('addSite') ? '' : 'none';
+    }
+}
+
+function updateDataManagementByPermission() {
+    const dataManagement = document.querySelector('.import-export');
+    if (!dataManagement) return;
+    
+    const buttons = {
+        saveToJsFile: dataManagement.querySelector('[onclick*="saveToJsFile"]'),
+        downloadJsonData: dataManagement.querySelector('[onclick*="downloadJsonData"]'),
+        loadFromJsFile: dataManagement.querySelector('[onclick*="loadFromJsFile"]'),
+        loadImagesZipOnly: dataManagement.querySelector('[onclick*="loadImagesZipOnly"]')
+    };
+    
+    if (buttons.saveToJsFile) {
+        buttons.saveToJsFile.style.display = hasPermission('exportData') ? '' : 'none';
+    }
+    if (buttons.downloadJsonData) {
+        buttons.downloadJsonData.style.display = hasPermission('exportData') ? '' : 'none';
+    }
+    if (buttons.loadFromJsFile) {
+        buttons.loadFromJsFile.style.display = hasPermission('importData') ? '' : 'none';
+    }
+    if (buttons.loadImagesZipOnly) {
+        buttons.loadImagesZipOnly.style.display = hasPermission('importData') ? '' : 'none';
+    }
+}
+
+function updateModalPermissions() {
+    const quoteInputs = document.querySelectorAll('#quoteTab input[type="number"]');
+    quoteInputs.forEach(input => {
+        input.readOnly = !hasPermission('editQuote');
+    });
+    
+    const saveQuoteBtn = document.querySelector('#quoteTab button[onclick="saveQuote()"]');
+    if (saveQuoteBtn) {
+        saveQuoteBtn.disabled = !hasPermission('editQuote');
+    }
+    
+    const deleteButtons = document.querySelectorAll('.action-btn.delete-btn');
+    deleteButtons.forEach(btn => {
+        btn.style.display = hasPermission('deleteItems') ? '' : 'none';
+    });
+    
+    const addButtons = document.querySelectorAll('.tab-content button[onclick*="add"]');
+    addButtons.forEach(btn => {
+        const tabContent = btn.closest('.tab-content');
+        if (tabContent) {
+            const tabId = tabContent.id;
+            const canView = canViewTab(tabId);
+            btn.style.display = (canView && hasPermission('addItems')) ? '' : 'none';
+        }
+    });
+}
+
+// ==================== 工具函数 ====================
+function getDefaultTemplate(username) {
+    return {
+        name: '默认权限',
+        description: '默认权限配置',
+        permissions: {
+            viewAllSites: false,
+            addSite: false,
+            deleteSite: false,
+            editAll: false,
+            exportData: false,
+            importData: true,
+            viewLogs: false,
+            cloudSync: true,
+            editQuote: false,
+            deleteItems: false,
+            viewAllTabs: false,
+            addItems: true,
+            allowedSites: [],
+            allowedTabs: []
+        }
+    };
+}
+// ==================== 管理员管理函数 ====================
+function addToAdminList(username) {
+    if (!window.ADMIN_USERS.includes(username)) {
+        window.ADMIN_USERS.push(username);
+        console.log(`已将用户 ${username} 添加到管理员列表`);
+    }
+}
+
+function removeFromAdminList(username) {
+    const index = window.ADMIN_USERS.indexOf(username);
+    if (index > -1) {
+        window.ADMIN_USERS.splice(index, 1);
+        console.log(`已将用户 ${username} 从管理员列表移除`);
+    }
+}
+
+function setUserAsAdmin(username, isAdmin = true) {
+    const user = builtInUsers.find(u => u.username === username);
+    if (user) {
+        user.isAdmin = isAdmin;
+        
+        // 更新权限配置
+        if (PERMISSION_CONFIG.userPermissions[username]) {
+            PERMISSION_CONFIG.userPermissions[username].permissions.isAdmin = isAdmin;
+        }
+        
+        // 更新管理员列表
+        if (isAdmin && !window.ADMIN_USERS.includes(username)) {
+            window.ADMIN_USERS.push(username);
+        } else if (!isAdmin) {
+            removeFromAdminList(username);
+        }
+        
+        savePermissionConfig();
+        console.log(`已将用户 ${username} 设置为管理员: ${isAdmin}`);
+    }
+}
+
+// 暴露到全局
+window.addToAdminList = addToAdminList;
+window.removeFromAdminList = removeFromAdminList;
+window.setUserAsAdmin = setUserAsAdmin;
+// 暴露函数到全局
+window.showPermissionManager = showPermissionManager;
+window.exportPermissionConfig = exportPermissionConfig;
+window.editUserPermissions = editUserPermissions;
+window.saveUserPermissions = saveUserPermissions;
+window.updatePermissionValue = updatePermissionValue;
+window.hasPermission = hasPermission;
+window.canViewSite = canViewSite;
+window.canViewTab = canViewTab;
+window.showAddUserModal = showAddUserModal;
+window.deleteUser = deleteUser;
+window.getAllowedTabs = getAllowedTabs;
+window.applyUserPermissions = applyUserPermissions;
+window.initPermissionSystem = initPermissionSystem;
+window.loadPermissionConfig = loadPermissionConfig;
+window.savePermissionConfig = savePermissionConfig;
+
+// 初始化
+document.addEventListener('DOMContentLoaded', function() {
+    // 等待主应用初始化完成后再初始化权限系统
+    setTimeout(function() {
+        if (typeof initPermissionSystem === 'function') {
+            initPermissionSystem();
+        }
+    }, 300); // 增加延迟，确保 app.js 先初始化
+});
