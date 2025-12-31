@@ -520,7 +520,7 @@ async function fetchCloudData() {
         }
         
         const gist = await response.json();
-        const fileContent = gist.files['construction_data.json']?.content;
+        const fileContent = gist.files['your-data.json']?.content;
         
         if (!fileContent) {
             return { sites: [], changeLog: [] };
@@ -688,7 +688,7 @@ async function saveToGitHub() {
             body: JSON.stringify({
                 description: `工地装饰管理系统完整数据备份 - ${new Date().toLocaleString()} (${dataSizeCheck.humanSize})`,
                 files: {
-                    'construction_data.json': {
+                    'your-data.json': {
                         content: dataString
                     }
                 }
@@ -1182,7 +1182,7 @@ async function loadFromJsFile() {
             const possibleDataFiles = [
                 'shuju_light.js',  // 新格式：轻量版数据
                 'shuju.js',        // 旧格式：完整数据
-                'construction_data.json'
+                'your-data.json'
             ];
 
             for (const fileName of possibleDataFiles) {
@@ -1474,7 +1474,7 @@ async function loadFromZipFile(file) {
     const possibleDataFiles = [
         'shuju.js',
         'shuju_light.js',
-        'construction_data.json'
+        'your-data.json'
     ];
 
     for (const fileName of possibleDataFiles) {
@@ -2103,7 +2103,7 @@ async function loadFromGitHub() {
         }
         
         const gist = await response.json();
-        const fileContent = gist.files['construction_data.json']?.content;
+        const fileContent = gist.files['your-data.json']?.content;
         
         if (!fileContent) {
             throw new Error('云端没有找到数据文件');
@@ -2136,7 +2136,7 @@ async function loadFromGitHub() {
         // 尝试从公开的raw URL加载
         try {
             console.log('尝试从raw URL加载数据...');
-            const rawResponse = await fetch(`https://gist.githubusercontent.com/ebaizs/${GIST_CONFIG.GIST_ID}/raw/construction_data.json`);
+            const rawResponse = await fetch(`https://gist.githubusercontent.com/ebaizs/${GIST_CONFIG.GIST_ID}/raw/your-data.json`);
             
             if (rawResponse.ok) {
                 const rawContent = await rawResponse.text();
