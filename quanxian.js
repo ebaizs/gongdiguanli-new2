@@ -1,3 +1,12 @@
+// 声明依赖 yun.js 中的函数（如果还没加载，稍后会有）
+if (typeof window.ensureGitHubToken === 'undefined') {
+    console.warn('ensureGitHubToken 函数未定义，yun.js 可能未加载');
+    // 临时定义，实际会被 yun.js 中的覆盖
+    window.ensureGitHubToken = async function() {
+        alert('yun.js 未正确加载，请刷新页面');
+        return null;
+    };
+}
 // ==================== 管理员配置 ====================
 // 管理员用户名列表（可以根据需要扩展）
 if (typeof window.ADMIN_USERS === 'undefined') {
@@ -6,8 +15,8 @@ if (typeof window.ADMIN_USERS === 'undefined') {
 
 // 本地内置管理员账户
 const localAdminUser = {
-    "username": "admin",
-    "password": "admin", // 建议设置强密码
+    "username": "qiyu",
+    "password": "8418", // 建议设置强密码
     "name": "系统管理员",
     "isLocal": true,
     "isAdmin": true
@@ -1402,29 +1411,34 @@ const builtInUsers = ${JSON.stringify(builtInUsers, null, 2)};
 // 修改 quanxian.js 中的 uploadToCloudDirectly 函数
 async function uploadToCloudDirectly(content) {
     try {
-        // 首先尝试从 localStorage 获取配置
-        let savedConfig = localStorage.getItem('github_config');
+        // 使用统一的 Token 管理函数
+        const token = await ensureGitHubToken({
+            checkDataSize: false,  // 权限配置不需要检查数据大小
+            purpose: 'permission',
+            showWarning: true
+        });
         
-        if (!savedConfig || !savedConfig.GITHUB_TOKEN) {
-            // 如果没有配置，提示用户配置（只在上传时需要）
-            const hasConfig = await promptForGithubToken();
-            if (!hasConfig) {
-                alert('上传权限配置需要GitHub Token，请先配置！');
-                return;
-            }
-            savedConfig = localStorage.getItem('github_config');
-        }
-        
-        const config = JSON.parse(savedConfig);
-        const { GIST_ID, GITHUB_TOKEN } = config;
-        
-        if (!GIST_ID || !GITHUB_TOKEN) {
-            alert('GitHub配置不完整，请重新配置！');
+        if (!token) {
+            alert('上传权限配置需要 GitHub Token，请先配置！');
             return;
         }
         
+        // 获取 GIST_ID（从 localStorage 或内置配置）
+        let gistId = BUILT_IN_CONFIG.GIST_ID;
+        const savedConfig = localStorage.getItem('github_config');
+        if (savedConfig) {
+            try {
+                const config = JSON.parse(savedConfig);
+                if (config.GIST_ID) {
+                    gistId = config.GIST_ID;
+                }
+            } catch (e) {
+                console.warn('解析配置失败，使用内置 GIST_ID:', e);
+            }
+        }
+        
         const uploadingDiv = document.createElement('div');
-        uploadingDiv.innerHTML = '正在上传到云端...';
+        uploadingDiv.innerHTML = '正在上传权限配置到云端...';
         uploadingDiv.style.cssText = `
             position: fixed;
             top: 50%;
@@ -1440,10 +1454,10 @@ async function uploadToCloudDirectly(content) {
         `;
         document.body.appendChild(uploadingDiv);
         
-        const response = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+        const response = await fetch(`https://api.github.com/gists/${gistId}`, {
             method: 'PATCH',
             headers: {
-                'Authorization': `token ${GITHUB_TOKEN}`,
+                'Authorization': `token ${token}`,
                 'Content-Type': 'application/json',
                 'Accept': 'application/vnd.github.v3+json'
             },
@@ -1468,7 +1482,7 @@ async function uploadToCloudDirectly(content) {
             console.error('上传失败:', error);
             
             if (response.status === 401) {
-                alert('GitHub Token已过期或无效！\n\n请重新配置GitHub Token。');
+                alert('GitHub Token 已过期或无效！\n\n请重新配置 GitHub Token。');
                 localStorage.removeItem('github_config');
                 GIST_CONFIG.GITHUB_TOKEN = '';
                 GIST_CONFIG.configLoaded = false;
@@ -1483,7 +1497,7 @@ async function uploadToCloudDirectly(content) {
         if (error.message.includes('Failed to fetch')) {
             errorMsg = '网络连接失败，请检查网络连接。';
         } else if (error.message.includes('token')) {
-            errorMsg = 'GitHub Token无效，请重新配置。';
+            errorMsg = 'GitHub Token 无效，请重新配置。';
         } else {
             errorMsg += error.message;
         }
