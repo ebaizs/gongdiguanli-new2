@@ -148,8 +148,6 @@ document.addEventListener('DOMContentLoaded', async function() {
                 renderSiteList();
                 addChangeLog('登录系统', '用户登录成功');
                 
-                                
-               
                 
                 // 移动端欢迎提示
                 if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
