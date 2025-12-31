@@ -1405,11 +1405,11 @@ async function uploadToCloudDirectly(content) {
         // 首先尝试从 localStorage 获取配置
         let savedConfig = localStorage.getItem('github_config');
         
-        if (!savedConfig) {
-            // 如果没有配置，提示用户配置
+        if (!savedConfig || !savedConfig.GITHUB_TOKEN) {
+            // 如果没有配置，提示用户配置（只在上传时需要）
             const hasConfig = await promptForGithubToken();
             if (!hasConfig) {
-                alert('请先配置GitHub同步！');
+                alert('上传权限配置需要GitHub Token，请先配置！');
                 return;
             }
             savedConfig = localStorage.getItem('github_config');
@@ -1422,7 +1422,6 @@ async function uploadToCloudDirectly(content) {
             alert('GitHub配置不完整，请重新配置！');
             return;
         }
-        
         
         const uploadingDiv = document.createElement('div');
         uploadingDiv.innerHTML = '正在上传到云端...';
@@ -1463,40 +1462,32 @@ async function uploadToCloudDirectly(content) {
         }
         
         if (response.ok) {
-            alert('✅ 权限配置已成功上传到云端！\n\n云端账户已更新，建议刷新页面使新配置生效。');
+            alert('✅ 权限配置已成功上传到云端！');
         } else {
             const error = await response.text();
             console.error('上传失败:', error);
             
-            // 检查是否是 token 过期或无效
             if (response.status === 401) {
-                alert('GitHub Token 已过期或无效！\n\n请重新配置GitHub Token。');
-                // 清除无效配置
+                alert('GitHub Token已过期或无效！\n\n请重新配置GitHub Token。');
                 localStorage.removeItem('github_config');
+                GIST_CONFIG.GITHUB_TOKEN = '';
+                GIST_CONFIG.configLoaded = false;
             } else {
-                alert(`上传失败：${response.status} ${response.statusText}\n\n请检查GitHub配置是否正确。`);
+                alert(`上传失败：${response.status} ${response.statusText}`);
             }
         }
         
     } catch (error) {
         console.error('上传异常:', error);
-        
-        // 显示更友好的错误信息
         let errorMsg = '上传失败：';
         if (error.message.includes('Failed to fetch')) {
             errorMsg = '网络连接失败，请检查网络连接。';
         } else if (error.message.includes('token')) {
-            errorMsg = 'GitHub Token 无效，请重新配置。';
+            errorMsg = 'GitHub Token无效，请重新配置。';
         } else {
             errorMsg += error.message;
         }
-        
         alert(errorMsg);
-        
-        const uploadingDiv = document.querySelector('div[style*="position: fixed; top: 50%"]');
-        if (uploadingDiv && uploadingDiv.parentNode) {
-            uploadingDiv.remove();
-        }
     }
 }
 
