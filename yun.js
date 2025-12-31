@@ -38,7 +38,6 @@ const BUILT_IN_CONFIG = {
 if (typeof window.currentUser === 'undefined') {
     window.currentUser = null;
 }
-// 在 yun.js 开头部分添加这个函数
 async function saveToJsFile() {
     try {
         if (!currentUser) {
@@ -46,29 +45,28 @@ async function saveToJsFile() {
             return;
         }
 
-        if (!confirm('即将下载完整数据备份ZIP包，包含所有文本和图片数据。是否继续？')) {
+        if (!confirm('即将下载完整数据备份ZIP包，包含所有文本和图片数据。文本数据不包含base64，图片以文件形式保存。是否继续？')) {
             return;
         }
 
-        // 创建完整数据对象（包含所有图片的base64）
+        // 创建完整数据对象（包含所有数据）
         const fullData = {
-            sites: JSON.parse(JSON.stringify(sites)),
+            sites: JSON.parse(JSON.stringify(sites)), // 深拷贝原始数据
             changeLog: changeLog,
             exportTime: new Date().toLocaleString('zh-CN'),
             exportedBy: currentUser.name,
             dataVersion: '2.3',
-            note: '完整数据备份'
+            note: '完整数据备份（图片以文件形式保存）'
         };
 
         await generateAndDownloadZip(fullData);
-        addChangeLog('备份完整数据', '下载了包含完整数据的ZIP包');
+        addChangeLog('备份完整数据', '下载了包含完整数据的ZIP包（图片以文件形式保存）');
 
     } catch (error) {
         console.error('保存失败:', error);
         alert('保存失败：' + error.message);
     }
 }
-
 
 // 重新配置 GitHub Token
 function resetGithubConfig() {
@@ -190,10 +188,12 @@ function checkGitHubConfig() {
     
     return null;
 }
-
-// ==================== Token 输入函数 ====================
+// 修改 promptForGithubToken 函数，只在上传时调用
 async function promptForGithubToken() {
     return new Promise((resolve) => {
+        // 先检查数据大小
+        const sizeCheck = checkDataSizeBeforeUpload();
+        
         // 创建输入模态框
         const modal = document.createElement('div');
         modal.className = 'modal';
@@ -211,32 +211,67 @@ async function promptForGithubToken() {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         `;
         
+        // 根据数据大小显示不同的警告
+        let warningHtml = '';
+        if (!sizeCheck.canUpload) {
+            warningHtml = `
+                <div style="background: #fff3cd; border: 1px solid #ffeaa7; color: #856404; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                    ⚠️ <strong>数据过大警告</strong><br>
+                    当前数据大小：${sizeCheck.humanSize}<br>
+                    GitHub Gist 单个文件限制为10MB。<br>
+                    请先清理数据再尝试上传。
+                </div>
+            `;
+        } else if (sizeCheck.totalSize > 5 * 1024 * 1024) {
+            warningHtml = `
+                <div style="background: #fff3cd; border: 1px solid #ffeaa7; color: #856404; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                    ⚠️ <strong>数据较大提醒</strong><br>
+                    当前数据大小：${sizeCheck.humanSize}<br>
+                    包含 ${sizeCheck.imageCount} 个图片文件。<br>
+                    建议压缩图片后再上传。
+                </div>
+            `;
+        }
+        
         modal.innerHTML = `
             <div style="background: white; padding: 30px; border-radius: 10px; width: 90%; max-width: 500px; box-shadow: 0 5px 30px rgba(0,0,0,0.3);">
-                <h3 style="margin: 0 0 20px 0; color: #333;">秘钥配置</h3>
+                <h3 style="margin: 0 0 20px 0; color: #333;">云备份配置</h3>
+                
+                ${warningHtml}
+                
                 <p style="color: #666; font-size: 14px; line-height: 1.5; margin-bottom: 20px;">
-                                   
-                <div style="margin-bottom: 15px;">
+                    <strong>需要Token才能备份数据到云端。</strong><br>
+                    从云端加载数据不需要Token。<br>
                     
+                </p>
+                
+                <div style="margin-bottom: 15px;">
                     <input type="password" 
                            id="githubTokenInput" 
                            style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; box-sizing: border-box;"
-                           placeholder="请输入秘钥，如：ghp_xxxxxxxxxxxxxxxxxxxx"
+                           placeholder="请输入Token，如：ghp_xxxxxxxxxxxxxxxxxxxx"
                            autocomplete="off">
                 </div>
-                
-                
                 
                 <div style="display: flex; justify-content: space-between; margin-top: 25px;">
                     <button id="saveTokenBtn" 
                             style="padding: 12px 24px; background: #28a745; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; flex: 1; margin-right: 10px;">
-                        保存并继续
+                        保存并备份
                     </button>
-                    <button id="skipTokenBtn" 
+                    <button id="cancelBtn" 
                             style="padding: 12px 24px; background: #6c757d; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; flex: 1; margin-left: 10px;">
-                        暂不使用云端
+                        取消备份
                     </button>
                 </div>
+                
+                ${sizeCheck.canUpload ? '' : `
+                <div style="margin-top: 15px; text-align: center;">
+                    <button id="cleanDataBtn" 
+                            style="padding: 8px 16px; background: #fd7e14; color: white; border: none; border-radius: 4px; font-size: 14px; cursor: pointer;">
+                        先去清理数据
+                    </button>
+                </div>
+                `}
             </div>
         `;
         
@@ -244,33 +279,41 @@ async function promptForGithubToken() {
         
         const tokenInput = document.getElementById('githubTokenInput');
         const saveBtn = document.getElementById('saveTokenBtn');
-        const skipBtn = document.getElementById('skipTokenBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const cleanDataBtn = document.getElementById('cleanDataBtn');
         
-        // 聚焦输入框
+        // 如果数据过大，禁用保存按钮
+        if (!sizeCheck.canUpload) {
+            saveBtn.disabled = true;
+            saveBtn.style.backgroundColor = '#6c757d';
+            saveBtn.style.cursor = 'not-allowed';
+            saveBtn.title = '数据过大，请先清理';
+        }
+        
         setTimeout(() => tokenInput.focus(), 100);
         
-        // 保存按钮事件
         saveBtn.onclick = () => {
-            const token = tokenInput.value.trim();
-            
-            if (!token) {
-                alert('请输入 GitHub Token');
+            if (!sizeCheck.canUpload) {
+                alert('数据过大，无法上传！请先清理数据。');
                 return;
             }
             
-            // 验证 Token 格式（基本检查）
+            const token = tokenInput.value.trim();
+            
+            if (!token) {
+                alert('请输入GitHub Token');
+                return;
+            }
+            
             if (!token.startsWith('ghp_') && !token.startsWith('github_pat_')) {
-                if (!confirm('警告：Token 格式看起来不正确！\n\n正确的 Token 通常以 "ghp_" 或 "github_pat_" 开头。\n是否继续使用此 Token？')) {
+                if (!confirm('警告：Token格式看起来不正确！\n正确的Token通常以"ghp_"或"github_pat_"开头。\n是否继续使用此Token？')) {
                     return;
                 }
             }
             
-            // 保存配置
-            GIST_CONFIG.GIST_ID = BUILT_IN_CONFIG.GIST_ID;
             GIST_CONFIG.GITHUB_TOKEN = token;
             GIST_CONFIG.configLoaded = true;
             
-            // 保存到 localStorage
             localStorage.setItem('github_config', JSON.stringify({
                 GIST_ID: BUILT_IN_CONFIG.GIST_ID,
                 GITHUB_TOKEN: token,
@@ -279,38 +322,99 @@ async function promptForGithubToken() {
             }));
             
             modal.remove();
-            showSimpleToast('GitHub Token 已保存！');
             resolve(true);
         };
         
-        // 跳过按钮事件
-        skipBtn.onclick = () => {
-            GIST_CONFIG.GIST_ID = BUILT_IN_CONFIG.GIST_ID;
-            GIST_CONFIG.GITHUB_TOKEN = '';
-            GIST_CONFIG.configLoaded = false;
-            
+        cancelBtn.onclick = () => {
             modal.remove();
-            showSimpleToast('已跳过云端配置，部分功能不可用。');
             resolve(false);
         };
         
-        // 回车键保存
+        if (cleanDataBtn) {
+            cleanDataBtn.onclick = () => {
+                modal.remove();
+                alert('建议清理以下数据：\n1. 删除不需要的维修图片\n2. 删除旧的图纸文件\n3. 压缩现有图片\n\n清理完成后重新尝试备份。');
+                resolve(false);
+            };
+        }
+        
         tokenInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 saveBtn.click();
             }
         });
         
-        // ESC键跳过
         document.addEventListener('keydown', function escHandler(e) {
             if (e.key === 'Escape') {
                 document.removeEventListener('keydown', escHandler);
-                skipBtn.click();
+                cancelBtn.click();
             }
         });
     });
 }
-
+// 添加数据清理提示
+function showDataCleanupTips() {
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.style.cssText = `
+        display: flex;
+        position: fixed;
+        z-index: 9999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.7);
+        justify-content: center;
+        align-items: center;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    `;
+    
+    modal.innerHTML = `
+        <div style="background: white; padding: 30px; border-radius: 10px; width: 90%; max-width: 500px; max-height: 80vh; overflow-y: auto;">
+            <h3 style="margin: 0 0 20px 0; color: #333;">数据清理指南</h3>
+            
+            <div style="margin-bottom: 20px;">
+                <h4 style="color: #d63031;">⚠️ 数据过大，需要清理</h4>
+                <p>您的数据大小超过了GitHub Gist的10MB限制，无法上传。</p>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <h4>清理建议：</h4>
+                <ul style="margin-left: 20px; color: #666;">
+                    <li><strong>删除不需要的图片：</strong>删除维修记录中的旧照片</li>
+                    <li><strong>压缩现有图片：</strong>点击图片旁边的"更换"按钮重新上传压缩版</li>
+                    <li><strong>删除旧的图纸文件：</strong>删除不再需要的设计图纸</li>
+                    <li><strong>清理历史数据：</strong>删除已完成的工地的相关数据</li>
+                </ul>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <h4>操作步骤：</h4>
+                <ol style="margin-left: 20px; color: #666;">
+                    <li>进入各个工地详情页面</li>
+                    <li>在"待维修"标签页，删除不需要的维修图片</li>
+                    <li>在"图纸"标签页，删除大的图纸文件</li>
+                    <li>使用"备份完整数据ZIP"功能先本地备份</li>
+                    <li>清理完成后重新尝试云端备份</li>
+                </ol>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; margin-top: 25px;">
+                <button id="closeBtn" 
+                        style="padding: 12px 24px; background: #6c757d; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; flex: 1;">
+                    关闭
+                </button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    document.getElementById('closeBtn').onclick = () => {
+        modal.remove();
+    };
+}
 // 修改 exportPermissionConfig 函数，添加配置检查
 function exportPermissionConfig() {
     if (!isAdmin()) {
@@ -457,15 +561,15 @@ function mergeChangeLogs(cloudLogs, localLogs) {
 }
 
 
-// ==================== GitHub同步函数 ====================
-// 修改 yun.js 中的 saveToGitHub 函数
+// 修改 saveToGitHub 函数，要求必须有token
 async function saveToGitHub() {
     console.log('=== 开始saveToGitHub函数 ===');
     
-    if (!GIST_CONFIG.configLoaded) {
-        const loaded = await loadGithubConfig();
-        if (!loaded) {
-            showSimpleToast('GitHub配置未完成，无法同步', 'error');
+    // 先检查是否有token
+    if (!GIST_CONFIG.GITHUB_TOKEN) {
+        const hasToken = await promptForGithubToken();
+        if (!hasToken) {
+            showSimpleToast('备份到云端需要GitHub Token，请先配置', 'error');
             return false;
         }
     }
@@ -475,42 +579,38 @@ async function saveToGitHub() {
         return false;
     }
 
-    // 修改确认提示，明确说明会包含图片
-    if (!confirm('即将备份完整数据到云端，包含所有文本和图片数据（图片以base64格式包含在JSON中）。是否继续？')) {
+    // 检查数据大小
+    const dataSizeCheck = checkDataSizeBeforeUpload();
+    if (!dataSizeCheck.canUpload) {
+        alert(`数据过大，无法上传！\n\n当前数据大小：${dataSizeCheck.humanSize}\n建议删除部分图片或清理数据后再试。`);
+        return false;
+    }
+
+    // 修改确认提示，包含大小信息
+    if (!confirm(`即将备份完整数据到云端。\n\n当前数据大小：${dataSizeCheck.humanSize}\n\n包含所有文本和图片数据，是否继续？`)) {
         return false;
     }
 
     isSyncing = true;
 
     try {
-        // 准备完整数据（包含所有图片的base64）
         const fullData = {
             sites: JSON.parse(JSON.stringify(sites)),
             changeLog: JSON.parse(JSON.stringify(changeLog)),
             lastSync: new Date().toISOString(),
             user: currentUser.name,
             syncVersion: '2.3',
-            hasFiles: true,
-            note: '完整数据备份（包含图片base64）',
-            backupType: 'full_with_images'
+            note: '完整数据备份'
         };
 
-        // 不删除base64数据，因为这是完整备份
-        // removeAllBase64Data(fullData.sites); // 确保这行被注释掉
-
-        console.log('准备上传数据，站点数量:', fullData.sites.length);
-        console.log('数据是否包含图片base64:', checkIfHasFiles(fullData.sites));
-        
-        // 计算数据大小
         const dataString = JSON.stringify(fullData);
-        console.log('JSON数据大小:', (dataString.length / 1024).toFixed(2), 'KB');
+        console.log('JSON数据大小:', (dataString.length / 1024 / 1024).toFixed(2), 'MB');
         
-        // 如果数据太大，可能需要分块，但这里先直接上传
-        if (dataString.length > 10 * 1024 * 1024) { // 大于10MB
-            if (!confirm('警告：数据大小超过10MB，上传可能会失败。是否继续？')) {
-                isSyncing = false;
-                return false;
-            }
+        // GitHub Gist 有10MB文件大小限制
+        if (dataString.length > 8 * 1024 * 1024) { // 8MB，留一些余量
+            alert('警告：数据大小超过8MB，上传到GitHub可能会失败！\n\n建议：\n1. 删除部分不重要的图片\n2. 压缩图片质量\n3. 分多次备份');
+            isSyncing = false;
+            return false;
         }
 
         const response = await fetch(`https://api.github.com/gists/${GIST_CONFIG.GIST_ID}`, {
@@ -521,7 +621,7 @@ async function saveToGitHub() {
                 'Accept': 'application/vnd.github.v3+json'
             },
             body: JSON.stringify({
-                description: `工地装饰管理系统完整数据备份 - ${new Date().toLocaleString()}（包含图片）`,
+                description: `工地装饰管理系统完整数据备份 - ${new Date().toLocaleString()} (${dataSizeCheck.humanSize})`,
                 files: {
                     'construction_data.json': {
                         content: dataString
@@ -531,25 +631,121 @@ async function saveToGitHub() {
         });
 
         if (response.ok) {
-            showSimpleToast('完整数据（含图片）已备份到云端！');
-            addChangeLog('云端备份', '备份了完整数据（包含图片base64）到云端');
+            showSimpleToast(`完整数据(${dataSizeCheck.humanSize})已备份到云端！`);
+            addChangeLog('云端备份', `备份了完整数据(${dataSizeCheck.humanSize})到云端`);
             return true;
         } else {
             const error = await response.text();
             console.error('云端备份失败:', error);
-            showSimpleToast('云端备份失败', 'error');
+            
+            // 检查是否是文件过大导致的错误
+            if (response.status === 422) {
+                const errorObj = JSON.parse(error);
+                if (errorObj.message && errorObj.message.includes('too large')) {
+                    alert('上传失败：文件过大！\n\nGitHub Gist 单个文件限制为10MB。\n请压缩图片或删除部分数据后重试。');
+                } else {
+                    alert('上传失败：' + errorObj.message);
+                }
+            } else if (response.status === 401) {
+                alert('GitHub Token 已过期或无效！\n\n请重新配置GitHub Token。');
+                GIST_CONFIG.GITHUB_TOKEN = '';
+                GIST_CONFIG.configLoaded = false;
+                localStorage.removeItem('github_config');
+            } else {
+                alert(`上传失败：${response.status} ${response.statusText}`);
+            }
             return false;
         }
 
     } catch (error) {
         console.error('云端备份异常:', error);
-        showSimpleToast('备份失败: ' + error.message, 'error');
+        
+        let errorMsg = '备份失败：';
+        if (error.message.includes('Failed to fetch')) {
+            errorMsg = '网络连接失败，请检查网络连接。';
+        } else if (error.message.includes('token')) {
+            errorMsg = 'GitHub Token 无效，请重新配置。';
+        } else {
+            errorMsg += error.message;
+        }
+        
+        showSimpleToast(errorMsg, 'error');
         return false;
     } finally {
         isSyncing = false;
     }
 }
 
+// 添加检查数据大小的函数
+function checkDataSizeBeforeUpload() {
+    try {
+        // 创建一个临时数据对象来估算大小
+        const tempData = {
+            sites: JSON.parse(JSON.stringify(sites)),
+            changeLog: JSON.parse(JSON.stringify(changeLog))
+        };
+        
+        const dataString = JSON.stringify(tempData);
+        const byteSize = dataString.length;
+        
+        // 估算base64图片的大小（base64比原始文件大33%）
+        let estimatedImageSize = 0;
+        let imageCount = 0;
+        
+        sites.forEach(site => {
+            // 统计维修图片
+            if (site.repairs) {
+                site.repairs.forEach(repair => {
+                    if (repair.photo && repair.photo.startsWith('data:')) {
+                        // base64数据大约是原始文件的133%
+                        const base64Size = repair.photo.length;
+                        estimatedImageSize += base64Size;
+                        imageCount++;
+                    }
+                });
+            }
+            
+            // 统计图纸文件
+            if (site.drawings) {
+                site.drawings.forEach(drawing => {
+                    if (drawing.file && drawing.file.startsWith('data:')) {
+                        const base64Size = drawing.file.length;
+                        estimatedImageSize += base64Size;
+                        imageCount++;
+                    }
+                });
+            }
+        });
+        
+        const totalSize = byteSize + estimatedImageSize;
+        
+        // 转换为可读格式
+        const formatSize = (bytes) => {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            if (bytes < 1024 * 1024 * 1024) return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+            return (bytes / (1024 * 1024 * 1024)).toFixed(1) + ' GB';
+        };
+        
+        return {
+            canUpload: totalSize < 8 * 1024 * 1024, // 8MB限制
+            totalSize: totalSize,
+            humanSize: formatSize(totalSize),
+            textSize: formatSize(byteSize),
+            imageSize: formatSize(estimatedImageSize),
+            imageCount: imageCount,
+            warning: totalSize > 6 * 1024 * 1024 ? '数据较大，建议压缩图片' : '大小正常'
+        };
+        
+    } catch (error) {
+        console.error('检查数据大小失败:', error);
+        return {
+            canUpload: true,
+            humanSize: '未知大小',
+            warning: '无法计算数据大小'
+        };
+    }
+}
 // 添加检查函数
 function checkIfHasFiles(sitesArray) {
     if (!sitesArray) return false;
@@ -680,15 +876,29 @@ async function generateAndDownloadZip(textData) {
 
         const zip = new JSZip();
 
-        const jsContent = `// 工地装饰管理系统数据文件（文本版）
+        // 1. 创建轻量版数据（不包含base64）
+        const lightData = {
+            sites: JSON.parse(JSON.stringify(textData.sites)),
+            changeLog: textData.changeLog,
+            exportTime: new Date().toLocaleString('zh-CN'),
+            exportedBy: currentUser.name,
+            dataVersion: '2.3',
+            note: '轻量版数据（不含图片base64）'
+        };
+
+        // 移除所有base64数据，替换为路径占位符
+        removeAllBase64Data(lightData.sites);
+
+        const jsContent = `// 工地装饰管理系统轻量版数据文件
 // 生成时间：${new Date().toLocaleString('zh-CN')}
 // 生成用户：${currentUser.name}
-// 数据版本：${textData.dataVersion}
+// 数据版本：${lightData.dataVersion}
 // 说明：此文件只包含路径信息，需要配合shuju文件夹中的文件使用
-const savedData = ${JSON.stringify(textData, null, 2)};`;
+const savedData = ${JSON.stringify(lightData, null, 2)};`;
 
         zip.file('shuju_light.js', jsContent);
 
+        // 2. 创建文件和图片文件夹结构
         const shujuFolder = zip.folder('shuju');
         const locationInfo = {
             info: '图片和文件位置信息',
@@ -698,23 +908,28 @@ const savedData = ${JSON.stringify(textData, null, 2)};`;
             sites: []
         };
 
+        // 3. 遍历所有工地，提取图片并保存到ZIP
         for (let i = 0; i < sites.length; i++) {
-            const site = sites[i];
-            const siteName = (site.name || `工地_${site.id}`).replace(/[\\/:*?"<>|]/g, '_');
+            const originalSite = sites[i]; // 使用原始数据
+            const lightSite = lightData.sites[i]; // 对应的轻量版数据
+            const siteName = (originalSite.name || `工地_${originalSite.id}`).replace(/[\\/:*?"<>|]/g, '_');
             const siteFolder = shujuFolder.folder(siteName);
 
             const siteInfo = {
-                id: site.id,
-                name: site.name,
+                id: originalSite.id,
+                name: originalSite.name,
                 folder: siteName,
                 repairs: [],
                 drawings: []
             };
 
-            if (site.repairs && site.repairs.length > 0) {
+            // 处理维修图片
+            if (originalSite.repairs && originalSite.repairs.length > 0) {
                 const repairsFolder = siteFolder.folder('repairs');
-                for (let j = 0; j < site.repairs.length; j++) {
-                    const repair = site.repairs[j];
+                for (let j = 0; j < originalSite.repairs.length; j++) {
+                    const repair = originalSite.repairs[j];
+                    const lightRepair = lightSite.repairs ? lightSite.repairs[j] : null;
+                    
                     if (repair.photo && repair.photo.startsWith('data:')) {
                         const match = repair.photo.match(/^data:([^;]+);base64,(.+)$/);
                         if (match) {
@@ -733,15 +948,24 @@ const savedData = ${JSON.stringify(textData, null, 2)};`;
                                 path: `${siteName}/repairs/${fileName}`,
                                 timestamp: new Date().toISOString()
                             });
+
+                            // 更新轻量版数据的路径
+                            if (lightRepair) {
+                                lightRepair.photo = `[PHOTO:${siteName}/repairs/${fileName}]`;
+                                lightRepair.hasPhoto = true;
+                            }
                         }
                     }
                 }
             }
 
-            if (site.drawings && site.drawings.length > 0) {
+            // 处理图纸文件
+            if (originalSite.drawings && originalSite.drawings.length > 0) {
                 const drawingsFolder = siteFolder.folder('drawings');
-                for (let j = 0; j < site.drawings.length; j++) {
-                    const drawing = site.drawings[j];
+                for (let j = 0; j < originalSite.drawings.length; j++) {
+                    const drawing = originalSite.drawings[j];
+                    const lightDrawing = lightSite.drawings ? lightSite.drawings[j] : null;
+                    
                     if (drawing.file && drawing.file.startsWith('data:')) {
                         const match = drawing.file.match(/^data:([^;]+);base64,(.+)$/);
                         if (match) {
@@ -765,6 +989,13 @@ const savedData = ${JSON.stringify(textData, null, 2)};`;
                                 path: `${siteName}/drawings/${fileName}`,
                                 timestamp: new Date().toISOString()
                             });
+
+                            // 更新轻量版数据的路径
+                            if (lightDrawing) {
+                                lightDrawing.file = `[FILE:${siteName}/drawings/${fileName}]`;
+                                lightDrawing.hasFile = true;
+                                lightDrawing.fileName = fileName;
+                            }
                         }
                     }
                 }
@@ -775,12 +1006,24 @@ const savedData = ${JSON.stringify(textData, null, 2)};`;
             }
         }
 
+        // 4. 保存位置信息文件
         zip.file('文件位置信息.json', JSON.stringify(locationInfo, null, 2));
 
+        // 5. 更新轻量版数据的内容（因为上面的循环修改了数据）
+        const updatedJsContent = `// 工地装饰管理系统轻量版数据文件
+// 生成时间：${new Date().toLocaleString('zh-CN')}
+// 生成用户：${currentUser.name}
+// 数据版本：${lightData.dataVersion}
+// 说明：此文件只包含路径信息，需要配合shuju文件夹中的文件使用
+const savedData = ${JSON.stringify(lightData, null, 2)};`;
+
+        zip.file('shuju_light.js', updatedJsContent);
+
+        // 6. 添加README文件
         const readmeContent = `工地装饰管理系统完整数据备份包
 
 文件结构：
-├── shuju_light.js            # 文本数据文件（不包含base64）
+├── shuju_light.js            # 文本数据文件（不包含base64，只含路径信息）
 ├── 文件位置信息.json         # 图片和文件位置信息
 └── shuju/                    # 文件和图片文件夹
     ├── 工地1/                # 第一个工地文件夹
@@ -796,12 +1039,15 @@ const savedData = ${JSON.stringify(textData, null, 2)};`;
 2. 系统会自动加载 shuju_light.js 和对应的图片文件
 3. 如需手动加载，可使用"从文件加载数据"功能
 
+注意：此备份包中的 shuju_light.js 不包含图片base64数据，图片以文件形式存放在shuju文件夹中
+
 生成时间：${new Date().toLocaleString('zh-CN')}
 生成用户：${currentUser.name}
-数据版本：${textData.dataVersion}`;
+数据版本：${lightData.dataVersion}`;
 
         zip.file('README_恢复说明.txt', readmeContent);
 
+        // 7. 生成并下载ZIP包
         const zipBlob = await zip.generateAsync({
             type: 'blob',
             compression: 'DEFLATE',
@@ -824,149 +1070,6 @@ const savedData = ${JSON.stringify(textData, null, 2)};`;
         throw new Error('生成ZIP包失败：' + error.message);
     }
 }
-
-async function saveImagesZipOnly() {
-    try {
-        if (typeof JSZip === 'undefined') {
-            alert('JSZip 库未加载，无法生成 ZIP 文件');
-            return;
-        }
-
-        const zip = new JSZip();
-
-        const readmeContent = `工地装饰管理系统图片数据包
-
-文件说明：
-1. 此ZIP包仅包含图片和文件数据
-2. 文本数据已上传到GitHub Gist云端
-3. 文件夹结构：
-  工地名称/
-    ├── repairs/          # 维修图片文件夹
-    │   ├── repair_1.jpg
-    │   └── repair_2.jpg
-    └── drawings/         # 图纸文件夹
-        ├── drawing_1.pdf
-        └── drawing_2.xlsx
-
-恢复说明：
-1. 请确保已从云端同步文本数据
-2. 系统会自动根据路径加载对应的图片文件
-3. 如需手动加载，可使用"手动加载"功能
-
-生成时间：${new Date().toLocaleString('zh-CN')}
-生成用户：${currentUser.name}`;
-
-        zip.file('README_图片包说明.txt', readmeContent);
-
-        let locationInfo = {
-            info: '图片位置信息文件 - 用于系统定位图片',
-            generated: new Date().toLocaleString('zh-CN'),
-            user: currentUser.name,
-            totalSites: sites.length,
-            sites: []
-        };
-
-        for (let i = 0; i < sites.length; i++) {
-            const site = sites[i];
-            const siteName = (site.name || `工地_${site.id}`).replace(/[\\/:*?"<>|]/g, '_');
-            const siteFolder = zip.folder(siteName);
-
-            const siteInfo = {
-                id: site.id,
-                name: site.name,
-                folder: siteName,
-                repairs: [],
-                drawings: []
-            };
-
-            if (site.repairs && site.repairs.length > 0) {
-                const repairsFolder = siteFolder.folder('repairs');
-                for (let j = 0; j < site.repairs.length; j++) {
-                    const repair = site.repairs[j];
-                    if (repair.photo && repair.photo.startsWith('data:')) {
-                        const match = repair.photo.match(/^data:([^;]+);base64,(.+)$/);
-                        if (match) {
-                            const mimeType = match[1];
-                            const base64Data = match[2];
-                            const extension = getExtensionFromMimeType(mimeType) || 'jpg';
-                            const fileName = `repair_${j + 1}.${extension}`;
-
-                            repairsFolder.file(fileName, base64Data, { base64: true });
-
-                            siteInfo.repairs.push({
-                                index: j,
-                                repairId: repair.id,
-                                fileName: fileName,
-                                path: `${siteName}/repairs/${fileName}`,
-                                timestamp: new Date().toISOString()
-                            });
-                        }
-                    }
-                }
-            }
-
-            if (site.drawings && site.drawings.length > 0) {
-                const drawingsFolder = siteFolder.folder('drawings');
-                for (let j = 0; j < site.drawings.length; j++) {
-                    const drawing = site.drawings[j];
-                    if (drawing.file && drawing.file.startsWith('data:')) {
-                        const match = drawing.file.match(/^data:([^;]+);base64,(.+)$/);
-                        if (match) {
-                            const mimeType = match[1];
-                            const base64Data = match[2];
-                            const extension = getExtensionFromMimeType(mimeType) ||
-                                getExtensionFromFileName(drawing.fileName) ||
-                                'bin';
-                            let fileName = drawing.fileName ||
-                                `drawing_${j + 1}.${extension}`;
-                            fileName = fileName.replace(/[\\/:*?"<>|]/g, '_');
-
-                            drawingsFolder.file(fileName, base64Data, { base64: true });
-
-                            siteInfo.drawings.push({
-                                index: j,
-                                drawingId: drawing.id,
-                                fileName: fileName,
-                                originalName: drawing.fileName,
-                                path: `${siteName}/drawings/${fileName}`,
-                                timestamp: new Date().toISOString()
-                            });
-                        }
-                    }
-                }
-            }
-
-            if (siteInfo.repairs.length > 0 || siteInfo.drawings.length > 0) {
-                locationInfo.sites.push(siteInfo);
-            }
-        }
-
-        zip.file('文件位置信息.json', JSON.stringify(locationInfo, null, 2));
-
-        const zipBlob = await zip.generateAsync({
-            type: 'blob',
-            compression: 'DEFLATE',
-            compressionOptions: { level: 6 }
-        });
-
-        const url = URL.createObjectURL(zipBlob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `工地图片数据包_${new Date().toLocaleDateString('zh-CN').replace(/\//g, '-')}.zip`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-
-        addChangeLog('保存云端图片包', '保存了仅包含图片的ZIP数据包');
-        showSimpleToast('图片数据包已保存！此ZIP仅包含图片，文本数据已在云端。');
-
-    } catch (error) {
-        console.error('保存图片ZIP失败:', error);
-        alert('保存图片数据包失败：' + error.message);
-    }
-}
-
 async function loadFromJsFile() {
     if (!currentUser) {
         alert('请先登录！');
@@ -980,12 +1083,24 @@ async function loadFromJsFile() {
 
     const input = document.createElement('input');
     input.type = 'file';
-    input.accept = '.zip';
+    input.accept = '.zip,.js';
     input.onchange = async function (event) {
         const file = event.target.files[0];
         if (!file) return;
 
         try {
+            // 如果是JS文件，直接加载
+            if (file.name.endsWith('.js')) {
+                const text = await file.text();
+                await loadFromJsContent(text);
+                saveData();
+                renderSiteList();
+                addChangeLog('从文件加载数据', `从文件 ${file.name} 加载数据`);
+                alert(`数据加载成功！\n已加载 ${sites.length} 个工地数据。`);
+                return;
+            }
+            
+            // 如果是ZIP文件，使用JSZip处理
             if (typeof JSZip === 'undefined') {
                 alert('JSZip 库未加载，无法处理 ZIP 文件');
                 return;
@@ -997,11 +1112,11 @@ async function loadFromJsFile() {
             
             const zip = await JSZip.loadAsync(file);
             
-            // 查找数据文件
+            // 查找数据文件（优先查找shuju_light.js）
             let dataFile = null;
             const possibleDataFiles = [
-                'shuju.js',
-                'shuju_light.js',
+                'shuju_light.js',  // 新格式：轻量版数据
+                'shuju.js',        // 旧格式：完整数据
                 'construction_data.json'
             ];
 
@@ -1026,7 +1141,7 @@ async function loadFromJsFile() {
                 await loadFromJsonContent(content, dataFile.name);
             }
 
-            // 恢复图片文件
+            // 恢复图片文件（从shuju文件夹）
             await restoreFilesFromZip(zip);
 
             saveData();
@@ -1527,6 +1642,7 @@ function removeAllBase64Data(sitesArray) {
                     const extension = repair.photo.match(/^data:image\/(\w+);/)?.[1] || 'jpg';
                     repair.photo = `[PHOTO:${siteName}/repairs/repair_${index + 1}.${extension}]`;
                     repair.hasPhoto = true;
+                    repair.photoMissing = false;
                 }
             });
         }
@@ -1542,6 +1658,7 @@ function removeAllBase64Data(sitesArray) {
                         fileName = fileName.replace(/[\\/:*?"<>|]/g, '_');
                         drawing.file = `[FILE:${siteName}/drawings/${fileName}]`;
                         drawing.hasFile = true;
+                        drawing.fileMissing = false;
                     }
                 }
             });
@@ -1877,23 +1994,17 @@ function clearChangeLog() {
     }
 }
 // 修改 yun.js 中的 loadFromGitHub 函数
+// 修改 loadFromGitHub 函数，移除token验证
 async function loadFromGitHub() {
-    if (!GIST_CONFIG.configLoaded) {
-        const loaded = await loadGithubConfig();
-        if (!loaded) {
-            showSimpleToast('GitHub配置未完成，无法同步', 'error');
-            return false;
-        }
+    if (!GIST_CONFIG.GIST_ID) {
+        GIST_CONFIG.GIST_ID = BUILT_IN_CONFIG.GIST_ID;
     }
     
-    // 修改提示为合并数据
-    if (!confirm('从云端加载数据将与现有数据合并。相同ID的工地将被合并，新工地将被添加。是否继续？')) {
-        return;
-    }
-    
+    // 从云端加载数据不需要确认，直接开始加载
     try {
         let response;
         
+        // 尝试使用token（如果有的话）
         if (GIST_CONFIG.GITHUB_TOKEN) {
             response = await fetch(`https://api.github.com/gists/${GIST_CONFIG.GIST_ID}`, {
                 headers: {
@@ -1902,6 +2013,7 @@ async function loadFromGitHub() {
                 }
             });
         } else {
+            // 如果没有token，尝试公开访问
             response = await fetch(`https://api.github.com/gists/${GIST_CONFIG.GIST_ID}`, {
                 headers: {
                     'Accept': 'application/vnd.github.v3+json'
@@ -1910,7 +2022,19 @@ async function loadFromGitHub() {
         }
         
         if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            // 如果token访问失败，尝试公开访问
+            if (GIST_CONFIG.GITHUB_TOKEN && response.status === 401) {
+                console.log('Token验证失败，尝试公开访问...');
+                response = await fetch(`https://api.github.com/gists/${GIST_CONFIG.GIST_ID}`, {
+                    headers: {
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+            }
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
         }
         
         const gist = await response.json();
@@ -1925,8 +2049,6 @@ async function loadFromGitHub() {
         const cloudChangeLog = cloudData.changeLog || [];
         
         console.log('从云端加载数据成功，站点数量:', cloudSites.length);
-        console.log('数据版本:', cloudData.syncVersion || cloudData.dataVersion || '未知');
-        console.log('是否包含图片:', cloudData.hasFiles || checkIfHasFiles(cloudSites));
         
         // 合并工地数据
         mergeCloudData(cloudSites, cloudChangeLog);
@@ -1945,6 +2067,29 @@ async function loadFromGitHub() {
         
     } catch (error) {
         console.error('从云端加载失败:', error);
+        
+        // 尝试从公开的raw URL加载
+        try {
+            console.log('尝试从raw URL加载数据...');
+            const rawResponse = await fetch(`https://gist.githubusercontent.com/ebaizs/${GIST_CONFIG.GIST_ID}/raw/construction_data.json`);
+            
+            if (rawResponse.ok) {
+                const rawContent = await rawResponse.text();
+                const cloudData = JSON.parse(rawContent);
+                const cloudSites = cloudData.sites || [];
+                const cloudChangeLog = cloudData.changeLog || [];
+                
+                mergeCloudData(cloudSites, cloudChangeLog);
+                saveData();
+                renderSiteList();
+                
+                showSimpleToast('从公开链接加载数据成功！');
+                return true;
+            }
+        } catch (rawError) {
+            console.error('从raw URL加载也失败:', rawError);
+        }
+        
         showSimpleToast('云端加载失败: ' + error.message, 'error');
         return false;
     }
