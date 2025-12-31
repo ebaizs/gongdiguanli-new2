@@ -1,24 +1,13 @@
-// ==================== 全局变量定义 ====================
-let currentUser = null;
-let currentSiteId = null;
-let sites = [];
-let changeLog = [];
-let isSyncing = false;
+// ==================== 依赖声明 ====================
+// 本文件依赖 base.js 中定义的公共函数和配置
+// 请确保 base.js 在 app.js 之前加载
+// ==================== 全局变量共享 ====================
+// 确保全局变量在应用间共享
+window.sites = window.sites || [];
+window.changeLog = window.changeLog || [];
+window.currentUser = window.currentUser || null;
+window.currentSiteId = window.currentSiteId || null;
 
-// GitHub 配置
-let GIST_CONFIG = {
-    GIST_ID: '',
-    GITHUB_TOKEN: '',
-    configLoaded: false
-};
-
-// 确保变量暴露给全局
-window.currentUser = currentUser;
-window.currentSiteId = currentSiteId;
-window.sites = sites;
-window.changeLog = changeLog;
-window.isSyncing = isSyncing;
-window.GIST_CONFIG = GIST_CONFIG;
 // ==================== 页面初始化 ====================
 document.addEventListener('DOMContentLoaded', async function() {
     console.log('页面加载完成，开始初始化...');
@@ -28,13 +17,18 @@ document.addEventListener('DOMContentLoaded', async function() {
         window.sites = [];
     }
     
-    // 初始化标签页
-    initTabs();
-    
-    // 初始化权限系统
+    // 先初始化权限系统（确保在 initTabs 之前）
     if (typeof initPermissionSystem === 'function') {
         initPermissionSystem();
     }
+    
+    // 等待权限系统初始化完成
+    setTimeout(() => {
+        // 初始化标签页
+        if (typeof initTabs === 'function') {
+            initTabs();
+        }
+    }, 100);
     
     // 设置移动端返回手势锁定
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
@@ -67,24 +61,24 @@ document.addEventListener('DOMContentLoaded', async function() {
                 isLocal: true
             };
             
-            // 如果是测试用户登录，尝试加载云端配置
-            console.log('测试用户登录，自动加载云端配置...');
-            try {
-                await loadCloudUserData();
-                
-                // 重新查找用户
-                user = window.builtInUsers.find(u => u.username === username && u.password === password);
-                
-                if (user && !user.isLocal) {
-                    console.log('云端账户加载成功，使用云端账户登录:', user.name);
-                } else {
-                    // 保持测试用户登录
-                    console.log('保持测试用户登录');
-                }
-            } catch (error) {
-                console.warn('测试用户无法连接云端:', error);
-                showSimpleToast('无法连接到云端配置，请检查网络连接', 'warning');
-            }
+           // 如果是测试用户登录，尝试加载云端配置
+console.log('测试用户登录，自动加载云端配置...');
+try {
+    await window.loadCloudUserData();
+    
+    // 重新查找用户
+    user = window.builtInUsers.find(u => u.username === username && u.password === password);
+    
+    if (user && !user.isLocal) {
+        console.log('云端账户加载成功，使用云端账户登录:', user.name);
+    } else {
+        // 保持测试用户登录
+        console.log('保持测试用户登录');
+    }
+} catch (error) {
+    console.warn('测试用户无法连接云端:', error);
+    showSimpleToast('无法连接到云端配置，请检查网络连接', 'warning');
+}
         }
         
         if (user) {
@@ -248,8 +242,35 @@ function initTabs() {
         return;
     }
     
+    // 确保权限配置已加载
+    if (!window.PERMISSION_CONFIG) {
+        console.warn('权限配置未加载，延迟初始化标签页');
+        setTimeout(initTabs, 100);
+        return;
+    }
+    
     // 获取允许的标签页
-    const allowedTabs = currentUser ? getAllowedTabs() : PERMISSION_CONFIG.availableTabs;
+    let allowedTabs = [];
+    
+    if (currentUser) {
+        if (typeof getAllowedTabs === 'function') {
+            allowedTabs = getAllowedTabs();
+        } else {
+            // 如果 getAllowedTabs 不存在，使用默认权限
+            allowedTabs = window.PERMISSION_CONFIG.availableTabs || [];
+        }
+    } else {
+        // 未登录时显示所有标签页
+        allowedTabs = window.PERMISSION_CONFIG.availableTabs || [];
+    }
+    
+    console.log('初始化标签页，用户:', currentUser?.username, '允许的标签:', allowedTabs);
+    
+    // 如果没有允许的标签页，显示一条消息
+    if (allowedTabs.length === 0) {
+        tabsContainer.innerHTML = '<p style="color: #999; padding: 10px;">没有可用的标签页</p>';
+        return;
+    }
     
     tabsContainer.innerHTML = '';
 
@@ -266,6 +287,7 @@ function initTabs() {
         tabsContainer.appendChild(tabElement);
     });
 
+    // 显示第一个标签页的内容
     const firstTabContent = document.getElementById(allowedTabs[0]?.id);
     if (firstTabContent) {
         firstTabContent.classList.add('active');
@@ -436,6 +458,10 @@ function clearAllLists() {
 function showSiteDetails(siteId) {
     console.log('显示工地详情，ID:', siteId);
     
+    // 设置当前工地ID到全局变量
+    window.currentSiteId = siteId;
+    currentSiteId = siteId;
+    
     // 先确保模态框元素存在
     const siteModal = document.getElementById('siteModal');
     if (!siteModal) {
@@ -444,7 +470,6 @@ function showSiteDetails(siteId) {
         return;
     }
     
-    currentSiteId = siteId;
     const site = sites.find(s => s.id === siteId);
 
     if (!site) {
@@ -787,7 +812,105 @@ function addRepair() {
     addChangeLog('添加维修项', `添加了维修项：${content.substring(0, 20)}...`);
     alert('维修项添加成功！');
 }
+function previewDrawing(event) {
+    const file = event.target.files[0];
+    if (!file) return;
 
+    const preview = document.getElementById('drawingPreview');
+    
+    // 修复：先清空预览
+    preview.innerHTML = '<div style="text-align: center; padding: 10px; color: #666;">正在处理文件...</div>';
+    
+    if (file.type.startsWith('image/')) {
+        // 使用 base.js 中的 compressImageToSize 函数
+        if (typeof compressImageToSize === 'function') {
+            compressImageToSize(file, 500)
+                .then((compressedDataUrl) => {
+                    preview.innerHTML = `
+                        <div style="text-align: center; padding: 10px;">
+                            <img src="${compressedDataUrl}" class="image-preview" onclick="viewImage('${compressedDataUrl}')" style="max-width: 200px; max-height: 150px;">
+                            <div style="margin-top: 5px; font-size: 12px; color: #666;">
+                                ${file.name}<br>
+                                <small>已压缩</small>
+                            </div>
+                        </div>
+                    `;
+                    preview.dataset.originalData = compressedDataUrl;
+                    preview.dataset.fileName = file.name;
+                    preview.dataset.fileType = file.type;
+                    preview.dataset.fileSize = file.size;
+                    
+                    console.log('图片压缩完成，数据已准备');
+                })
+                .catch((error) => {
+                    console.error('图片压缩失败:', error);
+                    alert('图片处理失败，请重试');
+                    preview.innerHTML = '';
+                    event.target.value = '';
+                });
+        } else {
+            // 备用方案：使用 FileReader
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const dataUrl = e.target.result;
+                preview.innerHTML = `
+                    <div style="text-align: center; padding: 10px;">
+                        <img src="${dataUrl}" class="image-preview" onclick="viewImage('${dataUrl}')" style="max-width: 200px; max-height: 150px;">
+                        <div style="margin-top: 5px; font-size: 12px; color: #666;">
+                            ${file.name}<br>
+                            <small>原始文件</small>
+                        </div>
+                    </div>
+                `;
+                preview.dataset.originalData = dataUrl;
+                preview.dataset.fileName = file.name;
+                preview.dataset.fileType = file.type;
+                preview.dataset.fileSize = file.size;
+            };
+            reader.readAsDataURL(file);
+        }
+    } else {
+        // 非图片文件
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const dataUrl = e.target.result;
+            
+            preview.dataset.originalData = dataUrl;
+            preview.dataset.fileName = file.name;
+            preview.dataset.fileType = file.type;
+            preview.dataset.fileSize = file.size;
+
+            let icon = '📄';
+            let typeText = '文档';
+
+            if (file.type.includes('pdf')) {
+                icon = '📕';
+                typeText = 'PDF文件';
+            } else if (file.type.includes('excel') || file.type.includes('sheet')) {
+                icon = '📊';
+                typeText = 'Excel文件';
+            } else if (file.type.includes('word')) {
+                icon = '📝';
+                typeText = 'Word文件';
+            } else if (file.type.includes('csv')) {
+                icon = '📋';
+                typeText = 'CSV文件';
+            }
+
+            preview.innerHTML = `
+                <div style="text-align: center; padding: 10px;">
+                    <div style="font-size: 48px; color: #667eea;">${icon}</div>
+                    <div style="font-weight: bold; margin: 10px 0;">${typeText}</div>
+                    <div style="word-break: break-all; font-size: 12px;">${file.name}</div>
+                    <div style="font-size: 12px; color: #666; margin-top: 5px;">
+                        ${(file.size / 1024).toFixed(1)} KB
+                    </div>
+                </div>
+            `;
+        };
+        reader.readAsDataURL(file);
+    }
+}
 function addWorker() {
     if (!currentSiteId) {
         alert('请先保存工地基本信息！');
@@ -878,7 +1001,6 @@ function addAddRemoveItem() {
     addChangeLog('添加增减项', `添加了${type === 'add' ? '增加' : '减少'}项：${item}，金额：¥${amount}`);
     alert('增减项添加成功！');
 }
-
 function uploadDrawing() {
     if (!currentSiteId) {
         alert('请先保存工地基本信息！');
@@ -892,11 +1014,12 @@ function uploadDrawing() {
     const note = document.getElementById('drawingNote').value;
     const preview = document.getElementById('drawingPreview');
 
+    // 修复：确保获取到正确的文件数据
     const fileData = preview.dataset.originalData;
     const fileName = preview.dataset.fileName;
 
     if (!fileData) {
-        alert('请上传图纸！');
+        alert('请上传图纸文件！');
         return;
     }
 
@@ -917,17 +1040,26 @@ function uploadDrawing() {
     site.drawings.push(drawing);
     saveData();
 
+    // 修复：清空预览和表单
     document.getElementById('drawingFile').value = '';
     document.getElementById('drawingPreview').innerHTML = '';
-    delete preview.dataset.originalData;
-    delete preview.dataset.fileName;
-    delete preview.dataset.fileType;
-    delete preview.dataset.fileSize;
+    
+    // 清除所有数据集属性
+    const previewElement = document.getElementById('drawingPreview');
+    delete previewElement.dataset.originalData;
+    delete previewElement.dataset.fileName;
+    delete previewElement.dataset.fileType;
+    delete previewElement.dataset.fileSize;
+    
     document.getElementById('drawingNote').value = '';
 
     renderDrawingList(site);
     addChangeLog('上传图纸', `上传了${getDrawingTypeText(type)}图纸：${fileName || '未命名文件'}`);
-    alert('图纸上传成功！');
+    
+    // 修复：添加成功提示
+    setTimeout(() => {
+        showSimpleToast('图纸上传成功！', 'success');
+    }, 100);
 }
 
 function addExperience() {
@@ -1179,59 +1311,7 @@ function uploadNewDrawingFile(drawingId, fileInput) {
         reader.readAsDataURL(file);
     }
 }
-// 替换原来的 resizeImage 函数
-function resizeImage(file, maxDimension, callback) {
-    if (!maxDimension) maxDimension = 500; // 默认最大宽度500像素
-    
-    const reader = new FileReader();
-    
-    reader.onload = function(e) {
-        const img = new Image();
-        img.onload = function() {
-            const originalWidth = img.width;
-            const originalHeight = img.height;
-            const scaleRatio = maxDimension / Math.max(originalWidth, originalHeight);
-            
-            // 如果图片小于最大尺寸，直接使用原图
-            if (scaleRatio >= 1) {
-                callback(e.target.result);
-                return;
-            }
-            
-            const newWidth = Math.round(originalWidth * scaleRatio);
-            const newHeight = Math.round(originalHeight * scaleRatio);
-            
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = newWidth;
-            canvas.height = newHeight;
-            
-            ctx.fillStyle = 'white';
-            ctx.fillRect(0, 0, newWidth, newHeight);
-            ctx.drawImage(img, 0, 0, newWidth, newHeight);
-            
-            let dataUrl;
-            const mimeType = file.type || 'image/jpeg';
-            
-            // 统一使用0.6的质量
-            if (mimeType === 'image/jpeg') {
-                dataUrl = canvas.toDataURL('image/jpeg', 0.6);
-            } else if (mimeType === 'image/png') {
-                dataUrl = canvas.toDataURL('image/png');
-            } else if (mimeType === 'image/webp') {
-                dataUrl = canvas.toDataURL('image/webp', 0.6);
-            } else {
-                dataUrl = canvas.toDataURL('image/jpeg', 0.6);
-            }
-            
-            callback(dataUrl);
-        };
-        
-        img.src = e.target.result;
-    };
-    
-    reader.readAsDataURL(file);
-}
+
 // ==================== 报价管理函数 ====================
 function saveQuote() {
     if (!currentSiteId) {
@@ -1381,7 +1461,7 @@ async function tryLoadJsFile() {
             return;
         }
 
-        const jsFilesToTry = ['shuju.js', 'shuju_light.js'];
+       const jsFilesToTry = [CLOUD_CONFIG.DATA_FILES.LOCAL_JS, CLOUD_CONFIG.DATA_FILES.LOCAL_LIGHT_JS];
         let currentIndex = 0;
 
         function tryNextFile() {
@@ -1469,80 +1549,6 @@ async function tryLoadJsFile() {
         }
 
         tryNextFile();
-    });
-}
-
-function convertAllTimesToDate() {
-    sites.forEach(site => {
-        if (site.todos) {
-            site.todos.forEach(todo => {
-                if (todo.time && !todo.time.match(/^\d{4}-\d{2}-\d{2}$/)) {
-                    todo.time = formatDate(todo.time);
-                }
-            });
-        }
-
-        if (site.expenses) {
-            site.expenses.forEach(expense => {
-                if (expense.time && !expense.time.match(/^\d{4}-\d{2}-\d{2}$/)) {
-                    expense.time = formatDate(expense.time);
-                }
-            });
-        }
-
-        if (site.requirements) {
-            site.requirements.forEach(req => {
-                if (req.time && !req.time.match(/^\d{4}-\d{2}-\d{2}$/)) {
-                    req.time = formatDate(req.time);
-                }
-            });
-        }
-
-        if (site.repairs) {
-            site.repairs.forEach(repair => {
-                if (repair.time && !repair.time.match(/^\d{4}-\d{2}-\d{2}$/)) {
-                    repair.time = formatDate(repair.time);
-                }
-            });
-        }
-
-        if (site.workers) {
-            site.workers.forEach(worker => {
-                if (worker.time && !worker.time.match(/^\d{4}-\d{2}-\d{2}$/)) {
-                    worker.time = formatDate(worker.time);
-                }
-                if (worker.startTime && !worker.startTime.match(/^\d{4}-\d{2}-\d{2}$/)) {
-                    worker.startTime = formatDate(worker.startTime);
-                }
-                if (worker.endTime && !worker.endTime.match(/^\d{4}-\d{2}-\d{2}$/)) {
-                    worker.endTime = formatDate(worker.endTime);
-                }
-            });
-        }
-
-        if (site.addRemoveItems) {
-            site.addRemoveItems.forEach(item => {
-                if (item.time && !item.time.match(/^\d{4}-\d{2}-\d{2}$/)) {
-                    item.time = formatDate(item.time);
-                }
-            });
-        }
-
-        if (site.drawings) {
-            site.drawings.forEach(drawing => {
-                if (drawing.time && !drawing.time.match(/^\d{4}-\d{2}-\d{2}$/)) {
-                    drawing.time = formatDate(drawing.time);
-                }
-            });
-        }
-
-        if (site.experiences) {
-            site.experiences.forEach(exp => {
-                if (exp.time && !exp.time.match(/^\d{4}-\d{2}-\d{2}$/)) {
-                    exp.time = formatDate(exp.time);
-                }
-            });
-        }
     });
 }
 
@@ -1712,10 +1718,12 @@ function updateFileData(filePath, base64Data) {
         showSimpleToast('未找到对应的文件路径', 'error');
     }
 }
-// ==================== 退出和模态框管理 ====================
 function closeSiteModal() {
     document.getElementById('siteModal').style.display = 'none';
     document.body.style.overflow = 'auto';
+    
+    // 清除当前工地ID
+    window.currentSiteId = null;
     currentSiteId = null;
     
     const previews = ['repairPhotoPreview', 'drawingPreview'];
@@ -2710,67 +2718,6 @@ function deleteItem(itemId, collectionName) {
     return false;
 }
 
-// ==================== 工地列表相关函数 ====================
-function renderSiteList() {
-    const siteList = document.getElementById('siteList');
-    siteList.innerHTML = '';
-
-    if (sites.length === 0) {
-        siteList.innerHTML = '<p class="loading">暂无工地数据，请添加工地</p>';
-        return;
-    }
-
-    // 过滤可访问的工地
-    const accessibleSites = sites.filter(site => {
-        return canViewSite ? canViewSite(site.id) : true;
-    });
-
-    if (accessibleSites.length === 0) {
-        siteList.innerHTML = '<p class="loading">您没有可访问的工地</p>';
-        return;
-    }
-
-    accessibleSites.forEach(site => {
-        const progress = site.progress || 0;
-        const daysLeft = calculateDaysLeft(site.endDate);
-        const status = getSiteStatus(progress, daysLeft);
-
-        const deleteBtnHtml = canDelete() ?
-            `<button class="site-delete-btn" onclick="event.stopPropagation(); deleteSite('${site.id}')" title="删除工地">×</button>` :
-            '';
-
-        const siteCard = document.createElement('div');
-        siteCard.className = 'site-card';
-        siteCard.innerHTML = `
-            <div class="site-card-header">
-                <div class="site-name">${site.name || '未命名工地'}</div>
-                <div class="site-card-actions">
-                    <div class="site-status status-${status.class}">${status.text}</div>
-                    ${deleteBtnHtml}
-                </div>
-            </div>
-            <div class="site-info">
-                <div>开工：${formatDate(site.startDate) || '未设置'}</div>
-                <div>计划完工：${formatDate(site.endDate) || '未设置'}</div>
-                <div>进度：${progress}%</div>
-                <div>剩余：${daysLeft > 0 ? daysLeft + '天' : '已逾期'}</div>
-            </div>
-            <div class="progress-bar" style="margin-top: 10px; height: 16px;">
-                <div class="progress-fill" style="width: ${progress}%; font-size: 10px; line-height: 16px;">${progress}%</div>
-            </div>
-        `;
-
-        siteCard.onclick = () => {
-            if (canViewSite(site.id)) {
-                showSiteDetails(site.id);
-            } else {
-                alert('您没有权限查看此工地');
-            }
-        };
-        siteList.appendChild(siteCard);
-    });
-}
-
 function updateTopButtonsByPermission() {
     const topButtons = document.querySelector('.header-top-buttons');
     if (!topButtons) return;
@@ -2810,11 +2757,119 @@ function updateTopButtonsByPermission() {
         changeLogBtnVisible: changeLogBtn.style.display !== 'none'
     });
 }
+// 在 app.js 末尾添加这些函数：
+
+// 数据管理相关函数
+function downloadJsonData() {
+    if (!canDownloadJsonData()) {
+        alert('您没有权限下载JSON数据！');
+        return;
+    }
+    
+    try {
+        const dataToExport = {
+            sites: sites,
+            changeLog: changeLog,
+            exportTime: new Date().toISOString(),
+            exportedBy: currentUser?.name || 'Unknown',
+            dataVersion: '2.3'
+        };
+        
+        const dataStr = JSON.stringify(dataToExport, null, 2);
+        const dataBlob = new Blob([dataStr], { type: 'application/json' });
+        const url = URL.createObjectURL(dataBlob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `工地数据_${new Date().toLocaleDateString('zh-CN')}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        addChangeLog('导出数据', '下载了JSON格式的数据文件');
+        showSimpleToast('JSON数据下载成功！', 'success');
+        
+    } catch (error) {
+        console.error('下载JSON数据失败:', error);
+        alert('下载失败：' + error.message);
+    }
+}
+
+function loadImagesZipOnly() {
+    if (!canLoadImagesZipOnly()) {
+        alert('您没有权限加载图片包！');
+        return;
+    }
+    
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.zip';
+    
+    input.onchange = async function(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        
+        if (!file.name.endsWith('.zip')) {
+            alert('请选择ZIP文件！');
+            return;
+        }
+        
+        try {
+            if (typeof JSZip === 'undefined') {
+                alert('JSZip库未加载，无法处理ZIP文件');
+                return;
+            }
+            
+            const zip = await JSZip.loadAsync(file);
+            
+            // 检查是否是包含图片的ZIP包
+            const hasShujuFolder = zip.folder('shuju');
+            if (!hasShujuFolder) {
+                alert('ZIP包中没有找到图片文件夹（shuju）');
+                return;
+            }
+            
+            // 恢复图片文件
+            const result = await restoreFilesFromZip(zip);
+            
+            if (result.restoredCount > 0) {
+                alert(`图片恢复成功！\n恢复 ${result.restoredCount} 个文件`);
+                
+                // 刷新当前显示
+                if (currentSiteId) {
+                    const site = sites.find(s => s.id === currentSiteId);
+                    if (site) {
+                        loadSiteData(site);
+                    }
+                }
+                
+                addChangeLog('加载图片包', `从ZIP文件恢复了${result.restoredCount}个图片文件`);
+            } else {
+                alert('未找到可恢复的图片文件');
+            }
+            
+        } catch (error) {
+            console.error('加载图片包失败:', error);
+            alert('加载失败：' + error.message);
+        }
+    };
+    
+    input.click();
+}
+
+// 暴露新函数到全局
+window.downloadJsonData = downloadJsonData;
+window.loadImagesZipOnly = loadImagesZipOnly;
 // 然后在登录成功后调用这个函数
 // 在 app.js 的登录事件处理中，登录成功后添加：
 // updateTopButtonsByPermission();
 // 暴露到全局
 // 暴露函数到全局
+// 暴露新函数到全局
+window.downloadJsonDataWithImages = downloadJsonDataWithImages;
+window.importJsonDataFromFile = importJsonDataFromFile;
+window.downloadLightweightZip = downloadLightweightZip;
 window.saveToJsFile = saveToJsFile;
 window.loadFromJsFile = loadFromJsFile;
 window.restoreFilesFromZip = restoreFilesFromZip;

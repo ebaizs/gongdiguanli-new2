@@ -55,16 +55,15 @@ window.adminUser = null;
 window.builtInUsers = [...localBuiltInUsers];
 
 // 初始化权限配置
-    
-window.PERMISSION_CONFIG.userPermissions['1'] = {
+ window.PERMISSION_CONFIG.userPermissions['1'] = {
     name: '测试',
     description: '默认权限',
     permissions: {
         refreshCloudUsers: false,
         showPermissionManager: false,
         showChangeLog: false,  
-        viewAllSites: false,
-        addSite: false,
+        viewAllSites: true,  // 改为 true 查看所有工地
+        addSite: true,       // 允许添加工地
         deleteSite: false,
         editAll: true,
         exportData: false,
@@ -73,10 +72,10 @@ window.PERMISSION_CONFIG.userPermissions['1'] = {
         cloudSync: true,
         editQuote: true,
         deleteItems: false,
-        viewAllTabs: true,
+        viewAllTabs: true,   // 改为 true 查看所有标签页
         addItems: true,
-        allowedSites: ['site001'],
-        allowedTabs: []
+        allowedSites: [],    // 空数组表示所有工地
+        allowedTabs: []      // 空数组表示所有标签页
     }
 };
 
@@ -102,78 +101,6 @@ if (typeof showSimpleToast === 'undefined') {
 }
 
 
-// ==================== 云端用户数据加载(用户账号及密码登录信息，指定至-/raw/yonghu.js) ====================
-async function loadCloudUserData() {
-    try {
-        const url = 'https://gist.githubusercontent.com/ebaizs/097f8adbb3790f3a95ba586a0867699b/raw/yonghu.js';
-        
-        console.log('正在从云端加载用户数据:', url);
-        
-        const response = await fetch(url, { 
-            cache: 'no-cache',
-            mode: 'cors'
-        });
-        
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-        
-        const content = await response.text();
-        console.log('云端数据加载成功，大小:', content.length);
-        
-        // 方法1: 使用Function构造函数创建独立作用域
-        try {
-            const parseCloudData = new Function(content + '\nreturn { builtInUsers, PERMISSION_CONFIG };');
-            const cloudData = parseCloudData();
-            
-            console.log('成功解析云端数据:', {
-                userCount: cloudData.builtInUsers ? cloudData.builtInUsers.length : 0,
-                permissionCount: cloudData.PERMISSION_CONFIG ? Object.keys(cloudData.PERMISSION_CONFIG.userPermissions || {}).length : 0
-            });
-           // 合并用户数据
-if (cloudData.builtInUsers && Array.isArray(cloudData.builtInUsers)) {
-    const existingUsernames = new Set(window.builtInUsers.map(u => u.username));
-    const newUsers = cloudData.builtInUsers.filter(user => 
-        user && user.username && !existingUsernames.has(user.username)
-    );
-    
-    window.builtInUsers.push(...newUsers);
-    console.log('添加了', newUsers.length, '个新用户:', newUsers.map(u => u.username));
-    
-    
-   // 保存云端管理员引用
-const adminUser = newUsers.find(u => 
-    u.isAdmin === true || window.ADMIN_USERS.includes(u.username)
-);
-if (adminUser) {
-    window.adminUser = adminUser;
-    // 确保管理员标志
-    if (!adminUser.isAdmin) adminUser.isAdmin = true;
-}
-}
-            
-            // 合并权限配置
-            if (cloudData.PERMISSION_CONFIG && cloudData.PERMISSION_CONFIG.userPermissions) {
-                for (const [username, config] of Object.entries(cloudData.PERMISSION_CONFIG.userPermissions)) {
-                    if (!window.PERMISSION_CONFIG.userPermissions[username]) {
-                        window.PERMISSION_CONFIG.userPermissions[username] = config;
-                    }
-                }
-                console.log('合并了权限配置，现有权限用户:', Object.keys(window.PERMISSION_CONFIG.userPermissions));
-            }
-            
-            return true;
-            
-        } catch (parseError) {
-            console.warn('方法1解析失败:', parseError);
-            return false;
-        }
-        
-    } catch (error) {
-        console.warn('加载云端用户数据失败:', error);
-        throw error;
-    }
-}
 
 // ==================== 权限系统初始化 ====================
 function initPermissionSystem() {
@@ -218,13 +145,13 @@ try {
     
  
 
-//////////////////////以下可能可删除///////////////////////////////////////////
+
 
 // 异步尝试从云端加载最新数据
-    setTimeout(async () => {
+   setTimeout(async () => {
         try {
-            console.log('开始异步加载云端用户数据...');
-            const loaded = await loadCloudUserData();
+            console.log('开始刷新云端账户数据...');
+            const loaded = await window.loadCloudUserData();
             
             if (loaded) {
                 console.log('云端账户数据已加载，可用账户:', window.builtInUsers.map(u => u.name));
@@ -253,7 +180,7 @@ try {
         }
     }, 3000);
 }
-//////////////////////以上可能可删除//////////////////////////////////////////////
+
 // 确保管理员有所有权限
 function ensureAdminPermissions() {
     // 从 ADMIN_USERS 获取管理员列表
@@ -658,7 +585,7 @@ function getTemplateByType(templateType, username) {
                 viewAllSites: false,
                 viewAllTabs: false,
                 allowedSites: [],
-                allowedTabs: ['progressTab', 'requirementTab', 'workerTab'],
+                allowedTabs: ['progressTab', 'requirementTab','todoTab', 'drawingTab'],
                 
                 // 10. 导入数据
                 importData: true,
@@ -811,7 +738,7 @@ function showPermissionManager() {
                     </div>
                     <p style="color: #666; font-size: 14px; margin-top: 10px;">
                         <strong>导出/上传权限配置：</strong>
-                        - 可选择上传到云端直接替换 yonghu.js<br>
+                        - 可选择上传到云端直接替换 账号密码.js<br>
                         - 或下载到本地备份<br>
                         - 文件包含所有用户和权限配置
                     </p>
@@ -1463,8 +1390,8 @@ async function uploadToCloudDirectly(content) {
             },
             body: JSON.stringify({
                 description: `权限配置文件更新 - ${new Date().toLocaleString()}`,
-                files: {
-                    'yonghu.js': {
+                  files: {
+                    [CLOUD_CONFIG.DATA_FILES.CLOUD_JS]: {  // 使用变量
                         content: content
                     }
                 }

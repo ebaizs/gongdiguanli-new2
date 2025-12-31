@@ -1,5 +1,11 @@
+// ==================== 依赖声明 ====================
+// 本文件依赖 base.js 中定义的公共函数和配置
+// 请确保 base.js 在 yun.js 之前加载
 
 // ==================== GitHub Token 管理函数 ====================
+// （保留原有的 ensureGitHubToken 和 promptForGitHubToken 函数）
+// ==================== GitHub Token 管理函数 ====================
+
 async function ensureGitHubToken(options = {}) {
     const {
         checkDataSize = true,      // 是否检查数据大小
@@ -251,7 +257,8 @@ checkAndWrapFunction('canShowChangeLog', function() {
 });
 // ==================== 内置GitHub配置 ====================
 const BUILT_IN_CONFIG = {
-    GIST_ID: '097f8adbb3790f3a95ba586a0867699b', // Gist ID 保持内置
+    //要更改的内容如下：------------------------------------------
+    GIST_ID: CLOUD_CONFIG.GIST_ID, // 使用base.js中的GIST_ID
     GITHUB_TOKEN: '', // Token 改为空，需要用户输入
     configLoaded: false // 初始状态为未加载
 };
@@ -304,44 +311,388 @@ function resetGithubConfig() {
         }
     });
 }
+// ==================== 权限检查函数（统一格式） ====================
 
-// 修改所有权限检查函数，先检查管理员权限
+// 删除权限
 function canDelete() { 
-    return isAdmin() || (hasPermission ? hasPermission('deleteItems') : false); 
+    if (typeof window.isAdmin === 'function' && window.isAdmin()) return true;
+    if (typeof window.hasPermission === 'function') return window.hasPermission('deleteItems');
+    return false;
 }
 
+// 编辑时间权限
 function canEditTime() { 
-    return isAdmin() || (hasPermission ? hasPermission('editAll') : false); 
+    if (typeof window.isAdmin === 'function' && window.isAdmin()) return true;
+    if (typeof window.hasPermission === 'function') return window.hasPermission('editAll');
+    return false;
 }
 
+// 编辑状态权限
 function canEditStatus() { 
-    return isAdmin() || (hasPermission ? hasPermission('editAll') : false); 
+    if (typeof window.isAdmin === 'function' && window.isAdmin()) return true;
+    if (typeof window.hasPermission === 'function') return window.hasPermission('editAll');
+    return false;
 }
 
+// 编辑报价权限
 function canEditQuote() { 
-    return isAdmin() || (hasPermission ? hasPermission('editQuote') : false); 
+    if (typeof window.isAdmin === 'function' && window.isAdmin()) return true;
+    if (typeof window.hasPermission === 'function') return window.hasPermission('editQuote');
+    return false;
 }
 
+// 清空日志权限
 function canClearLog() { 
-    return isAdmin() || (hasPermission ? hasPermission('viewLogs') : false); 
+    if (typeof window.isAdmin === 'function' && window.isAdmin()) return true;
+    if (typeof window.hasPermission === 'function') return window.hasPermission('viewLogs');
+    return false;
 }
 
+// 添加项目权限
 function canAdd() { 
-    return isAdmin() || (hasPermission ? hasPermission('addItems') : false); 
+    if (typeof window.isAdmin === 'function' && window.isAdmin()) return true;
+    if (typeof window.hasPermission === 'function') return window.hasPermission('addItems');
+    return false;
 }
 
+// 编辑工人评分权限
 function canEditWorkerRating() { 
-    return isAdmin() || (hasPermission ? hasPermission('editAll') : false); 
+    if (typeof window.isAdmin === 'function' && window.isAdmin()) return true;
+    if (typeof window.hasPermission === 'function') return window.hasPermission('editAll');
+    return false;
 }
 
+// 编辑工人时间权限
 function canEditWorkerTime() { 
-    return isAdmin() || (hasPermission ? hasPermission('editAll') : false); 
+    if (typeof window.isAdmin === 'function' && window.isAdmin()) return true;
+    if (typeof window.hasPermission === 'function') return window.hasPermission('editAll');
+    return false;
 }
 
+// 编辑备注权限
 function canEditNote() { 
-    return isAdmin() || (hasPermission ? hasPermission('editAll') : false); 
+    if (typeof window.isAdmin === 'function' && window.isAdmin()) return true;
+    if (typeof window.hasPermission === 'function') return window.hasPermission('editAll');
+    return false;
 }
 
+// 显示权限管理器权限
+function canShowPermissionManager() { 
+    if (typeof window.isAdmin === 'function' && window.isAdmin()) return true;
+    if (typeof window.hasPermission === 'function') return window.hasPermission('showPermissionManager');
+    return false;
+}
+
+// 显示更改日志权限
+function canShowChangeLog() { 
+    if (typeof window.isAdmin === 'function' && window.isAdmin()) return true;
+    if (typeof window.hasPermission === 'function') return window.hasPermission('viewLogs');
+    return false;
+}
+
+// 管理GitHub配置权限
+function canManageGithubConfig() { 
+    if (typeof window.isAdmin === 'function' && window.isAdmin()) return true;
+    if (typeof window.hasPermission === 'function') return window.hasPermission('cloudSync');
+    return false;
+}
+
+// 刷新云端用户权限
+function canRefreshCloudUsers() { 
+    if (typeof window.isAdmin === 'function' && window.isAdmin()) return true;
+    if (typeof window.hasPermission === 'function') return window.hasPermission('refreshCloudUsers');
+    return false;
+}
+
+function canSaveToJsFile() {
+    if (typeof window.isAdmin === 'function' && window.isAdmin()) return true;
+    if (typeof window.hasPermission === 'function') return window.hasPermission('exportData');
+    return false;
+}
+
+// 下载JSON数据权限
+function canDownloadJsonData() { 
+    if (typeof window.isAdmin === 'function' && window.isAdmin()) return true;
+    if (typeof window.hasPermission === 'function') return window.hasPermission('exportData');
+    return false;
+}
+
+// 从文件加载权限
+function canLoadFromJsFile() { 
+    if (typeof window.isAdmin === 'function' && window.isAdmin()) return true;
+    if (typeof window.hasPermission === 'function') return window.hasPermission('importData');
+    return false;
+}
+
+// 加载图片包权限
+function canLoadImagesZipOnly() { 
+    if (typeof window.isAdmin === 'function' && window.isAdmin()) return true;
+    if (typeof window.hasPermission === 'function') return window.hasPermission('importData');
+    return false;
+}
+
+// 查看工地权限
+function canViewSite(siteId) { 
+    if (typeof window.isAdmin === 'function' && window.isAdmin()) return true;
+    
+    if (typeof window.hasPermission === 'function') {
+        if (window.hasPermission('viewAllSites')) return true;
+        
+        const userPerms = window.PERMISSION_CONFIG && window.PERMISSION_CONFIG.userPermissions;
+        if (userPerms && window.currentUser && userPerms[window.currentUser.username]) {
+            return userPerms[window.currentUser.username].permissions.allowedSites?.includes(siteId) || false;
+        }
+    }
+    return false;
+}
+
+// 查看标签页权限
+function canViewTab(tabId) { 
+    if (typeof window.isAdmin === 'function' && window.isAdmin()) return true;
+    
+    if (typeof window.hasPermission === 'function') {
+        if (window.hasPermission('viewAllTabs')) return true;
+        
+        const userPerms = window.PERMISSION_CONFIG && window.PERMISSION_CONFIG.userPermissions;
+        if (userPerms && window.currentUser && userPerms[window.currentUser.username]) {
+            return userPerms[window.currentUser.username].permissions.allowedTabs?.includes(tabId) || false;
+        }
+    }
+    return false;
+}
+
+// 云端同步权限
+function canCloudSync() { 
+    if (typeof window.isAdmin === 'function' && window.isAdmin()) return true;
+    if (typeof window.hasPermission === 'function') return window.hasPermission('cloudSync');
+    return false;
+}
+
+// 导出数据权限
+function canExportData() { 
+    if (typeof window.isAdmin === 'function' && window.isAdmin()) return true;
+    if (typeof window.hasPermission === 'function') return window.hasPermission('exportData');
+    return false;
+}
+
+// 导入数据权限
+function canImportData() { 
+    if (typeof window.isAdmin === 'function' && window.isAdmin()) return true;
+    if (typeof window.hasPermission === 'function') return window.hasPermission('importData');
+    return false;
+}
+
+// 添加工地权限
+function canAddSite() { 
+    if (typeof window.isAdmin === 'function' && window.isAdmin()) return true;
+    if (typeof window.hasPermission === 'function') return window.hasPermission('addSite');
+    return false;
+}
+
+// ==================== 暴露到全局 ====================
+
+// 核心权限函数
+window.canDelete = canDelete;
+window.canEditTime = canEditTime;
+window.canEditStatus = canEditStatus;
+window.canEditQuote = canEditQuote;
+window.canClearLog = canClearLog;
+window.canAdd = canAdd;
+window.canEditWorkerRating = canEditWorkerRating;
+window.canEditWorkerTime = canEditWorkerTime;
+window.canEditNote = canEditNote;
+
+// 界面权限函数
+window.canShowPermissionManager = canShowPermissionManager;
+window.canShowChangeLog = canShowChangeLog;
+window.canManageGithubConfig = canManageGithubConfig;
+
+// 数据管理权限函数
+window.canRefreshCloudUsers = canRefreshCloudUsers;
+window.canSaveToJsFile = canSaveToJsFile;
+window.canDownloadJsonData = canDownloadJsonData;
+window.canLoadFromJsFile = canLoadFromJsFile;
+window.canLoadImagesZipOnly = canLoadImagesZipOnly;
+window.canCloudSync = canCloudSync;
+window.canExportData = canExportData;
+window.canImportData = canImportData;
+window.canAddSite = canAddSite;
+
+// 访问控制函数
+window.canViewSite = canViewSite;
+window.canViewTab = canViewTab;
+
+// 管理员检查函数（确保存在）
+if (typeof window.isAdmin === 'undefined') {
+    window.isAdmin = function() {
+        if (!window.currentUser) return false;
+        
+        // 检查用户对象的 isAdmin 属性
+        if (window.currentUser.isAdmin === true) return true;
+        
+        // 检查管理员列表
+        if (window.ADMIN_USERS && window.ADMIN_USERS.includes(window.currentUser.username)) return true;
+        
+        // 检查权限配置中的管理员标志
+        const userPerms = window.PERMISSION_CONFIG && window.PERMISSION_CONFIG.userPermissions;
+        if (userPerms && userPerms[window.currentUser.username]) {
+            return userPerms[window.currentUser.username].permissions.isAdmin === true;
+        }
+        
+        return false;
+    };
+}
+
+// 权限检查函数（确保存在）
+if (typeof window.hasPermission === 'undefined') {
+    window.hasPermission = function(permissionName) {
+        if (!window.currentUser) return false;
+        
+        // 首先检查是否为管理员
+        if (window.isAdmin && window.isAdmin()) return true;
+        
+        // 获取用户权限
+        const userPerms = window.PERMISSION_CONFIG && window.PERMISSION_CONFIG.userPermissions;
+        if (!userPerms || !userPerms[window.currentUser.username]) return false;
+        
+        return userPerms[window.currentUser.username].permissions[permissionName] || false;
+    };
+}
+
+// ==================== 权限应用函数 ====================
+
+/**
+ * 更新顶部按钮权限显示
+ */
+function updateTopButtonsByPermission() {
+    const topButtons = document.querySelector('.header-top-buttons');
+    if (!topButtons) return;
+    
+    // 权限管理按钮
+    let permissionBtn = topButtons.querySelector('.permission-manager-btn');
+    if (!permissionBtn) {
+        permissionBtn = document.createElement('button');
+        permissionBtn.className = 'top-btn btn-danger permission-manager-btn';
+        permissionBtn.onclick = window.showPermissionManager || function() { alert('权限管理功能未加载'); };
+        permissionBtn.textContent = '权限管理';
+        permissionBtn.title = '权限管理';
+        topButtons.appendChild(permissionBtn);
+    }
+    
+    // 更改日志按钮
+    let changeLogBtn = topButtons.querySelector('.change-log-btn');
+    if (!changeLogBtn) {
+        changeLogBtn = document.createElement('button');
+        changeLogBtn.className = 'top-btn btn-primary change-log-btn';
+        changeLogBtn.onclick = window.showChangeLog || function() { alert('更改日志功能未加载'); };
+        changeLogBtn.textContent = '更改日志';
+        changeLogBtn.title = '更改日志';
+        topButtons.appendChild(changeLogBtn);
+    }
+    
+    // 根据权限显示/隐藏按钮
+    if (typeof window.canShowPermissionManager === 'function') {
+        permissionBtn.style.display = window.canShowPermissionManager() ? '' : 'none';
+    } else {
+        permissionBtn.style.display = 'none';
+    }
+    
+    if (typeof window.canShowChangeLog === 'function') {
+        changeLogBtn.style.display = window.canShowChangeLog() ? '' : 'none';
+    } else {
+        changeLogBtn.style.display = 'none';
+    }
+}
+
+/**
+ * 获取用户可访问的标签页
+ */
+function getAllowedTabs() {
+    if (!window.currentUser) return [];
+    
+    if (window.hasPermission && window.hasPermission('viewAllTabs')) {
+        return window.PERMISSION_CONFIG.availableTabs || [];
+    }
+    
+    const userPerms = window.PERMISSION_CONFIG && window.PERMISSION_CONFIG.userPermissions;
+    if (!userPerms || !userPerms[window.currentUser.username] || !userPerms[window.currentUser.username].permissions.allowedTabs) {
+        return [];
+    }
+    
+    const availableTabs = window.PERMISSION_CONFIG.availableTabs || [];
+    return availableTabs.filter(tab => 
+        userPerms[window.currentUser.username].permissions.allowedTabs.includes(tab.id)
+    );
+}
+
+/**
+ * 应用用户权限到界面
+ */
+function applyUserPermissions() {
+    if (!window.currentUser) return;
+    
+    console.log('应用用户权限:', window.currentUser.username);
+    
+    // 更新顶部按钮
+    updateTopButtonsByPermission();
+    
+    // 更新标签页
+    if (typeof window.initTabs === 'function') {
+        window.initTabs();
+    }
+    
+    // 更新工地列表
+    if (typeof window.renderSiteList === 'function') {
+        setTimeout(() => window.renderSiteList(), 100);
+    }
+    
+    // 更新添加按钮
+    const addButton = document.querySelector('.add-site-btn');
+    if (addButton && typeof window.canAddSite === 'function') {
+        addButton.style.display = window.canAddSite() ? '' : 'none';
+    }
+    
+    // 更新数据管理按钮
+    updateDataManagementButtons();
+}
+
+/**
+ * 更新数据管理按钮权限
+ */
+function updateDataManagementButtons() {
+    const dataManagement = document.querySelector('.import-export');
+    if (!dataManagement) return;
+    
+    // 备份完整数据按钮
+    const saveToJsFileBtn = dataManagement.querySelector('[onclick*="saveToJsFile"]');
+    if (saveToJsFileBtn && typeof window.canSaveToJsFile === 'function') {
+        saveToJsFileBtn.style.display = window.canSaveToJsFile() ? '' : 'none';
+    }
+    
+    // 下载JSON数据按钮
+    const downloadJsonDataBtn = dataManagement.querySelector('[onclick*="downloadJsonData"]');
+    if (downloadJsonDataBtn && typeof window.canDownloadJsonData === 'function') {
+        downloadJsonDataBtn.style.display = window.canDownloadJsonData() ? '' : 'none';
+    }
+    
+    // 从文件加载按钮
+    const loadFromJsFileBtn = dataManagement.querySelector('[onclick*="loadFromJsFile"]');
+    if (loadFromJsFileBtn && typeof window.canLoadFromJsFile === 'function') {
+        loadFromJsFileBtn.style.display = window.canLoadFromJsFile() ? '' : 'none';
+    }
+    
+    // 加载图片包按钮
+    const loadImagesBtn = dataManagement.querySelector('[onclick*="loadImagesZipOnly"]');
+    if (loadImagesBtn && typeof window.canLoadImagesZipOnly === 'function') {
+        loadImagesBtn.style.display = window.canLoadImagesZipOnly() ? '' : 'none';
+    }
+}
+
+// 暴露权限应用函数
+window.updateTopButtonsByPermission = updateTopButtonsByPermission;
+window.getAllowedTabs = getAllowedTabs;
+window.applyUserPermissions = applyUserPermissions;
+window.updateDataManagementButtons = updateDataManagementButtons;
 
 // 可选：添加一个查看配置的函数
 function showCurrentConfig() {
@@ -520,7 +871,8 @@ async function fetchCloudData() {
         }
         
         const gist = await response.json();
-        const fileContent = gist.files['your-data.json']?.content;
+        //要更改的内容如下：------------------------------------------
+        const fileContent = gist.files[CLOUD_CONFIG.DATA_FILES.CLOUD_JSON]?.content;
         
         if (!fileContent) {
             return { sites: [], changeLog: [] };
@@ -687,8 +1039,8 @@ async function saveToGitHub() {
             },
             body: JSON.stringify({
                 description: `工地装饰管理系统完整数据备份 - ${new Date().toLocaleString()} (${dataSizeCheck.humanSize})`,
-                files: {
-                    'your-data.json': {
+              files: {
+                    [CLOUD_CONFIG.DATA_FILES.CLOUD_JSON]: {  // 使用变量
                         content: dataString
                     }
                 }
@@ -741,76 +1093,6 @@ async function saveToGitHub() {
     }
 }
 
-// 添加检查数据大小的函数
-function checkDataSizeBeforeUpload() {
-    try {
-        // 创建一个临时数据对象来估算大小
-        const tempData = {
-            sites: JSON.parse(JSON.stringify(sites)),
-            changeLog: JSON.parse(JSON.stringify(changeLog))
-        };
-        
-        const dataString = JSON.stringify(tempData);
-        const byteSize = dataString.length;
-        
-        // 估算base64图片的大小（base64比原始文件大33%）
-        let estimatedImageSize = 0;
-        let imageCount = 0;
-        
-        sites.forEach(site => {
-            // 统计维修图片
-            if (site.repairs) {
-                site.repairs.forEach(repair => {
-                    if (repair.photo && repair.photo.startsWith('data:')) {
-                        // base64数据大约是原始文件的133%
-                        const base64Size = repair.photo.length;
-                        estimatedImageSize += base64Size;
-                        imageCount++;
-                    }
-                });
-            }
-            
-            // 统计图纸文件
-            if (site.drawings) {
-                site.drawings.forEach(drawing => {
-                    if (drawing.file && drawing.file.startsWith('data:')) {
-                        const base64Size = drawing.file.length;
-                        estimatedImageSize += base64Size;
-                        imageCount++;
-                    }
-                });
-            }
-        });
-        
-        const totalSize = byteSize + estimatedImageSize;
-        
-        // 转换为可读格式
-        const formatSize = (bytes) => {
-            if (bytes < 1024) return bytes + ' B';
-            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
-            if (bytes < 1024 * 1024 * 1024) return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
-            return (bytes / (1024 * 1024 * 1024)).toFixed(1) + ' GB';
-        };
-        
-        return {
-            canUpload: totalSize < 8 * 1024 * 1024, // 8MB限制
-            totalSize: totalSize,
-            humanSize: formatSize(totalSize),
-            textSize: formatSize(byteSize),
-            imageSize: formatSize(estimatedImageSize),
-            imageCount: imageCount,
-            warning: totalSize > 6 * 1024 * 1024 ? '数据较大，建议压缩图片' : '大小正常'
-        };
-        
-    } catch (error) {
-        console.error('检查数据大小失败:', error);
-        return {
-            canUpload: true,
-            humanSize: '未知大小',
-            warning: '无法计算数据大小'
-        };
-    }
-}
 // 添加检查函数
 function checkIfHasFiles(sitesArray) {
     if (!sitesArray) return false;
@@ -843,298 +1125,6 @@ function checkIfHasFiles(sitesArray) {
     return hasFiles;
 }
 
-// 在 yun.js 中添加这个函数
-function convertAllTimesToDate() {
-    if (!sites) return;
-    
-    sites.forEach(site => {
-        if (site.todos) {
-            site.todos.forEach(todo => {
-                if (todo.time && !todo.time.match(/^\d{4}-\d{2}-\d{2}$/)) {
-                    todo.time = formatDate(todo.time);
-                }
-            });
-        }
-
-        function convertAllTimesToDate() {
-    sites.forEach(site => {
-        if (site.todos) {
-            site.todos.forEach(todo => {
-                if (todo.time && !todo.time.match(/^\d{4}-\d{2}-\d{2}$/)) {
-                    todo.time = formatDate(todo.time);
-                }
-            });
-        }
-
-        if (site.expenses) {
-            site.expenses.forEach(expense => {
-                if (expense.time && !expense.time.match(/^\d{4}-\d{2}-\d{2}$/)) {
-                    expense.time = formatDate(expense.time);
-                }
-            });
-        }
-
-        if (site.requirements) {
-            site.requirements.forEach(req => {
-                if (req.time && !req.time.match(/^\d{4}-\d{2}-\d{2}$/)) {
-                    req.time = formatDate(req.time);
-                }
-            });
-        }
-
-        if (site.repairs) {
-            site.repairs.forEach(repair => {
-                if (repair.time && !repair.time.match(/^\d{4}-\d{2}-\d{2}$/)) {
-                    repair.time = formatDate(repair.time);
-                }
-            });
-        }
-
-        if (site.workers) {
-            site.workers.forEach(worker => {
-                if (worker.time && !worker.time.match(/^\d{4}-\d{2}-\d{2}$/)) {
-                    worker.time = formatDate(worker.time);
-                }
-                if (worker.startTime && !worker.startTime.match(/^\d{4}-\d{2}-\d{2}$/)) {
-                    worker.startTime = formatDate(worker.startTime);
-                }
-                if (worker.endTime && !worker.endTime.match(/^\d{4}-\d{2}-\d{2}$/)) {
-                    worker.endTime = formatDate(worker.endTime);
-                }
-            });
-        }
-
-        if (site.addRemoveItems) {
-            site.addRemoveItems.forEach(item => {
-                if (item.time && !item.time.match(/^\d{4}-\d{2}-\d{2}$/)) {
-                    item.time = formatDate(item.time);
-                }
-            });
-        }
-
-        if (site.drawings) {
-            site.drawings.forEach(drawing => {
-                if (drawing.time && !drawing.time.match(/^\d{4}-\d{2}-\d{2}$/)) {
-                    drawing.time = formatDate(drawing.time);
-                }
-            });
-        }
-
-        if (site.experiences) {
-            site.experiences.forEach(exp => {
-                if (exp.time && !exp.time.match(/^\d{4}-\d{2}-\d{2}$/)) {
-                    exp.time = formatDate(exp.time);
-                }
-            });
-        }
-    });
-}
-
-    });
-}
-async function generateAndDownloadZip(textData) {
-    try {
-        if (typeof JSZip === 'undefined') {
-            alert('JSZip 库未加载，无法生成 ZIP 文件');
-            return;
-        }
-
-        const zip = new JSZip();
-
-        // 1. 创建轻量版数据（不包含base64）
-        const lightData = {
-            sites: JSON.parse(JSON.stringify(textData.sites)),
-            changeLog: textData.changeLog,
-            exportTime: new Date().toLocaleString('zh-CN'),
-            exportedBy: currentUser.name,
-            dataVersion: '2.3',
-            note: '轻量版数据（不含图片base64）'
-        };
-
-        // 移除所有base64数据，替换为路径占位符
-        removeAllBase64Data(lightData.sites);
-
-        const jsContent = `// 工地装饰管理系统轻量版数据文件
-// 生成时间：${new Date().toLocaleString('zh-CN')}
-// 生成用户：${currentUser.name}
-// 数据版本：${lightData.dataVersion}
-// 说明：此文件只包含路径信息，需要配合shuju文件夹中的文件使用
-const savedData = ${JSON.stringify(lightData, null, 2)};`;
-
-        zip.file('shuju_light.js', jsContent);
-
-        // 2. 创建文件和图片文件夹结构
-        const shujuFolder = zip.folder('shuju');
-        const locationInfo = {
-            info: '图片和文件位置信息',
-            generated: new Date().toLocaleString('zh-CN'),
-            user: currentUser.name,
-            totalSites: sites.length,
-            sites: []
-        };
-
-        // 3. 遍历所有工地，提取图片并保存到ZIP
-        for (let i = 0; i < sites.length; i++) {
-            const originalSite = sites[i]; // 使用原始数据
-            const lightSite = lightData.sites[i]; // 对应的轻量版数据
-            const siteName = (originalSite.name || `工地_${originalSite.id}`).replace(/[\\/:*?"<>|]/g, '_');
-            const siteFolder = shujuFolder.folder(siteName);
-
-            const siteInfo = {
-                id: originalSite.id,
-                name: originalSite.name,
-                folder: siteName,
-                repairs: [],
-                drawings: []
-            };
-
-            // 处理维修图片
-            if (originalSite.repairs && originalSite.repairs.length > 0) {
-                const repairsFolder = siteFolder.folder('repairs');
-                for (let j = 0; j < originalSite.repairs.length; j++) {
-                    const repair = originalSite.repairs[j];
-                    const lightRepair = lightSite.repairs ? lightSite.repairs[j] : null;
-                    
-                    if (repair.photo && repair.photo.startsWith('data:')) {
-                        const match = repair.photo.match(/^data:([^;]+);base64,(.+)$/);
-                        if (match) {
-                            const mimeType = match[1];
-                            const base64Data = match[2];
-                            const extension = getExtensionFromMimeType(mimeType) || 'jpg';
-                            const fileName = `repair_${j + 1}.${extension}`;
-
-                            repairsFolder.file(fileName, base64Data, { base64: true });
-
-                            siteInfo.repairs.push({
-                                index: j,
-                                repairId: repair.id,
-                                repairContent: repair.content,
-                                fileName: fileName,
-                                path: `${siteName}/repairs/${fileName}`,
-                                timestamp: new Date().toISOString()
-                            });
-
-                            // 更新轻量版数据的路径
-                            if (lightRepair) {
-                                lightRepair.photo = `[PHOTO:${siteName}/repairs/${fileName}]`;
-                                lightRepair.hasPhoto = true;
-                            }
-                        }
-                    }
-                }
-            }
-
-            // 处理图纸文件
-            if (originalSite.drawings && originalSite.drawings.length > 0) {
-                const drawingsFolder = siteFolder.folder('drawings');
-                for (let j = 0; j < originalSite.drawings.length; j++) {
-                    const drawing = originalSite.drawings[j];
-                    const lightDrawing = lightSite.drawings ? lightSite.drawings[j] : null;
-                    
-                    if (drawing.file && drawing.file.startsWith('data:')) {
-                        const match = drawing.file.match(/^data:([^;]+);base64,(.+)$/);
-                        if (match) {
-                            const mimeType = match[1];
-                            const base64Data = match[2];
-                            const extension = getExtensionFromMimeType(mimeType) ||
-                                getExtensionFromFileName(drawing.fileName) ||
-                                'bin';
-                            let fileName = drawing.fileName ||
-                                `drawing_${j + 1}.${extension}`;
-                            fileName = fileName.replace(/[\\/:*?"<>|]/g, '_');
-
-                            drawingsFolder.file(fileName, base64Data, { base64: true });
-
-                            siteInfo.drawings.push({
-                                index: j,
-                                drawingId: drawing.id,
-                                drawingType: drawing.type,
-                                fileName: fileName,
-                                originalName: drawing.fileName,
-                                path: `${siteName}/drawings/${fileName}`,
-                                timestamp: new Date().toISOString()
-                            });
-
-                            // 更新轻量版数据的路径
-                            if (lightDrawing) {
-                                lightDrawing.file = `[FILE:${siteName}/drawings/${fileName}]`;
-                                lightDrawing.hasFile = true;
-                                lightDrawing.fileName = fileName;
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (siteInfo.repairs.length > 0 || siteInfo.drawings.length > 0) {
-                locationInfo.sites.push(siteInfo);
-            }
-        }
-
-        // 4. 保存位置信息文件
-        zip.file('文件位置信息.json', JSON.stringify(locationInfo, null, 2));
-
-        // 5. 更新轻量版数据的内容（因为上面的循环修改了数据）
-        const updatedJsContent = `// 工地装饰管理系统轻量版数据文件
-// 生成时间：${new Date().toLocaleString('zh-CN')}
-// 生成用户：${currentUser.name}
-// 数据版本：${lightData.dataVersion}
-// 说明：此文件只包含路径信息，需要配合shuju文件夹中的文件使用
-const savedData = ${JSON.stringify(lightData, null, 2)};`;
-
-        zip.file('shuju_light.js', updatedJsContent);
-
-        // 6. 添加README文件
-        const readmeContent = `工地装饰管理系统完整数据备份包
-
-文件结构：
-├── shuju_light.js            # 文本数据文件（不包含base64，只含路径信息）
-├── 文件位置信息.json         # 图片和文件位置信息
-└── shuju/                    # 文件和图片文件夹
-    ├── 工地1/                # 第一个工地文件夹
-    │   ├── repairs/         # 维修图片
-    │   └── drawings/        # 图纸文件
-    ├── 工地2/
-    │   ├── repairs/
-    │   └── drawings/
-    └── ...
-
-恢复说明：
-1. 将此ZIP包解压到网站根目录
-2. 系统会自动加载 shuju_light.js 和对应的图片文件
-3. 如需手动加载，可使用"从文件加载数据"功能
-
-注意：此备份包中的 shuju_light.js 不包含图片base64数据，图片以文件形式存放在shuju文件夹中
-
-生成时间：${new Date().toLocaleString('zh-CN')}
-生成用户：${currentUser.name}
-数据版本：${lightData.dataVersion}`;
-
-        zip.file('README_恢复说明.txt', readmeContent);
-
-        // 7. 生成并下载ZIP包
-        const zipBlob = await zip.generateAsync({
-            type: 'blob',
-            compression: 'DEFLATE',
-            compressionOptions: { level: 6 }
-        });
-
-        const url = URL.createObjectURL(zipBlob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `工地完整数据备份_${new Date().toLocaleDateString('zh-CN').replace(/\//g, '-')}_${currentUser.name}.zip`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-
-        console.log('完整数据ZIP包已生成并下载');
-
-    } catch (error) {
-        console.error('生成ZIP包失败:', error);
-        throw new Error('生成ZIP包失败：' + error.message);
-    }
-}
 async function loadFromJsFile() {
     if (!currentUser) {
         alert('请先登录！');
@@ -1182,7 +1172,7 @@ async function loadFromJsFile() {
             const possibleDataFiles = [
                 'shuju_light.js',  // 新格式：轻量版数据
                 'shuju.js',        // 旧格式：完整数据
-                'your-data.json'
+                CLOUD_CONFIG.DATA_FILES.CLOUD_JSON
             ];
 
             for (const fileName of possibleDataFiles) {
@@ -1223,149 +1213,7 @@ async function loadFromJsFile() {
     input.click();
 }
 
-async function restoreFilesFromZip(zip) {
-    console.log('开始从ZIP恢复文件...');
-    
-    let restoredCount = 0;
-    let failedCount = 0;
-    
-    // 首先尝试从位置信息文件恢复
-    const locationInfoFile = zip.file('文件位置信息.json');
-    if (locationInfoFile) {
-        try {
-            const locationInfo = JSON.parse(await locationInfoFile.async('text'));
-            console.log('找到位置信息文件:', locationInfo);
-            
-            for (const siteInfo of locationInfo.sites || []) {
-                const site = sites.find(s => {
-                    if (s.id === siteInfo.id) return true;
-                    const siteNameNormalized = (s.name || `site_${s.id}`).replace(/[\\/:*?"<>|]/g, '_');
-                    return siteNameNormalized === siteInfo.folder;
-                });
-                
-                if (site) {
-                    // 恢复维修图片
-                    for (const repairInfo of siteInfo.repairs || []) {
-                        const file = zip.file(repairInfo.path);
-                        if (file) {
-                            try {
-                                const base64 = await file.async('base64');
-                                const mimeType = getMimeTypeFromFileName(repairInfo.fileName);
-                                const dataUrl = `data:${mimeType};base64,${base64}`;
-                                
-                                // 压缩图片到50KB以下
-                                const compressedDataUrl = await compressImageTo50KB(dataUrl);
-                                
-                                // 更新维修项
-                                if (site.repairs && site.repairs[repairInfo.index]) {
-                                    site.repairs[repairInfo.index].photo = compressedDataUrl;
-                                    restoredCount++;
-                                }
-                            } catch (e) {
-                                console.warn('恢复维修图片失败:', e);
-                                failedCount++;
-                            }
-                        }
-                    }
-                    
-                    // 恢复图纸文件
-                    for (const drawingInfo of siteInfo.drawings || []) {
-                        const file = zip.file(drawingInfo.path);
-                        if (file) {
-                            try {
-                                const base64 = await file.async('base64');
-                                const mimeType = getMimeTypeFromFileName(drawingInfo.fileName);
-                                const dataUrl = `data:${mimeType};base64,${base64}`;
-                                
-                                // 更新图纸
-                                if (site.drawings && site.drawings[drawingInfo.index]) {
-                                    site.drawings[drawingInfo.index].file = dataUrl;
-                                    site.drawings[drawingInfo.index].fileName = drawingInfo.fileName;
-                                    restoredCount++;
-                                }
-                            } catch (e) {
-                                console.warn('恢复图纸文件失败:', e);
-                                failedCount++;
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (error) {
-            console.warn('解析位置信息文件失败:', error);
-        }
-    }
-    
-    // 如果没有位置信息文件，尝试按文件夹结构恢复
-    if (restoredCount === 0) {
-        console.log('按文件夹结构恢复文件...');
-        
-        const filePromises = [];
-        zip.forEach((relativePath, zipEntry) => {
-            if (!zipEntry.dir) {
-                filePromises.push(processZipFile(zipEntry, relativePath));
-            }
-        });
-        
-        const results = await Promise.allSettled(filePromises);
-        results.forEach(result => {
-            if (result.status === 'fulfilled' && result.value) {
-                restoredCount++;
-            } else if (result.status === 'rejected') {
-                failedCount++;
-            }
-        });
-    }
-    
-    console.log(`文件恢复完成: 成功 ${restoredCount} 个, 失败 ${failedCount} 个`);
-    return { restoredCount, failedCount };
-}
-// 替换原来的 compressImageTo50KB 函数
-async function compressImageTo50KB(dataUrl) {
-    return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.onload = function() {
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            
-            // 设置最大宽度为500像素
-            let width = img.width;
-            let height = img.height;
-            const MAX_WIDTH = 500;
-            
-            if (width > MAX_WIDTH) {
-                height = Math.round((height * MAX_WIDTH) / width);
-                width = MAX_WIDTH;
-            }
-            
-            canvas.width = width;
-            canvas.height = height;
-            
-            // 绘制图片，质量为0.6
-            ctx.drawImage(img, 0, 0, width, height);
-            
-            // 根据原始图片类型输出
-            const mimeType = dataUrl.split(';')[0].split(':')[1];
-            let quality = 0.6;
-            
-            if (mimeType === 'image/jpeg') {
-                // JPEG使用0.6质量
-                resolve(canvas.toDataURL('image/jpeg', quality));
-            } else if (mimeType === 'image/png') {
-                // PNG不需要质量参数
-                resolve(canvas.toDataURL('image/png'));
-            } else if (mimeType === 'image/webp') {
-                // WebP使用0.6质量
-                resolve(canvas.toDataURL('image/webp', quality));
-            } else {
-                // 其他格式转为JPEG
-                resolve(canvas.toDataURL('image/jpeg', quality));
-            }
-        };
-        img.onerror = reject;
-        img.src = dataUrl;
-    });
-}
+
 function previewRepairPhoto(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -1474,7 +1322,7 @@ async function loadFromZipFile(file) {
     const possibleDataFiles = [
         'shuju.js',
         'shuju_light.js',
-        'your-data.json'
+        CLOUD_CONFIG.DATA_FILES.CLOUD_JSON
     ];
 
     for (const fileName of possibleDataFiles) {
@@ -1623,71 +1471,6 @@ async function restoreImagesFromZip(zip) {
     return { restoredCount, failedCount };
 }
 
-async function processZipFile(zipEntry, relativePath) {
-    const pathParts = relativePath.split('/');
-    if (pathParts.length < 3) return false;
-
-    const siteFolder = pathParts[0];
-    const type = pathParts[1];
-    const fileName = pathParts.slice(2).join('/');
-
-    const site = sites.find(s => {
-        const siteNameNormalized = (s.name || `site_${s.id}`).replace(/[\\/:*?"<>|]/g, '_');
-        return siteNameNormalized === siteFolder;
-    });
-
-    if (!site) {
-        console.warn(`未找到对应工地: ${siteFolder}`);
-        return false;
-    }
-
-    const base64 = await zipEntry.async('base64');
-    const mimeType = getMimeTypeFromFileName(fileName);
-
-    if (type === 'repairs') {
-        const repairIndex = extractIndexFromFileName(fileName, 'repair');
-        if (repairIndex !== null && site.repairs && site.repairs[repairIndex]) {
-            site.repairs[repairIndex].photo = `data:${mimeType};base64,${base64}`;
-            console.log(`恢复维修图片: ${relativePath} -> 工地 ${site.name} 的第 ${repairIndex + 1} 个维修项`);
-            return true;
-        }
-
-        if (site.repairs) {
-            const repair = site.repairs.find(r => {
-                return r.photo && (r.photo.includes(fileName) || r.photo.includes(siteFolder));
-            });
-            if (repair) {
-                repair.photo = `data:${mimeType};base64,${base64}`;
-                console.log(`通过文件名匹配恢复维修图片: ${relativePath}`);
-                return true;
-            }
-        }
-    } else if (type === 'drawings') {
-        const drawingIndex = extractIndexFromFileName(fileName, 'drawing');
-        if (drawingIndex !== null && site.drawings && site.drawings[drawingIndex]) {
-            site.drawings[drawingIndex].file = `data:${mimeType};base64,${base64}`;
-            site.drawings[drawingIndex].fileName = fileName;
-            console.log(`恢复图纸文件: ${relativePath} -> 工地 ${site.name} 的第 ${drawingIndex + 1} 个图纸`);
-            return true;
-        }
-
-        if (site.drawings) {
-            const drawing = site.drawings.find(d => {
-                return d.file && (d.file.includes(fileName) || d.file.includes(siteFolder));
-            });
-            if (drawing) {
-                drawing.file = `data:${mimeType};base64,${base64}`;
-                drawing.fileName = fileName;
-                console.log(`通过文件名匹配恢复图纸文件: ${relativePath}`);
-                return true;
-            }
-        }
-    }
-
-    console.warn(`无法匹配文件: ${relativePath}`);
-    return false;
-}
-
 // ==================== 工具函数 ====================
 function extractIndexFromFileName(fileName, prefix) {
     const regex = new RegExp(`${prefix}_(\\d+)\\.`);
@@ -1695,64 +1478,8 @@ function extractIndexFromFileName(fileName, prefix) {
     return match ? parseInt(match[1], 10) - 1 : null;
 }
 
-function removeAllBase64Data(sitesArray) {
-    if (!sitesArray) return;
-
-    sitesArray.forEach(site => {
-        const siteName = (site.name || `site_${site.id}`).replace(/[\\/:*?"<>|]/g, '_');
-
-        if (site.repairs) {
-            site.repairs.forEach((repair, index) => {
-                if (repair.photo && repair.photo.startsWith('data:')) {
-                    const extension = repair.photo.match(/^data:image\/(\w+);/)?.[1] || 'jpg';
-                    repair.photo = `[PHOTO:${siteName}/repairs/repair_${index + 1}.${extension}]`;
-                    repair.hasPhoto = true;
-                    repair.photoMissing = false;
-                }
-            });
-        }
-
-        if (site.drawings) {
-            site.drawings.forEach((drawing, index) => {
-                if (drawing.file && drawing.file.startsWith('data:')) {
-                    const match = drawing.file.match(/^data:([^;]+);/);
-                    if (match) {
-                        const mimeType = match[1];
-                        const extension = getExtensionFromMimeType(mimeType) || 'bin';
-                        let fileName = drawing.fileName || `drawing_${index + 1}.${extension}`;
-                        fileName = fileName.replace(/[\\/:*?"<>|]/g, '_');
-                        drawing.file = `[FILE:${siteName}/drawings/${fileName}]`;
-                        drawing.hasFile = true;
-                        drawing.fileMissing = false;
-                    }
-                }
-            });
-        }
-    });
-}
 
 
-
-function formatFileSize(bytes) {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-}
-
-function getMimeTypeFromFileName(fileName) {
-    const ext = fileName.split('.').pop().toLowerCase();
-    const mimeTypes = {
-        'jpg': 'image/jpeg', 'jpeg': 'image/jpeg', 'png': 'image/png',
-        'gif': 'image/gif', 'webp': 'image/webp', 'bmp': 'image/bmp',
-        'pdf': 'application/pdf', 'xls': 'application/vnd.ms-excel',
-        'xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        'doc': 'application/msword', 'docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        'csv': 'text/csv', 'txt': 'text/plain', 'json': 'application/json'
-    };
-    return mimeTypes[ext] || 'application/octet-stream';
-}
 
 function getExtensionFromMimeType(mimeType) {
     const mimeMap = {
@@ -1926,6 +1653,7 @@ function setupBackGestureLock() {
     });
 }
 
+
 // ==================== 更改日志相关函数 ====================
 function addChangeLog(action, details) {
     if (!currentUser) return;
@@ -1995,55 +1723,8 @@ function exportChangeLog() {
     a.click();
     URL.revokeObjectURL(url);
 }
-// 在 yun.js 中添加以下函数（可以放在文件末尾的“工具函数”部分）
 
-async function loadFromJsContent(content) {
-    try {
-        // 使用 Function 构造函数解析 JS 文件内容
-        const func = new Function(content + '\nreturn savedData;');
-        const data = func();
-        
-        if (!data) {
-            throw new Error('JS 文件中没有找到 savedData 变量');
-        }
-        
-        // 覆盖现有数据
-        sites = data.sites || [];
-        changeLog = data.changeLog || [];
-        
-        // 同步到 window 对象
-        window.sites = sites;
-        window.changeLog = changeLog;
-        
-        convertAllTimesToDate();
-        return true;
-        
-    } catch (error) {
-        console.error('解析 JS 文件失败:', error);
-        throw new Error('解析 JS 文件失败: ' + error.message);
-    }
-}
 
-async function loadFromJsonContent(content, fileName) {
-    try {
-        const data = JSON.parse(content);
-        
-        // 覆盖现有数据
-        sites = data.sites || [];
-        changeLog = data.changeLog || [];
-        
-        // 同步到 window 对象
-        window.sites = sites;
-        window.changeLog = changeLog;
-        
-        convertAllTimesToDate();
-        return true;
-        
-    } catch (error) {
-        console.error('解析 JSON 文件失败:', error);
-        throw new Error('解析 JSON 文件失败: ' + error.message);
-    }
-}
 function clearChangeLog() {
     if (!canClearLog()) {
         alert('只有管理员可以清空日志！');
@@ -2059,212 +1740,62 @@ function clearChangeLog() {
     }
 }
 // 修改 yun.js 中的 loadFromGitHub 函数
-// 修改 loadFromGitHub 函数，移除token验证
+// ==================== 从云端加载工地数据 ====================
 async function loadFromGitHub() {
-    if (!GIST_CONFIG.GIST_ID) {
-        GIST_CONFIG.GIST_ID = BUILT_IN_CONFIG.GIST_ID;
-    }
-    
-    // 从云端加载数据不需要确认，直接开始加载
+    // 直接使用 raw URL 加载数据
     try {
-        let response;
+        console.log('直接从 raw URL 加载数据...');
+         const rawUrl = CLOUD_CONFIG.RAW_DATA_URL;
+        console.log('加载URL:', rawUrl);
         
-        // 尝试使用token（如果有的话）
-        if (GIST_CONFIG.GITHUB_TOKEN) {
-            response = await fetch(`https://api.github.com/gists/${GIST_CONFIG.GIST_ID}`, {
-                headers: {
-                    'Authorization': `token ${GIST_CONFIG.GITHUB_TOKEN}`,
-                    'Accept': 'application/vnd.github.v3+json'
-                }
-            });
-        } else {
-            // 如果没有token，尝试公开访问
-            response = await fetch(`https://api.github.com/gists/${GIST_CONFIG.GIST_ID}`, {
-                headers: {
-                    'Accept': 'application/vnd.github.v3+json'
-                }
-            });
+        const rawResponse = await fetch(rawUrl, {
+            cache: 'no-cache',
+            mode: 'cors'
+        });
+        
+        if (!rawResponse.ok) {
+            throw new Error(`HTTP ${rawResponse.status}: ${rawResponse.statusText}`);
         }
         
-        if (!response.ok) {
-            // 如果token访问失败，尝试公开访问
-            if (GIST_CONFIG.GITHUB_TOKEN && response.status === 401) {
-                console.log('Token验证失败，尝试公开访问...');
-                response = await fetch(`https://api.github.com/gists/${GIST_CONFIG.GIST_ID}`, {
-                    headers: {
-                        'Accept': 'application/vnd.github.v3+json'
-                    }
-                });
-            }
-            
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            }
-        }
-        
-        const gist = await response.json();
-        const fileContent = gist.files['your-data.json']?.content;
-        
-        if (!fileContent) {
-            throw new Error('云端没有找到数据文件');
-        }
-        
-        const cloudData = JSON.parse(fileContent);
+        const rawContent = await rawResponse.text();
+        const cloudData = JSON.parse(rawContent);
         const cloudSites = cloudData.sites || [];
         const cloudChangeLog = cloudData.changeLog || [];
         
-        console.log('从云端加载数据成功，站点数量:', cloudSites.length);
+        console.log('从 raw URL 加载数据成功，站点数量:', cloudSites.length);
         
         // 合并工地数据
         mergeCloudData(cloudSites, cloudChangeLog);
         
-        saveData();
-        renderSiteList();
+        // 使用 window.saveData 确保调用正确的函数
+        if (typeof window.saveData === 'function') {
+            window.saveData();
+        }
         
-        showSimpleToast('云端数据已合并到本地！');
+        // 使用 window.renderSiteList 确保调用正确的函数
+        if (typeof window.renderSiteList === 'function') {
+            window.renderSiteList();
+        }
         
-        if (currentSiteId) {
-            const site = sites.find(s => s.id === currentSiteId);
-            if (site) loadSiteData(site);
+        showSimpleToast('云端数据已成功加载并合并到本地！');
+        
+        // 修复：使用 window.currentSiteId，并检查是否为 null
+        if (window.currentSiteId && window.sites) {
+            const site = window.sites.find(s => s.id === window.currentSiteId);
+            if (site && typeof window.loadSiteData === 'function') {
+                window.loadSiteData(site);
+            }
         }
         
         return true;
         
     } catch (error) {
         console.error('从云端加载失败:', error);
-        
-        // 尝试从公开的raw URL加载
-        try {
-            console.log('尝试从raw URL加载数据...');
-            const rawResponse = await fetch(`https://gist.githubusercontent.com/ebaizs/${GIST_CONFIG.GIST_ID}/raw/your-data.json`);
-            
-            if (rawResponse.ok) {
-                const rawContent = await rawResponse.text();
-                const cloudData = JSON.parse(rawContent);
-                const cloudSites = cloudData.sites || [];
-                const cloudChangeLog = cloudData.changeLog || [];
-                
-                mergeCloudData(cloudSites, cloudChangeLog);
-                saveData();
-                renderSiteList();
-                
-                showSimpleToast('从公开链接加载数据成功！');
-                return true;
-            }
-        } catch (rawError) {
-            console.error('从raw URL加载也失败:', rawError);
-        }
-        
         showSimpleToast('云端加载失败: ' + error.message, 'error');
         return false;
     }
 }
 
-// 确保 mergeCloudData 函数能正确处理图片数据
-function mergeCloudData(cloudSites, cloudChangeLog) {
-    let addedCount = 0;
-    let updatedCount = 0;
-    let imageCount = 0;
-    
-    // 合并工地
-    cloudSites.forEach(cloudSite => {
-        const existingIndex = sites.findIndex(s => s.id === cloudSite.id);
-        
-        if (existingIndex >= 0) {
-            // 合并现有工地
-            const existingSite = sites[existingIndex];
-            
-            // 基础信息（如果云端有则更新）
-            existingSite.name = cloudSite.name || existingSite.name;
-            existingSite.startDate = cloudSite.startDate || existingSite.startDate;
-            existingSite.endDate = cloudSite.endDate || existingSite.endDate;
-            existingSite.progress = cloudSite.progress !== undefined ? cloudSite.progress : existingSite.progress;
-            
-            // 合并数组数据，图片数据优先使用云端的
-            ['todos', 'expenses', 'requirements', 'repairs', 'workers', 
-             'addRemoveItems', 'drawings', 'experiences'].forEach(arrayField => {
-                if (cloudSite[arrayField] && Array.isArray(cloudSite[arrayField])) {
-                    if (!existingSite[arrayField]) {
-                        existingSite[arrayField] = [];
-                    }
-                    
-                    // 创建ID集合用于快速查找
-                    const existingIds = new Set(existingSite[arrayField].map(item => item.id));
-                    
-                    // 添加云端特有的项目
-                    cloudSite[arrayField].forEach(cloudItem => {
-                        const existingItem = existingSite[arrayField].find(item => item.id === cloudItem.id);
-                        
-                        if (!existingItem) {
-                            // 新项目，直接添加
-                            existingSite[arrayField].push(cloudItem);
-                            // 统计图片数量
-                            if (arrayField === 'repairs' && cloudItem.photo && cloudItem.photo.startsWith('data:')) {
-                                imageCount++;
-                            }
-                            if (arrayField === 'drawings' && cloudItem.file && cloudItem.file.startsWith('data:')) {
-                                imageCount++;
-                            }
-                        } else {
-                            // 已存在项目，如果云端有图片数据，优先使用云端的
-                            if (arrayField === 'repairs' && cloudItem.photo && cloudItem.photo.startsWith('data:')) {
-                                existingItem.photo = cloudItem.photo;
-                                existingItem.photoName = cloudItem.photoName;
-                                imageCount++;
-                            }
-                            if (arrayField === 'drawings' && cloudItem.file && cloudItem.file.startsWith('data:')) {
-                                existingItem.file = cloudItem.file;
-                                existingItem.fileName = cloudItem.fileName;
-                                existingItem.fileType = cloudItem.fileType;
-                                imageCount++;
-                            }
-                        }
-                    });
-                }
-            });
-            
-            updatedCount++;
-        } else {
-            // 添加新工地
-            sites.push(cloudSite);
-            addedCount++;
-            
-            // 统计新工地中的图片数量
-            if (cloudSite.repairs) {
-                cloudSite.repairs.forEach(repair => {
-                    if (repair.photo && repair.photo.startsWith('data:')) {
-                        imageCount++;
-                    }
-                });
-            }
-            if (cloudSite.drawings) {
-                cloudSite.drawings.forEach(drawing => {
-                    if (drawing.file && drawing.file.startsWith('data:')) {
-                        imageCount++;
-                    }
-                });
-            }
-        }
-    });
-    
-    // 合并更改日志
-    const existingLogKeys = new Set(changeLog.map(log => `${log.timestamp}-${log.user}-${log.action}`));
-    cloudChangeLog.forEach(log => {
-        const logKey = `${log.timestamp}-${log.user}-${log.action}`;
-        if (!existingLogKeys.has(logKey)) {
-            changeLog.unshift(log);
-            existingLogKeys.add(logKey);
-        }
-    });
-    
-    // 限制日志数量
-    if (changeLog.length > 1000) {
-        changeLog = changeLog.slice(0, 1000);
-    }
-    
-    console.log(`数据合并完成: 新增工地 ${addedCount}, 更新工地 ${updatedCount}, 包含图片 ${imageCount} 个`);
-    showSimpleToast(`数据合并成功！新增${addedCount}个工地，更新${updatedCount}个工地，包含${imageCount}个图片文件。`);
-}
 // 添加手动刷新云端账户功能
 function refreshCloudUsers() {
     if (confirm('确定要刷新云端账户数据吗？当前登录状态不会改变。')) {

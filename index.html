@@ -448,16 +448,15 @@
             <img id="viewerImage" src="" alt="查看图片">
         </div>
     </div>
-
-<!-- 简化脚本加载 -->
+<!-- 先加载基础库 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
-<script>
-// 只在HTML中添加这个简单的检查，其他变量在各自的JS文件中定义
-console.log('开始加载脚本...');
-</script>
+<!-- 然后加载公共基础文件 -->
+<script src="base.js"></script>
 
-<script src="quanxian.js"></script>  <!-- 先加载权限文件 -->
-<script src="yun.js"></script>      <!-- 再加载云功能文件 -->
-<script src="app.js"></script>      <!-- 最后加载主逻辑文件 -->
+<script src="base.js"></script>       <!-- 基础函数 -->
+<script src="quanxian.js"></script>   <!-- 权限系统 -->
+<script src="yun.js"></script>        <!-- 云功能 -->
+<script src="app.js"></script>        <!-- 主应用 -->
+<script src="fix.js"></script>        <!-- 修复脚本 -->
 </html>
