@@ -1,4 +1,228 @@
 
+// ==================== GitHub Token 管理函数 ====================
+async function ensureGitHubToken(options = {}) {
+    const {
+        checkDataSize = true,      // 是否检查数据大小
+        purpose = 'upload',        // 用途: 'upload'|'config'|'permission'
+        showWarning = true         // 是否显示警告
+    } = options;
+    
+    // 1. 先检查是否已有 Token
+    if (GIST_CONFIG.GITHUB_TOKEN && GIST_CONFIG.GITHUB_TOKEN.length > 10) {
+        console.log('已有 Token，直接使用');
+        return GIST_CONFIG.GITHUB_TOKEN;
+    }
+    
+    // 2. 检查 localStorage
+    const savedConfig = localStorage.getItem('github_config');
+    if (savedConfig) {
+        try {
+            const config = JSON.parse(savedConfig);
+            if (config.GITHUB_TOKEN && config.GITHUB_TOKEN.length > 10) {
+                GIST_CONFIG.GITHUB_TOKEN = config.GITHUB_TOKEN;
+                GIST_CONFIG.configLoaded = true;
+                console.log('从 localStorage 加载 Token');
+                return GIST_CONFIG.GITHUB_TOKEN;
+            }
+        } catch (e) {
+            console.warn('解析 localStorage 配置失败:', e);
+        }
+    }
+    
+    // 3. 如果没有 Token，提示用户输入
+    return await promptForGitHubToken({ checkDataSize, purpose, showWarning });
+}
+
+// 独立的 Token 输入函数
+async function promptForGitHubToken(options = {}) {
+    return new Promise((resolve) => {
+        const {
+            checkDataSize = true,
+            purpose = 'upload',
+            showWarning = true
+        } = options;
+        
+        // 根据用途显示不同的提示
+        const purposeText = {
+            'upload': '备份数据到云端',
+            'config': '同步云端配置',
+            'permission': '上传权限配置'
+        }[purpose] || '操作';
+        
+        // 创建输入模态框
+        const modal = document.createElement('div');
+        modal.className = 'github-token-modal';
+        modal.style.cssText = `
+            display: flex;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            justify-content: center;
+            align-items: center;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        `;
+        
+        // 检查数据大小（只在需要时）
+        let sizeCheck = { canUpload: true, humanSize: '0 MB' };
+        let warningHtml = '';
+        
+        if (checkDataSize) {
+            sizeCheck = checkDataSizeBeforeUpload();
+            
+            if (!sizeCheck.canUpload) {
+                warningHtml = `
+                    <div style="background: #fff3cd; border: 1px solid #ffeaa7; color: #856404; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                        ⚠️ <strong>数据过大警告</strong><br>
+                        当前数据大小：${sizeCheck.humanSize}<br>
+                        GitHub Gist 单个文件限制为10MB。<br>
+                        请先清理数据再尝试上传。
+                    </div>
+                `;
+            } else if (sizeCheck.totalSize > 5 * 1024 * 1024) {
+                warningHtml = `
+                    <div style="background: #fff3cd; border: 1px solid #ffeaa7; color: #856404; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                        ⚠️ <strong>数据较大提醒</strong><br>
+                        当前数据大小：${sizeCheck.humanSize}<br>
+                        包含 ${sizeCheck.imageCount} 个图片文件。<br>
+                        建议压缩图片后再上传。
+                    </div>
+                `;
+            }
+        }
+        
+        modal.innerHTML = `
+            <div style="background: white; padding: 30px; border-radius: 10px; width: 90%; max-width: 500px; box-shadow: 0 5px 30px rgba(0,0,0,0.3);">
+                <h3 style="margin: 0 0 20px 0; color: #333;"> Token秘钥 配置</h3>
+                
+                ${warningHtml}
+                
+                <p style="color: #666; font-size: 14px; line-height: 1.5; margin-bottom: 20px;">
+                    <strong>需要 Token 才能 ${purposeText}。</strong><br>
+                    ${
+                        purpose === 'upload' 
+                            ? '从云端加载数据不需要 Token。' 
+                            : '从云端加载配置不需要 Token。'
+                    }
+                    
+                </p>
+                
+                <div style="margin-bottom: 15px;">
+                    <input type="password" 
+                           id="githubTokenInput" 
+                           style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; box-sizing: border-box;"
+                           placeholder="请输入 GitHub Token，如：ghp_xxxxxxxxxxxxxxxxxxxx"
+                           autocomplete="off">
+                </div>
+                
+                <div style="display: flex; justify-content: space-between; margin-top: 25px;">
+                    <button id="saveTokenBtn" 
+                            style="padding: 12px 24px; background: #28a745; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; flex: 1; margin-right: 10px;">
+                        保存 Token
+                    </button>
+                    <button id="cancelBtn" 
+                            style="padding: 12px 24px; background: #6c757d; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; flex: 1; margin-left: 10px;">
+                        取消
+                    </button>
+                </div>
+                
+                ${!sizeCheck.canUpload ? `
+                <div style="margin-top: 15px; text-align: center;">
+                    <button id="cleanDataBtn" 
+                            style="padding: 8px 16px; background: #fd7e14; color: white; border: none; border-radius: 4px; font-size: 14px; cursor: pointer;">
+                        先去清理数据
+                    </button>
+                </div>
+                ` : ''}
+                
+               
+                
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        const tokenInput = document.getElementById('githubTokenInput');
+        const saveBtn = document.getElementById('saveTokenBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const cleanDataBtn = document.getElementById('cleanDataBtn');
+        
+        // 如果数据过大，禁用保存按钮
+        if (!sizeCheck.canUpload) {
+            saveBtn.disabled = true;
+            saveBtn.style.backgroundColor = '#6c757d';
+            saveBtn.style.cursor = 'not-allowed';
+            saveBtn.title = '数据过大，请先清理';
+        }
+        
+        setTimeout(() => tokenInput.focus(), 100);
+        
+        saveBtn.onclick = () => {
+            if (!sizeCheck.canUpload) {
+                alert('数据过大，无法上传！请先清理数据。');
+                return;
+            }
+            
+            const token = tokenInput.value.trim();
+            
+            if (!token) {
+                alert('请输入 GitHub Token');
+                return;
+            }
+            
+            // 验证 Token 格式
+            if (!token.startsWith('ghp_') && !token.startsWith('github_pat_')) {
+                if (!confirm('警告：Token 格式看起来不正确！\n正确的 Token 通常以 "ghp_" 或 "github_pat_" 开头。\n是否继续使用此 Token？')) {
+                    return;
+                }
+            }
+            
+            // 保存 Token
+            GIST_CONFIG.GITHUB_TOKEN = token;
+            GIST_CONFIG.configLoaded = true;
+            
+            localStorage.setItem('github_config', JSON.stringify({
+                GIST_ID: BUILT_IN_CONFIG.GIST_ID,
+                GITHUB_TOKEN: token,
+                configLoaded: true,
+                lastUpdated: new Date().toISOString(),
+                purpose: purpose
+            }));
+            
+            modal.remove();
+            resolve(token); // 返回 Token
+        };
+        
+        cancelBtn.onclick = () => {
+            modal.remove();
+            resolve(null); // 返回 null 表示取消
+        };
+        
+        if (cleanDataBtn) {
+            cleanDataBtn.onclick = () => {
+                modal.remove();
+                alert('建议清理以下数据：\n1. 删除不需要的维修图片\n2. 删除旧的图纸文件\n3. 压缩现有图片\n\n清理完成后重新尝试。');
+                resolve(null);
+            };
+        }
+        
+        tokenInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                saveBtn.click();
+            }
+        });
+        
+        document.addEventListener('keydown', function escHandler(e) {
+            if (e.key === 'Escape') {
+                document.removeEventListener('keydown', escHandler);
+                cancelBtn.click();
+            }
+        });
+    });
+}
 // 对于其他权限检查函数，同样避免直接覆盖
 function checkAndWrapFunction(funcName, fallbackFunc) {
     if (typeof window[funcName] === 'undefined') {
@@ -188,170 +412,7 @@ function checkGitHubConfig() {
     
     return null;
 }
-// 修改 promptForGithubToken 函数，只在上传时调用
-async function promptForGithubToken() {
-    return new Promise((resolve) => {
-        // 先检查数据大小
-        const sizeCheck = checkDataSizeBeforeUpload();
-        
-        // 创建输入模态框
-        const modal = document.createElement('div');
-        modal.className = 'modal';
-        modal.style.cssText = `
-            display: flex;
-            position: fixed;
-            z-index: 9999;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            justify-content: center;
-            align-items: center;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        `;
-        
-        // 根据数据大小显示不同的警告
-        let warningHtml = '';
-        if (!sizeCheck.canUpload) {
-            warningHtml = `
-                <div style="background: #fff3cd; border: 1px solid #ffeaa7; color: #856404; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
-                    ⚠️ <strong>数据过大警告</strong><br>
-                    当前数据大小：${sizeCheck.humanSize}<br>
-                    GitHub Gist 单个文件限制为10MB。<br>
-                    请先清理数据再尝试上传。
-                </div>
-            `;
-        } else if (sizeCheck.totalSize > 5 * 1024 * 1024) {
-            warningHtml = `
-                <div style="background: #fff3cd; border: 1px solid #ffeaa7; color: #856404; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
-                    ⚠️ <strong>数据较大提醒</strong><br>
-                    当前数据大小：${sizeCheck.humanSize}<br>
-                    包含 ${sizeCheck.imageCount} 个图片文件。<br>
-                    建议压缩图片后再上传。
-                </div>
-            `;
-        }
-        
-        modal.innerHTML = `
-            <div style="background: white; padding: 30px; border-radius: 10px; width: 90%; max-width: 500px; box-shadow: 0 5px 30px rgba(0,0,0,0.3);">
-                <h3 style="margin: 0 0 20px 0; color: #333;">云备份配置</h3>
-                
-                ${warningHtml}
-                
-                <p style="color: #666; font-size: 14px; line-height: 1.5; margin-bottom: 20px;">
-                    <strong>需要Token才能备份数据到云端。</strong><br>
-                    从云端加载数据不需要Token。<br>
-                    
-                </p>
-                
-                <div style="margin-bottom: 15px;">
-                    <input type="password" 
-                           id="githubTokenInput" 
-                           style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; box-sizing: border-box;"
-                           placeholder="请输入Token，如：ghp_xxxxxxxxxxxxxxxxxxxx"
-                           autocomplete="off">
-                </div>
-                
-                <div style="display: flex; justify-content: space-between; margin-top: 25px;">
-                    <button id="saveTokenBtn" 
-                            style="padding: 12px 24px; background: #28a745; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; flex: 1; margin-right: 10px;">
-                        保存并备份
-                    </button>
-                    <button id="cancelBtn" 
-                            style="padding: 12px 24px; background: #6c757d; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; flex: 1; margin-left: 10px;">
-                        取消备份
-                    </button>
-                </div>
-                
-                ${sizeCheck.canUpload ? '' : `
-                <div style="margin-top: 15px; text-align: center;">
-                    <button id="cleanDataBtn" 
-                            style="padding: 8px 16px; background: #fd7e14; color: white; border: none; border-radius: 4px; font-size: 14px; cursor: pointer;">
-                        先去清理数据
-                    </button>
-                </div>
-                `}
-            </div>
-        `;
-        
-        document.body.appendChild(modal);
-        
-        const tokenInput = document.getElementById('githubTokenInput');
-        const saveBtn = document.getElementById('saveTokenBtn');
-        const cancelBtn = document.getElementById('cancelBtn');
-        const cleanDataBtn = document.getElementById('cleanDataBtn');
-        
-        // 如果数据过大，禁用保存按钮
-        if (!sizeCheck.canUpload) {
-            saveBtn.disabled = true;
-            saveBtn.style.backgroundColor = '#6c757d';
-            saveBtn.style.cursor = 'not-allowed';
-            saveBtn.title = '数据过大，请先清理';
-        }
-        
-        setTimeout(() => tokenInput.focus(), 100);
-        
-        saveBtn.onclick = () => {
-            if (!sizeCheck.canUpload) {
-                alert('数据过大，无法上传！请先清理数据。');
-                return;
-            }
-            
-            const token = tokenInput.value.trim();
-            
-            if (!token) {
-                alert('请输入GitHub Token');
-                return;
-            }
-            
-            if (!token.startsWith('ghp_') && !token.startsWith('github_pat_')) {
-                if (!confirm('警告：Token格式看起来不正确！\n正确的Token通常以"ghp_"或"github_pat_"开头。\n是否继续使用此Token？')) {
-                    return;
-                }
-            }
-            
-            GIST_CONFIG.GITHUB_TOKEN = token;
-            GIST_CONFIG.configLoaded = true;
-            
-            localStorage.setItem('github_config', JSON.stringify({
-                GIST_ID: BUILT_IN_CONFIG.GIST_ID,
-                GITHUB_TOKEN: token,
-                configLoaded: true,
-                lastUpdated: new Date().toISOString()
-            }));
-            
-            modal.remove();
-            resolve(true);
-        };
-        
-        cancelBtn.onclick = () => {
-            modal.remove();
-            resolve(false);
-        };
-        
-        if (cleanDataBtn) {
-            cleanDataBtn.onclick = () => {
-                modal.remove();
-                alert('建议清理以下数据：\n1. 删除不需要的维修图片\n2. 删除旧的图纸文件\n3. 压缩现有图片\n\n清理完成后重新尝试备份。');
-                resolve(false);
-            };
-        }
-        
-        tokenInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                saveBtn.click();
-            }
-        });
-        
-        document.addEventListener('keydown', function escHandler(e) {
-            if (e.key === 'Escape') {
-                document.removeEventListener('keydown', escHandler);
-                cancelBtn.click();
-            }
-        });
-    });
-}
+
 // 添加数据清理提示
 function showDataCleanupTips() {
     const modal = document.createElement('div');
@@ -425,14 +486,12 @@ function exportPermissionConfig() {
     // 检查 GitHub 配置
     const config = checkGitHubConfig();
     if (!config) {
-        alert('请先配置GitHub同步！\n\n点击"配置管理"按钮进行配置。');
+        alert('请先配置GitHub同步！');
         
         // 尝试显示配置管理按钮
-        const manageConfigBtn = document.querySelector('[onclick*="manageGithubConfig"]');
-        if (manageConfigBtn) {
-            alert('请点击页面顶部的"配置管理"按钮进行GitHub配置。');
-        }
-        return;
+        ensureGitHubToken();
+                return;
+                
     }
     
     const yonghuJsContent = `// 权限配置数据结构
@@ -563,22 +622,28 @@ function mergeChangeLogs(cloudLogs, localLogs) {
 
 // 修改 saveToGitHub 函数，要求必须有token
 async function saveToGitHub() {
-    console.log('=== 开始saveToGitHub函数 ===');
+    console.log('=== 开始 saveToGitHub 函数 ===');
     
-    // 先检查是否有token
-    if (!GIST_CONFIG.GITHUB_TOKEN) {
-        const hasToken = await promptForGithubToken();
-        if (!hasToken) {
-            showSimpleToast('备份到云端需要GitHub Token，请先配置', 'error');
-            return false;
-        }
+    // 使用新的 Token 管理函数
+    const token = await ensureGitHubToken({
+        checkDataSize: true,
+        purpose: 'upload',
+        showWarning: true
+    });
+    
+    if (!token) {
+        showSimpleToast('备份到云端需要 GitHub Token，请先配置', 'error');
+        return false;
     }
-
+    
+    // 确保 Token 已设置
+    GIST_CONFIG.GITHUB_TOKEN = token;
+    
     if (isSyncing) {
         showSimpleToast('正在同步中，请稍后重试', 'warning');
         return false;
     }
-
+    
     // 检查数据大小
     const dataSizeCheck = checkDataSizeBeforeUpload();
     if (!dataSizeCheck.canUpload) {
@@ -2290,7 +2355,9 @@ window.canManageGithubConfig = canManageGithubConfig;
 window.canShowPermissionManager = canShowPermissionManager;
 window.canShowChangeLog = canShowChangeLog;
 window.isAdmin = isAdmin;
-
+// 暴露到全局
+window.ensureGitHubToken = ensureGitHubToken;
+window.promptForGitHubToken = promptForGitHubToken;
 
 // 暴露到全局
 window.canManageGithubConfig = canManageGithubConfig;
