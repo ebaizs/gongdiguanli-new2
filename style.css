@@ -3,8 +3,7 @@
     padding: 0;
     box-sizing: border-box;
 }
-:root {
-    /* 原有的浅色模式变量 */
+:root {    
     --primary-color: #4361ee;
     --primary-dark: #3a56d4;
     --secondary-color: #7209b7;
@@ -36,53 +35,7 @@
     --button-text: #333333;
 }
 
-/* 深色模式 */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --text-primary: #ffffff;
-        --text-secondary: #cccccc;
-        --text-light: #999999;
-        
-        --bg-primary: #1a1a1a;
-        --bg-secondary: #2d2d2d;
-        --bg-tertiary: #3d3d3d;
-        
-        --border-color: #444444;
-        --shadow-color: rgba(0, 0, 0, 0.5);
-        
-        --card-bg: #2d2d2d;
-        --modal-bg: #2d2d2d;
-        
-        --progress-bg: #3d3d3d;
-        --progress-fill: linear-gradient(90deg, #27ae60, #219653);
-        
-        /* 表格文字颜色 - 深色模式下改为白色 */
-        --table-text: #ffffff;
-        --note-text: #cccccc;
-        --button-text: #ffffff;
-    }
-    
-    /* 深色模式下的特殊调整 */
-    body {
-        background-color: #121212;
-    }
-    
-    /* 确保深色模式下图片和按钮更清晰 */
-    .photo-placeholder,
-    .photo-missing,
-    .file-placeholder,
-    .file-missing {
-        background-color: #3d3d3d;
-        border-color: #555555;
-    }
-    
-    .photo-placeholder div,
-    .photo-missing div,
-    .file-placeholder div,
-    .file-missing div {
-        color: #ffffff;
-    }
-}
+
 /* 数据管理按钮强制一行显示 */
 .import-export .button-grid {
     display: flex;
@@ -249,6 +202,8 @@ body {
     top: 0;
     z-index: 100;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    width: 100%; /* 确保宽度100% */
+    box-sizing: border-box; /* 确保内边距包含在宽度内 */
 }
 
 .header-left {
@@ -276,11 +231,12 @@ body {
 .header-top-buttons {
     display: flex;
     gap: 8px;
-    width: 100%;
+    width: 100%; /* 确保宽度100% */
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     padding-bottom: 2px;
     scrollbar-width: none;
+    box-sizing: border-box; /* 确保内边距包含在宽度内 */
 }
 
 .header-top-buttons::-webkit-scrollbar {
@@ -320,7 +276,9 @@ body {
 
 /* 主内容区 */
 .main-content {
-    padding: 16px;
+    padding: 6x;
+    width: 100%; /* 确保宽度100% */
+    box-sizing: border-box; /* 确保内边距包含在宽度内 */
 }
 
 /* 导入导出区域 */
@@ -420,6 +378,8 @@ body {
     border-radius: 8px;
     margin-bottom: 16px;
     border: 1px solid var(--border-color);
+    width: 100%; /* 添加宽度100% */
+    box-sizing: border-box; /* 确保内边距包含在宽度内 */
 }
 
 #currentUser {
@@ -451,7 +411,7 @@ body {
     font-size: 16px;
     font-weight: 600;
     margin-bottom: 20px;
-    width: 100%;
+    width: 100%; /* 确保宽度100% */
     transition: all 0.3s;
     min-height: 50px;
     display: block;
@@ -465,6 +425,7 @@ body {
 /* 工地卡片 */
 .site-list {
     margin-bottom: 20px;
+    width: 100%; /* 确保宽度100% */
 }
 
 .site-card {
@@ -478,6 +439,8 @@ body {
     box-shadow: 0 2px 8px var(--shadow-color);
     position: relative;
     display: block;
+    width: 100%; /* 确保宽度100% */
+    box-sizing: border-box; /* 确保内边距包含在宽度内 */
 }
 
 .site-card:active {
