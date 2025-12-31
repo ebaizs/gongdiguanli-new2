@@ -1849,9 +1849,9 @@ function renderTodoList(site) {
                 </select>
             </td>`;
         } else {
-            const statusText = { 'pending': '待办', 'in-progress': '进行中', 'completed': '已完成' };
-            const statusColor = { 'pending': '#ff9800', 'in-progress': '#2196f3', 'completed': '#4caf50' };
-            statusCell = `<td><span style="color: ${statusColor[todo.status]}">${statusText[todo.status]}</span></td>`;
+           const statusText = { 'pending': '待办', 'in-progress': '进行中', 'completed': '已完成' };
+const statusColor = { 'pending': '#ff6b6b', 'in-progress': '#4caf50', 'completed': '#9e9e9e' };
+           statusCell = `<td><span style="color: ${statusColor[todo.status]} !important;">${statusText[todo.status]}</span></td>`;
         }
         
         html += `<tr>
@@ -1946,7 +1946,6 @@ function renderExpenseList(site) {
     html += '</tbody></table>';
     list.innerHTML = html;
 }
-
 function renderRequirementList(site) {
     const list = document.getElementById('requirementList');
     
@@ -1966,7 +1965,8 @@ function renderRequirementList(site) {
     
     site.requirements.forEach(req => {
         const typeText = req.type === 'need' ? '需要' : '排除';
-        const typeColor = req.type === 'need' ? '#4caf50' : '#ff6b6b';
+        // 使用 CSS 变量，确保在深色模式下颜色不变
+        const typeStyle = `style="color: ${req.type === 'need' ? '#4caf50' : '#ff6b6b'} !important;"`;
         
         let statusCell = '';
         if (canEditStatus()) {
@@ -1978,9 +1978,9 @@ function renderRequirementList(site) {
                 </select>
             </td>`;
         } else {
-            const statusText = { 'pending': '待完成', 'in-progress': '进行中', 'completed': '已完成' };
-            const statusColor = { 'pending': '#666', 'in-progress': '#ff9800', 'completed': '#4caf50' };
-            statusCell = `<td><span style="color: ${statusColor[req.status]}">${statusText[req.status]}</span></td>`;
+           const statusText = { 'pending': '待完成', 'in-progress': '进行中', 'completed': '已完成' };
+const statusColor = { 'pending': '#ff6b6b', 'in-progress': '#4caf50', 'completed': '#9e9e9e' };
+            statusCell = `<td><span style="color: ${statusColor[req.status]} !important;">${statusText[req.status]}</span></td>`;
         }
         
         let timeCell = '';
@@ -1997,7 +1997,7 @@ function renderRequirementList(site) {
         
         html += `<tr>
             <td class="compact-text multi-line" title="${req.content}">${req.content}</td>
-            <td style="color: ${typeColor}; font-weight: 500;">${typeText}</td>
+            <td ${typeStyle} class="requirement-type-cell">${typeText}</td>
             ${statusCell}
             ${timeCell}
             <td class="compact-text multi-line">${req.operator}</td>
@@ -2080,7 +2080,7 @@ function renderRepairList(site) {
                 </select>
             </td>`;
         } else {
-            statusCell = `<td><span style="color: ${repair.status === 'completed' ? '#4caf50' : '#ff9800'}">${repair.status === 'completed' ? '已完成' : '待维修'}</span></td>`;
+          statusCell = `<td><span style="color: ${repair.status === 'completed' ? '#9e9e9e' : '#ff6b6b'} !important;">${repair.status === 'completed' ? '已完成' : '待维修'}</span></td>`;
         }
         
         let timeCell = '';
