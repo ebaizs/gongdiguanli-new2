@@ -88,18 +88,18 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
         
         if (user) {
-            currentUser = user;
-            document.getElementById('currentUser').textContent = `当前用户：${user.name}${user.isLocal ? ' (本地测试)' : ''}`;
-            document.getElementById('loginPage').style.display = 'none';
-            document.getElementById('mainContainer').classList.remove('hidden');
-            
-            localStorage.setItem('lastUser', JSON.stringify({
-                username: user.username,
-                password: user.password,
-                name: user.name,
-                loginTime: new Date().toISOString(),
-                isLocal: user.isLocal || false
-            }));
+        currentUser = user;
+        document.getElementById('currentUser').textContent = `当前用户：${user.name}${user.isLocal ? ' (本地测试)' : ''}`;
+        document.getElementById('loginPage').style.display = 'none';
+        document.getElementById('mainContainer').classList.remove('hidden');
+        
+        localStorage.setItem('lastUser', JSON.stringify({
+            username: user.username,
+            password: user.password,
+            name: user.name,
+            loginTime: new Date().toISOString(),
+            isLocal: user.isLocal || false
+        }));
             
             // 在这里添加：
             updateTopButtonsByPermission();  // 更新顶部按钮权限
@@ -177,13 +177,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             
            
             
-            // 移动端欢迎提示
-            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                setTimeout(() => {
-                    showSimpleToast(`欢迎回来，${user.name}！`);
-                }, 500);
-            }
-            
+           
         } else {
             const errorDiv = document.getElementById('loginError');
             errorDiv.textContent = '用户名或密码错误！';
