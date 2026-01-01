@@ -1,14 +1,992 @@
-var _0xc8498e;const CLOUD_CONFIG={'\u0047\u0049\u0053\u0054\u005F\u0049\u0044':"\u0030\u0039\u0037\u0066\u0038\u0061\u0064\u0062\u0062\u0033\u0037\u0039\u0030\u0066\u0033\u0061\u0039\u0035\u0062\u0061\u0035\u0038\u0036\u0061\u0030\u0038\u0036\u0037\u0036\u0039\u0039\u0062",'\u0052\u0041\u0057\u005F\u0044\u0041\u0054\u0041\u005F\u0055\u0052\u004C':"\u0068\u0074\u0074\u0070\u0073\u003A\u002F\u002F\u0067\u0069\u0073\u0074\u002E\u0067\u0069\u0074\u0068\u0075\u0062\u0075\u0073\u0065\u0072\u0063\u006F\u006E\u0074\u0065\u006E\u0074\u002E\u0063\u006F\u006D\u002F\u0065\u0062\u0061\u0069\u007A\u0073\u002F\u0030\u0039\u0037\u0066\u0038\u0061\u0064\u0062\u0062\u0033\u0037\u0039\u0030\u0066\u0033\u0061\u0039\u0035\u0062\u0061\u0035\u0038\u0036\u0061\u0030\u0038\u0036\u0037\u0036\u0039\u0039\u0062\u002F\u0072\u0061\u0077\u002F\u0079\u006F\u0075\u0072\u002D\u006C\u0069\u0067\u0068\u0074\u0064\u0061\u0074\u0061\u002E\u006A\u0073\u006F\u006E","RAW_USER_URL":'https://gist.githubusercontent.com/ebaizs/097f8adbb3790f3a95ba586a0867699b/raw/zhanghao.js','\u0044\u0041\u0054\u0041\u005F\u0046\u0049\u004C\u0045\u0053':{"CLOUD_JSON":"\u0079\u006F\u0075\u0072\u002D\u006C\u0069\u0067\u0068\u0074\u0064\u0061\u0074\u0061\u002E\u006A\u0073\u006F\u006E",'\u0043\u004C\u004F\u0055\u0044\u005F\u004A\u0053\u004F\u004E':"\u0061\u006C\u006C\u002E\u006A\u0073\u006F\u006E",'\u004C\u004F\u0043\u0041\u004C\u005F\u004A\u0053':"\u0073\u0068\u0075\u006A\u0075\u002E\u006A\u0073",'\u004C\u004F\u0043\u0041\u004C\u005F\u004C\u0049\u0047\u0048\u0054\u005F\u004A\u0053':"\u0073\u0068\u0075\u006A\u0075\u005F\u006C\u0069\u0067\u0068\u0074\u002E\u006A\u0073",'\u004C\u004F\u0043\u0041\u004C\u005F\u005A\u0049\u0050\u005F\u0049\u004D\u0041\u0047\u0045\u0053\u005F\u0046\u004F\u004C\u0044\u0045\u0052':"\u0073\u0068\u0075\u006A\u0075","LOCAL_ZIP_LOCATION_INFO":'文件位置信息.json'},'\u0053\u0049\u005A\u0045\u005F\u004C\u0049\u004D\u0049\u0054\u0053':{'\u0047\u0049\u0053\u0054\u005F\u004D\u0041\u0058':(771842^771848)*(403224^402200)*(502008^503032),"GIST_SAFE":(917812^917820)*(727585^728609)*(544764^543740),'\u0049\u004D\u0041\u0047\u0045\u005F\u004D\u0041\u0058\u005F\u0057\u0049\u0044\u0054\u0048':500,"IMAGE_MAX_SIZE":(241364^241382)*(756049^757073),'\u0046\u0049\u004C\u0045\u005F\u004D\u0041\u0058\u005F\u0053\u0049\u005A\u0045':(268311^268317)*(970498^969474)*(276067^275043)},'\u0044\u0041\u0054\u0041\u005F\u0056\u0045\u0052\u0053\u0049\u004F\u004E':"\u0032\u002E\u0033"};_0xc8498e=(272515^272515)+(829160^829152);let GIST_CONFIG={'\u0047\u0049\u0053\u0054\u005F\u0049\u0044':CLOUD_CONFIG['\u0047\u0049\u0053\u0054\u005F\u0049\u0044'],'\u0047\u0049\u0054\u0048\u0055\u0042\u005F\u0054\u004F\u004B\u0045\u004E':'',"configLoaded":false};if(typeof window['\u0063\u0075\u0072\u0072\u0065\u006E\u0074\u0055\u0073\u0065\u0072']==="\u0075\u006E\u0064\u0065\u0066\u0069\u006E\u0065\u0064")window['\u0063\u0075\u0072\u0072\u0065\u006E\u0074\u0055\u0073\u0065\u0072']=null;if(typeof window['\u0073\u0069\u0074\u0065\u0073']==="\u0075\u006E\u0064\u0065\u0066\u0069\u006E\u0065\u0064")window['\u0073\u0069\u0074\u0065\u0073']=[];if(typeof window['\u0063\u0068\u0061\u006E\u0067\u0065\u004C\u006F\u0067']==="\u0075\u006E\u0064\u0065\u0066\u0069\u006E\u0065\u0064")window['\u0063\u0068\u0061\u006E\u0067\u0065\u004C\u006F\u0067']=[];if(typeof window['\u0069\u0073\u0053\u0079\u006E\u0063\u0069\u006E\u0067']==="denifednu".split("").reverse().join(""))window['\u0069\u0073\u0053\u0079\u006E\u0063\u0069\u006E\u0067']=false;if(typeof window['\u0063\u0075\u0072\u0072\u0065\u006E\u0074\u0053\u0069\u0074\u0065\u0049\u0064']==="\u0075\u006E\u0064\u0065\u0066\u0069\u006E\u0065\u0064")window['\u0063\u0075\u0072\u0072\u0065\u006E\u0074\u0053\u0069\u0074\u0065\u0049\u0064']=null;async function compressImageToSize(source,maxWidth=CLOUD_CONFIG['\u0053\u0049\u005A\u0045\u005F\u004C\u0049\u004D\u0049\u0054\u0053']['\u0049\u004D\u0041\u0047\u0045\u005F\u004D\u0041\u0058\u005F\u0057\u0049\u0044\u0054\u0048']){return new Promise((resolve,reject)=>{if(typeof source==="gnirts".split("").reverse().join("")&&source['\u0073\u0074\u0061\u0072\u0074\u0073\u0057\u0069\u0074\u0068']("\u0064\u0061\u0074\u0061\u003A")){_0xe3bac(source);return;}if(source instanceof File){var _0x4dada;const _0xe75ecc=new FileReader();_0x4dada=(550351^550347)+(136341^136338);_0xe75ecc['\u006F\u006E\u006C\u006F\u0061\u0064']=function(e){_0xe3bac(e['\u0074\u0061\u0072\u0067\u0065\u0074']['\u0072\u0065\u0073\u0075\u006C\u0074']);};_0xe75ecc['\u006F\u006E\u0065\u0072\u0072\u006F\u0072']=reject;_0xe75ecc['\u0072\u0065\u0061\u0064\u0041\u0073\u0044\u0061\u0074\u0061\u0055\u0052\u004C'](source);return;}function _0xe3bac(dataUrl){const _0x789g8f=new Image();_0x789g8f['\u006F\u006E\u006C\u006F\u0061\u0064']=function(){const _0x681ag=document['\u0063\u0072\u0065\u0061\u0074\u0065\u0045\u006C\u0065\u006D\u0065\u006E\u0074']("\u0063\u0061\u006E\u0076\u0061\u0073");var _0xc112f=(557023^557015)+(118230^118226);const _0xg_0x4a9=_0x681ag['\u0067\u0065\u0074\u0043\u006F\u006E\u0074\u0065\u0078\u0074']("d2".split("").reverse().join(""));_0xc112f=(216720^216720)+(888055^888048);var _0xc22bb=(650513^650514)+(682030^682024);let _0xabf=_0x789g8f['\u0077\u0069\u0064\u0074\u0068'];_0xc22bb=565922^565923;var _0xdb3dff;let _0x04bbdc=_0x789g8f['\u0068\u0065\u0069\u0067\u0068\u0074'];_0xdb3dff=(988395^988392)+(135437^135428);if(_0xabf>maxWidth){_0x04bbdc=Math['\u0072\u006F\u0075\u006E\u0064'](_0x04bbdc*maxWidth/_0xabf);_0xabf=maxWidth;}_0x681ag['\u0077\u0069\u0064\u0074\u0068']=_0xabf;_0x681ag['\u0068\u0065\u0069\u0067\u0068\u0074']=_0x04bbdc;_0xg_0x4a9['\u0064\u0072\u0061\u0077\u0049\u006D\u0061\u0067\u0065'](_0x789g8f,398102^398102,641798^641798,_0xabf,_0x04bbdc);const _0xab497e=dataUrl['\u0073\u0070\u006C\u0069\u0074']("\u003B")[319752^319752]['\u0073\u0070\u006C\u0069\u0074']("\u003A")[405950^405951]||"\u0069\u006D\u0061\u0067\u0065\u002F\u006A\u0070\u0065\u0067";if(_0xab497e==="gepj/egami".split("").reverse().join("")||_0xab497e==="\u0069\u006D\u0061\u0067\u0065\u002F\u0077\u0065\u0062\u0070"){resolve(_0x681ag['\u0074\u006F\u0044\u0061\u0074\u0061\u0055\u0052\u004C'](_0xab497e,0.6));}else if(_0xab497e==="\u0069\u006D\u0061\u0067\u0065\u002F\u0070\u006E\u0067"){resolve(_0x681ag['\u0074\u006F\u0044\u0061\u0074\u0061\u0055\u0052\u004C']("\u0069\u006D\u0061\u0067\u0065\u002F\u0070\u006E\u0067"));}else{resolve(_0x681ag['\u0074\u006F\u0044\u0061\u0074\u0061\u0055\u0052\u004C']("\u0069\u006D\u0061\u0067\u0065\u002F\u006A\u0070\u0065\u0067",0.6));}};_0x789g8f['\u006F\u006E\u0065\u0072\u0072\u006F\u0072']=reject;_0x789g8f['\u0073\u0072\u0063']=dataUrl;}});}async function compressImageTo50KB(dataUrl){return compressImageToSize(dataUrl);}function resizeImage(file,maxDimension,callback){compressImageToSize(file,maxDimension)['\u0074\u0068\u0065\u006E'](callback)['\u0063\u0061\u0074\u0063\u0068'](()=>{const _0xde_0x840=new FileReader();_0xde_0x840['\u006F\u006E\u006C\u006F\u0061\u0064']=e=>callback(e['\u0074\u0061\u0072\u0067\u0065\u0074']['\u0072\u0065\u0073\u0075\u006C\u0074']);_0xde_0x840['\u0072\u0065\u0061\u0064\u0041\u0073\u0044\u0061\u0074\u0061\u0055\u0052\u004C'](file);});}function getMimeTypeFromFileName(fileName){var _0x5fegbe;const _0xc7a36f=(fileName['\u0073\u0070\u006C\u0069\u0074']("\u002E")['\u0070\u006F\u0070']()||'')['\u0074\u006F\u004C\u006F\u0077\u0065\u0072\u0043\u0061\u0073\u0065']();_0x5fegbe=(953155^953162)+(300946^300949);const _0x7c709d={"\u006A\u0070\u0067":'image/jpeg',"\u006A\u0070\u0065\u0067":"\u0069\u006D\u0061\u0067\u0065\u002F\u006A\u0070\u0065\u0067","\u0070\u006E\u0067":"\u0069\u006D\u0061\u0067\u0065\u002F\u0070\u006E\u0067","\u0067\u0069\u0066":"\u0069\u006D\u0061\u0067\u0065\u002F\u0067\u0069\u0066",'webp':"\u0069\u006D\u0061\u0067\u0065\u002F\u0077\u0065\u0062\u0070","\u0062\u006D\u0070":"\u0069\u006D\u0061\u0067\u0065\u002F\u0062\u006D\u0070",'pdf':"\u0061\u0070\u0070\u006C\u0069\u0063\u0061\u0074\u0069\u006F\u006E\u002F\u0070\u0064\u0066","\u0078\u006C\u0073":'application/vnd.ms-excel','xlsx':'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','doc':"\u0061\u0070\u0070\u006C\u0069\u0063\u0061\u0074\u0069\u006F\u006E\u002F\u006D\u0073\u0077\u006F\u0072\u0064","\u0064\u006F\u0063\u0078":"\u0061\u0070\u0070\u006C\u0069\u0063\u0061\u0074\u0069\u006F\u006E\u002F\u0076\u006E\u0064\u002E\u006F\u0070\u0065\u006E\u0078\u006D\u006C\u0066\u006F\u0072\u006D\u0061\u0074\u0073\u002D\u006F\u0066\u0066\u0069\u0063\u0065\u0064\u006F\u0063\u0075\u006D\u0065\u006E\u0074\u002E\u0077\u006F\u0072\u0064\u0070\u0072\u006F\u0063\u0065\u0073\u0073\u0069\u006E\u0067\u006D\u006C\u002E\u0064\u006F\u0063\u0075\u006D\u0065\u006E\u0074",'csv':"\u0074\u0065\u0078\u0074\u002F\u0063\u0073\u0076",'txt':"\u0074\u0065\u0078\u0074\u002F\u0070\u006C\u0061\u0069\u006E",'json':"\u0061\u0070\u0070\u006C\u0069\u0063\u0061\u0074\u0069\u006F\u006E\u002F\u006A\u0073\u006F\u006E"};return _0x7c709d[_0xc7a36f]||"\u0061\u0070\u0070\u006C\u0069\u0063\u0061\u0074\u0069\u006F\u006E\u002F\u006F\u0063\u0074\u0065\u0074\u002D\u0073\u0074\u0072\u0065\u0061\u006D";}function getExtensionFromMimeType(mimeType){const _0xg147bd={"\u0069\u006D\u0061\u0067\u0065\u002F\u006A\u0070\u0065\u0067":"\u006A\u0070\u0067",'image/png':"\u0070\u006E\u0067",'image/gif':'gif','image/webp':"\u0077\u0065\u0062\u0070","\u0069\u006D\u0061\u0067\u0065\u002F\u0062\u006D\u0070":"\u0062\u006D\u0070",'application/pdf':"\u0070\u0064\u0066","\u0061\u0070\u0070\u006C\u0069\u0063\u0061\u0074\u0069\u006F\u006E\u002F\u0076\u006E\u0064\u002E\u006D\u0073\u002D\u0065\u0078\u0063\u0065\u006C":"\u0078\u006C\u0073","\u0061\u0070\u0070\u006C\u0069\u0063\u0061\u0074\u0069\u006F\u006E\u002F\u0076\u006E\u0064\u002E\u006F\u0070\u0065\u006E\u0078\u006D\u006C\u0066\u006F\u0072\u006D\u0061\u0074\u0073\u002D\u006F\u0066\u0066\u0069\u0063\u0065\u0064\u006F\u0063\u0075\u006D\u0065\u006E\u0074\u002E\u0073\u0070\u0072\u0065\u0061\u0064\u0073\u0068\u0065\u0065\u0074\u006D\u006C\u002E\u0073\u0068\u0065\u0065\u0074":'xlsx','application/msword':'doc','application/vnd.openxmlformats-officedocument.wordprocessingml.document':'docx',"\u0074\u0065\u0078\u0074\u002F\u0063\u0073\u0076":"\u0063\u0073\u0076",'text/plain':'txt',"\u0061\u0070\u0070\u006C\u0069\u0063\u0061\u0074\u0069\u006F\u006E\u002F\u006A\u0073\u006F\u006E":"\u006A\u0073\u006F\u006E"};return _0xg147bd[mimeType]||"nib".split("").reverse().join("");}function getExtensionFromFileName(fileName){if(!fileName)return null;var _0x8986a;const _0xc9efe=fileName['\u0073\u0070\u006C\u0069\u0074']("\u002E");_0x8986a="nijhhm".split("").reverse().join("");return _0xc9efe['\u006C\u0065\u006E\u0067\u0074\u0068']>(392142^392143)?_0xc9efe[_0xc9efe['\u006C\u0065\u006E\u0067\u0074\u0068']-(235320^235321)]['\u0074\u006F\u004C\u006F\u0077\u0065\u0072\u0043\u0061\u0073\u0065']():null;}function getDrawingTypeText(type){var _0x5g95ad=(240659^240667)+(165394^165393);const _0x67c={'design':"\u8BBE\u8BA1\u56FE\u7EB8",'quote':"\u62A5\u4EF7\u8868","\u006F\u0074\u0068\u0065\u0072":"\u5176\u4ED6"};_0x5g95ad="qbedld".split("").reverse().join("");return _0x67c[type]||"\u77E5\u672A".split("").reverse().join("");}function getFileIcon(fileType){if(fileType['\u0069\u006E\u0063\u006C\u0075\u0064\u0065\u0073']("\u0070\u0064\u0066"))return"\uDCD5\uD83D".split("").reverse().join("");if(fileType['\u0069\u006E\u0063\u006C\u0075\u0064\u0065\u0073']("lecxe".split("").reverse().join(""))||fileType['\u0069\u006E\u0063\u006C\u0075\u0064\u0065\u0073']("teehs".split("").reverse().join("")))return"\uDCCA\uD83D".split("").reverse().join("");if(fileType['\u0069\u006E\u0063\u006C\u0075\u0064\u0065\u0073']("drow".split("").reverse().join("")))return"\uD83D\uDCDD";if(fileType['\u0069\u006E\u0063\u006C\u0075\u0064\u0065\u0073']("vsc".split("").reverse().join("")))return"\uDCCB\uD83D".split("").reverse().join("");if(fileType['\u0069\u006E\u0063\u006C\u0075\u0064\u0065\u0073']("\u0069\u006D\u0061\u0067\u0065"))return"\uFE0F\uDDBC\uD83D".split("").reverse().join("");return"\uD83D\uDCC4";}function checkDataSizeBeforeUpload(){try{const _0x9c794c={'\u0073\u0069\u0074\u0065\u0073':JSON['\u0070\u0061\u0072\u0073\u0065'](JSON['\u0073\u0074\u0072\u0069\u006E\u0067\u0069\u0066\u0079'](window['\u0073\u0069\u0074\u0065\u0073']||[])),'\u0063\u0068\u0061\u006E\u0067\u0065\u004C\u006F\u0067':JSON['\u0070\u0061\u0072\u0073\u0065'](JSON['\u0073\u0074\u0072\u0069\u006E\u0067\u0069\u0066\u0079'](window['\u0063\u0068\u0061\u006E\u0067\u0065\u004C\u006F\u0067']||[]))};var _0xfe4a=(464576^464581)+(688108^688110);const _0xcf_0x3bf=JSON['\u0073\u0074\u0072\u0069\u006E\u0067\u0069\u0066\u0079'](_0x9c794c);_0xfe4a=617660^617659;const _0x15323f=_0xcf_0x3bf['\u006C\u0065\u006E\u0067\u0074\u0068'];let _0x167a0d=664994^664994;let _0xb1bf9b=374806^374806;(window['\u0073\u0069\u0074\u0065\u0073']||[])['\u0066\u006F\u0072\u0045\u0061\u0063\u0068'](site=>{if(site['\u0072\u0065\u0070\u0061\u0069\u0072\u0073']){site['\u0072\u0065\u0070\u0061\u0069\u0072\u0073']['\u0066\u006F\u0072\u0045\u0061\u0063\u0068'](repair=>{if(repair['\u0070\u0068\u006F\u0074\u006F']&&repair['\u0070\u0068\u006F\u0074\u006F']['\u0073\u0074\u0061\u0072\u0074\u0073\u0057\u0069\u0074\u0068']("\u0064\u0061\u0074\u0061\u003A")){_0x167a0d+=repair['\u0070\u0068\u006F\u0074\u006F']['\u006C\u0065\u006E\u0067\u0074\u0068'];_0xb1bf9b++;}});}if(site['\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0073']){site['\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0073']['\u0066\u006F\u0072\u0045\u0061\u0063\u0068'](drawing=>{if(drawing['\u0066\u0069\u006C\u0065']&&drawing['\u0066\u0069\u006C\u0065']['\u0073\u0074\u0061\u0072\u0074\u0073\u0057\u0069\u0074\u0068']("\u0064\u0061\u0074\u0061\u003A")){_0x167a0d+=drawing['\u0066\u0069\u006C\u0065']['\u006C\u0065\u006E\u0067\u0074\u0068'];_0xb1bf9b++;}});}});var _0x47b97e=(135075^135075)+(580849^580856);const _0x9c893f=_0x15323f+_0x167a0d;_0x47b97e=543233^543233;var _0x7abd=(578893^578891)+(555020^555017);const _0x5db=bytes=>{if(bytes<(748957^747933))return bytes+"\u0020\u0042";if(bytes<(966831^967855)*(273860^272836))return(bytes/(319550^320574))['\u0074\u006F\u0046\u0069\u0078\u0065\u0064'](495061^495060)+"BK ".split("").reverse().join("");if(bytes<(275228^276252)*(109088^110112)*(890844^889820))return(bytes/((132057^133081)*(972368^971344)))['\u0074\u006F\u0046\u0069\u0078\u0065\u0064'](964211^964210)+"BM ".split("").reverse().join("");return(bytes/((136259^135235)*(368136^367112)*(886093^885069)))['\u0074\u006F\u0046\u0069\u0078\u0065\u0064'](373599^373598)+"\u0020\u0047\u0042";};_0x7abd=(953326^953325)+(754142^754136);return{'\u0063\u0061\u006E\u0055\u0070\u006C\u006F\u0061\u0064':_0x9c893f<CLOUD_CONFIG['\u0053\u0049\u005A\u0045\u005F\u004C\u0049\u004D\u0049\u0054\u0053']['\u0047\u0049\u0053\u0054\u005F\u0053\u0041\u0046\u0045'],'\u0074\u006F\u0074\u0061\u006C\u0053\u0069\u007A\u0065':_0x9c893f,'\u0068\u0075\u006D\u0061\u006E\u0053\u0069\u007A\u0065':_0x5db(_0x9c893f),"textSize":_0x5db(_0x15323f),'\u0069\u006D\u0061\u0067\u0065\u0053\u0069\u007A\u0065':_0x5db(_0x167a0d),'\u0069\u006D\u0061\u0067\u0065\u0043\u006F\u0075\u006E\u0074':_0xb1bf9b,'\u0077\u0061\u0072\u006E\u0069\u006E\u0067':_0x9c893f>(203181^203179)*(933283^932259)*(238981^237957)?"\u6570\u636E\u8F83\u5927\uFF0C\u5EFA\u8BAE\u538B\u7F29\u56FE\u7247":"\u5927\u5C0F\u6B63\u5E38"};}catch(error){console['\u0065\u0072\u0072\u006F\u0072']("\u68C0\u67E5\u6570\u636E\u5927\u5C0F\u5931\u8D25\u003A",error);return{"canUpload":!![],'\u0068\u0075\u006D\u0061\u006E\u0053\u0069\u007A\u0065':'未知大小','\u0077\u0061\u0072\u006E\u0069\u006E\u0067':'无法计算数据大小'};}}function formatDate(dateStr){if(!dateStr)return'';if(dateStr['\u006D\u0061\u0074\u0063\u0068'](new RegExp('\u005E\u005C\u0064\u007B\u0034\u007D\u002D\u005C\u0064\u007B\u0032\u007D\u002D\u005C\u0064\u007B\u0032\u007D\u0024',""))){return dateStr;}var _0x88gf=(955055^955052)+(571008^571009);const _0x257b=new Date(dateStr);_0x88gf=(796380^796383)+(757003^757001);if(isNaN(_0x257b['\u0067\u0065\u0074\u0054\u0069\u006D\u0065']()))return dateStr;return _0x257b['\u0074\u006F\u0049\u0053\u004F\u0053\u0074\u0072\u0069\u006E\u0067']()['\u0073\u0070\u006C\u0069\u0074']("\u0054")[119638^119638];}function convertAllTimesToDate(){if(!window['\u0073\u0069\u0074\u0065\u0073'])return;window['\u0073\u0069\u0074\u0065\u0073']['\u0066\u006F\u0072\u0045\u0061\u0063\u0068'](site=>{var _0x14bf;const _0x1d2da=[{"field":"\u0074\u006F\u0064\u006F\u0073",'\u0073\u0075\u0062\u0066\u0069\u0065\u006C\u0064':"\u0074\u0069\u006D\u0065"},{"field":"\u0065\u0078\u0070\u0065\u006E\u0073\u0065\u0073","subfield":"\u0074\u0069\u006D\u0065"},{'\u0066\u0069\u0065\u006C\u0064':"\u0072\u0065\u0071\u0075\u0069\u0072\u0065\u006D\u0065\u006E\u0074\u0073",'\u0073\u0075\u0062\u0066\u0069\u0065\u006C\u0064':'time'},{'\u0066\u0069\u0065\u006C\u0064':"\u0072\u0065\u0070\u0061\u0069\u0072\u0073","subfield":"\u0074\u0069\u006D\u0065"},{'\u0066\u0069\u0065\u006C\u0064':"\u0077\u006F\u0072\u006B\u0065\u0072\u0073","subfield":["emit".split("").reverse().join(""),"\u0073\u0074\u0061\u0072\u0074\u0054\u0069\u006D\u0065","\u0065\u006E\u0064\u0054\u0069\u006D\u0065"]},{'\u0066\u0069\u0065\u006C\u0064':"\u0061\u0064\u0064\u0052\u0065\u006D\u006F\u0076\u0065\u0049\u0074\u0065\u006D\u0073","subfield":"\u0074\u0069\u006D\u0065"},{"field":'drawings','\u0073\u0075\u0062\u0066\u0069\u0065\u006C\u0064':"\u0074\u0069\u006D\u0065"},{'\u0066\u0069\u0065\u006C\u0064':'experiences','\u0073\u0075\u0062\u0066\u0069\u0065\u006C\u0064':'time'},{'\u0066\u0069\u0065\u006C\u0064':'dailyLogs',"subfield":"\u0074\u0069\u006D\u0065"}];_0x14bf=(583040^583040)+(737536^737536);_0x1d2da['\u0066\u006F\u0072\u0045\u0061\u0063\u0068'](({'\u0066\u0069\u0065\u006C\u0064':field,'\u0073\u0075\u0062\u0066\u0069\u0065\u006C\u0064':subfield})=>{if(site[field]&&Array['\u0069\u0073\u0041\u0072\u0072\u0061\u0079'](site[field])){site[field]['\u0066\u006F\u0072\u0045\u0061\u0063\u0068'](item=>{if(Array['\u0069\u0073\u0041\u0072\u0072\u0061\u0079'](subfield)){subfield['\u0066\u006F\u0072\u0045\u0061\u0063\u0068'](f=>{if(item[f]&&!item[f]['\u006D\u0061\u0074\u0063\u0068'](new RegExp("$}2{d\\-}2{d\\-}4{d\\^".split("").reverse().join(""),""))){item[f]=formatDate(item[f]);}});}else if(item[subfield]&&!item[subfield]['\u006D\u0061\u0074\u0063\u0068'](new RegExp('\u005E\u005C\u0064\u007B\u0034\u007D\u002D\u005C\u0064\u007B\u0032\u007D\u002D\u005C\u0064\u007B\u0032\u007D\u0024',""))){item[subfield]=formatDate(item[subfield]);}});}});});}async function loadCloudUserData(){try{console['\u006C\u006F\u0067'](":\u636E\u6570\u6237\u7528\u8F7D\u52A0\u7AEF\u4E91\u4ECE\u5728\u6B63".split("").reverse().join(""),CLOUD_CONFIG['\u0052\u0041\u0057\u005F\u0055\u0053\u0045\u0052\u005F\u0055\u0052\u004C']);var _0xcc861e=(960823^960819)+(414900^414900);const _0x026abe=await fetch(CLOUD_CONFIG['\u0052\u0041\u0057\u005F\u0055\u0053\u0045\u0052\u005F\u0055\u0052\u004C'],{'\u0063\u0061\u0063\u0068\u0065':"\u006E\u006F\u002D\u0063\u0061\u0063\u0068\u0065","mode":'cors'});_0xcc861e=(321537^321537)+(974364^974365);if(!_0x026abe['\u006F\u006B']){throw new Error(`HTTP ${_0x026abe['\u0073\u0074\u0061\u0074\u0075\u0073']}: ${_0x026abe['\u0073\u0074\u0061\u0074\u0075\u0073\u0054\u0065\u0078\u0074']}`);}var _0x8d672a=(287000^287007)+(465730^465728);const _0xac_0x9f8=await _0x026abe['\u0074\u0065\u0078\u0074']();_0x8d672a=609536^609538;console['\u006C\u006F\u0067']("\u4E91\u7AEF\u7528\u6237\u6570\u636E\u52A0\u8F7D\u6210\u529F\uFF0C\u5927\u5C0F\u003A",_0xac_0x9f8['\u006C\u0065\u006E\u0067\u0074\u0068']);try{const _0xed441a=new Function(_0xac_0x9f8+";} GIFNOC_NOISSIMREP ,sresUnItliub { nruter\n".split("").reverse().join(""));var _0x6fa42b=(370307^370308)+(441419^441422);const _0xgd51c=_0xed441a();_0x6fa42b=(872788^872791)+(757967^757965);if(_0xgd51c['\u0062\u0075\u0069\u006C\u0074\u0049\u006E\u0055\u0073\u0065\u0072\u0073']&&Array['\u0069\u0073\u0041\u0072\u0072\u0061\u0079'](_0xgd51c['\u0062\u0075\u0069\u006C\u0074\u0049\u006E\u0055\u0073\u0065\u0072\u0073'])){const _0xc1b=new Set(window['\u0062\u0075\u0069\u006C\u0074\u0049\u006E\u0055\u0073\u0065\u0072\u0073']['\u006D\u0061\u0070'](u=>u['\u0075\u0073\u0065\u0072\u006E\u0061\u006D\u0065']));var _0xe937d=(389495^389494)+(538021^538023);const _0x93447c=_0xgd51c['\u0062\u0075\u0069\u006C\u0074\u0049\u006E\u0055\u0073\u0065\u0072\u0073']['\u0066\u0069\u006C\u0074\u0065\u0072'](user=>user&&user['\u0075\u0073\u0065\u0072\u006E\u0061\u006D\u0065']&&!_0xc1b['\u0068\u0061\u0073'](user['\u0075\u0073\u0065\u0072\u006E\u0061\u006D\u0065']));_0xe937d=(407496^407496)+(155354^155358);window['\u0062\u0075\u0069\u006C\u0074\u0049\u006E\u0055\u0073\u0065\u0072\u0073']['\u0070\u0075\u0073\u0068'](..._0x93447c);console['\u006C\u006F\u0067']("\u6DFB\u52A0\u4E86",_0x93447c['\u006C\u0065\u006E\u0067\u0074\u0068'],"\u6237\u7528\u65B0\u4E2A".split("").reverse().join(""));const _0xeg7e=_0x93447c['\u0066\u0069\u006E\u0064'](u=>u['\u0069\u0073\u0041\u0064\u006D\u0069\u006E']===!![]||window['\u0041\u0044\u004D\u0049\u004E\u005F\u0055\u0053\u0045\u0052\u0053']&&window['\u0041\u0044\u004D\u0049\u004E\u005F\u0055\u0053\u0045\u0052\u0053']['\u0069\u006E\u0063\u006C\u0075\u0064\u0065\u0073'](u['\u0075\u0073\u0065\u0072\u006E\u0061\u006D\u0065']));if(_0xeg7e){window['\u0061\u0064\u006D\u0069\u006E\u0055\u0073\u0065\u0072']=_0xeg7e;if(!_0xeg7e['\u0069\u0073\u0041\u0064\u006D\u0069\u006E'])_0xeg7e['\u0069\u0073\u0041\u0064\u006D\u0069\u006E']=!![];}}if(_0xgd51c['\u0050\u0045\u0052\u004D\u0049\u0053\u0053\u0049\u004F\u004E\u005F\u0043\u004F\u004E\u0046\u0049\u0047']&&_0xgd51c['\u0050\u0045\u0052\u004D\u0049\u0053\u0053\u0049\u004F\u004E\u005F\u0043\u004F\u004E\u0046\u0049\u0047']['\u0075\u0073\u0065\u0072\u0050\u0065\u0072\u006D\u0069\u0073\u0073\u0069\u006F\u006E\u0073']){for(const[username,config]of Object['\u0065\u006E\u0074\u0072\u0069\u0065\u0073'](_0xgd51c['\u0050\u0045\u0052\u004D\u0049\u0053\u0053\u0049\u004F\u004E\u005F\u0043\u004F\u004E\u0046\u0049\u0047']['\u0075\u0073\u0065\u0072\u0050\u0065\u0072\u006D\u0069\u0073\u0073\u0069\u006F\u006E\u0073'])){if(!window['\u0050\u0045\u0052\u004D\u0049\u0053\u0053\u0049\u004F\u004E\u005F\u0043\u004F\u004E\u0046\u0049\u0047']['\u0075\u0073\u0065\u0072\u0050\u0065\u0072\u006D\u0069\u0073\u0073\u0069\u006F\u006E\u0073'][username]){window['\u0050\u0045\u0052\u004D\u0049\u0053\u0053\u0049\u004F\u004E\u005F\u0043\u004F\u004E\u0046\u0049\u0047']['\u0075\u0073\u0065\u0072\u0050\u0065\u0072\u006D\u0069\u0073\u0073\u0069\u006F\u006E\u0073'][username]=config;}}}return!![];}catch(parseError){console['\u0077\u0061\u0072\u006E'](":\u8D25\u5931\u636E\u6570\u6237\u7528\u7AEF\u4E91\u6790\u89E3".split("").reverse().join(""),parseError);showSimpleToast("\u786E\u6B63\u4E0D\u5F0F\u683C\u636E\u6570\u6237\u7528\u7AEF\u4E91".split("").reverse().join(""),"\u0077\u0061\u0072\u006E\u0069\u006E\u0067");return false;}}catch(error){console['\u0077\u0061\u0072\u006E']("\u52A0\u8F7D\u4E91\u7AEF\u7528\u6237\u6570\u636E\u5931\u8D25\u003A",error);showSimpleToast("\u52A0\u8F7D\u4E91\u7AEF\u7528\u6237\u6570\u636E\u5931\u8D25\uFF0C\u4F7F\u7528\u672C\u5730\u8D26\u6237","\u0077\u0061\u0072\u006E\u0069\u006E\u0067");return false;}}async function loadDataFromPublicUrl(){try{console['\u006C\u006F\u0067'](":\u636E\u6570\u8F7D\u52A0LRU\u5F00\u516C\u4ECE\u5728\u6B63".split("").reverse().join(""),CLOUD_CONFIG['\u0052\u0041\u0057\u005F\u0044\u0041\u0054\u0041\u005F\u0055\u0052\u004C']);var _0xb_0x4f2=(583407^583399)+(490967^490974);const _0xc7cdb=await fetch(CLOUD_CONFIG['\u0052\u0041\u0057\u005F\u0044\u0041\u0054\u0041\u005F\u0055\u0052\u004C'],{"cache":'no-cache',"mode":"\u0063\u006F\u0072\u0073"});_0xb_0x4f2=(487233^487232)+(737795^737799);if(!_0xc7cdb['\u006F\u006B']){throw new Error(`HTTP ${_0xc7cdb['\u0073\u0074\u0061\u0074\u0075\u0073']}: ${_0xc7cdb['\u0073\u0074\u0061\u0074\u0075\u0073\u0054\u0065\u0078\u0074']}`);}const _0x4c_0x3g3=await _0xc7cdb['\u0074\u0065\u0078\u0074']();console['\u006C\u006F\u0067']("\u4E91\u7AEF\u6570\u636E\u52A0\u8F7D\u6210\u529F\uFF0C\u5927\u5C0F\u003A",_0x4c_0x3g3['\u006C\u0065\u006E\u0067\u0074\u0068']);return JSON['\u0070\u0061\u0072\u0073\u0065'](_0x4c_0x3g3);}catch(error){console['\u0077\u0061\u0072\u006E'](":\u8D25\u5931\u636E\u6570\u8F7D\u52A0LRU\u5F00\u516C\u4ECE".split("").reverse().join(""),error);return null;}}function mergeCloudData(cloudSites,cloudChangeLog,_0xddc,_0x24c6d,_0xc5a3c){_0xddc=137953^137953;var _0x2b9gcf=(300977^300979)+(512891^512889);_0x24c6d=667189^667189;_0x2b9gcf=705807^705801;_0xc5a3c=938264^938264;cloudSites['\u0066\u006F\u0072\u0045\u0061\u0063\u0068'](cloudSite=>{const _0xc39bd=window['\u0073\u0069\u0074\u0065\u0073']['\u0066\u0069\u006E\u0064\u0049\u006E\u0064\u0065\u0078'](s=>s['\u0069\u0064']===cloudSite['\u0069\u0064']);if(_0xc39bd>=(628789^628789)){var _0x720cbc=(759208^759209)+(927234^927236);const _0xgcf0ea=window['\u0073\u0069\u0074\u0065\u0073'][_0xc39bd];_0x720cbc=(615083^615087)+(878706^878708);_0xgcf0ea['\u006E\u0061\u006D\u0065']=cloudSite['\u006E\u0061\u006D\u0065']||_0xgcf0ea['\u006E\u0061\u006D\u0065'];_0xgcf0ea['\u0073\u0074\u0061\u0072\u0074\u0044\u0061\u0074\u0065']=cloudSite['\u0073\u0074\u0061\u0072\u0074\u0044\u0061\u0074\u0065']||_0xgcf0ea['\u0073\u0074\u0061\u0072\u0074\u0044\u0061\u0074\u0065'];_0xgcf0ea['\u0065\u006E\u0064\u0044\u0061\u0074\u0065']=cloudSite['\u0065\u006E\u0064\u0044\u0061\u0074\u0065']||_0xgcf0ea['\u0065\u006E\u0064\u0044\u0061\u0074\u0065'];_0xgcf0ea['\u0070\u0072\u006F\u0067\u0072\u0065\u0073\u0073']=cloudSite['\u0070\u0072\u006F\u0067\u0072\u0065\u0073\u0073']!==undefined?cloudSite['\u0070\u0072\u006F\u0067\u0072\u0065\u0073\u0073']:_0xgcf0ea['\u0070\u0072\u006F\u0067\u0072\u0065\u0073\u0073'];["\u0074\u006F\u0064\u006F\u0073","sesnepxe".split("").reverse().join(""),"stnemeriuqer".split("").reverse().join(""),"\u0072\u0065\u0070\u0061\u0069\u0072\u0073","\u0077\u006F\u0072\u006B\u0065\u0072\u0073","smetIevomeRdda".split("").reverse().join(""),"\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0073","secneirepxe".split("").reverse().join(""),"sgoLyliad".split("").reverse().join("")]['\u0066\u006F\u0072\u0045\u0061\u0063\u0068'](arrayField=>{if(cloudSite[arrayField]&&Array['\u0069\u0073\u0041\u0072\u0072\u0061\u0079'](cloudSite[arrayField])){if(!_0xgcf0ea[arrayField]){_0xgcf0ea[arrayField]=[];}const _0x6d4efa=new Set(_0xgcf0ea[arrayField]['\u006D\u0061\u0070'](item=>item['\u0069\u0064']));cloudSite[arrayField]['\u0066\u006F\u0072\u0045\u0061\u0063\u0068'](cloudItem=>{const _0xe965dd=_0xgcf0ea[arrayField]['\u0066\u0069\u006E\u0064'](item=>item['\u0069\u0064']===cloudItem['\u0069\u0064']);if(!_0xe965dd){_0xgcf0ea[arrayField]['\u0070\u0075\u0073\u0068'](cloudItem);if(arrayField==="sriaper".split("").reverse().join("")&&cloudItem['\u0070\u0068\u006F\u0074\u006F']&&cloudItem['\u0070\u0068\u006F\u0074\u006F']['\u0073\u0074\u0061\u0072\u0074\u0073\u0057\u0069\u0074\u0068']("\u0064\u0061\u0074\u0061\u003A")){_0xc5a3c++;}if(arrayField==="\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0073"&&cloudItem['\u0066\u0069\u006C\u0065']&&cloudItem['\u0066\u0069\u006C\u0065']['\u0073\u0074\u0061\u0072\u0074\u0073\u0057\u0069\u0074\u0068'](":atad".split("").reverse().join(""))){_0xc5a3c++;}}else{if(arrayField==="\u0072\u0065\u0070\u0061\u0069\u0072\u0073"&&cloudItem['\u0070\u0068\u006F\u0074\u006F']&&cloudItem['\u0070\u0068\u006F\u0074\u006F']['\u0073\u0074\u0061\u0072\u0074\u0073\u0057\u0069\u0074\u0068'](":atad".split("").reverse().join(""))){_0xe965dd['\u0070\u0068\u006F\u0074\u006F']=cloudItem['\u0070\u0068\u006F\u0074\u006F'];_0xe965dd['\u0070\u0068\u006F\u0074\u006F\u004E\u0061\u006D\u0065']=cloudItem['\u0070\u0068\u006F\u0074\u006F\u004E\u0061\u006D\u0065'];_0xc5a3c++;}if(arrayField==="sgniward".split("").reverse().join("")&&cloudItem['\u0066\u0069\u006C\u0065']&&cloudItem['\u0066\u0069\u006C\u0065']['\u0073\u0074\u0061\u0072\u0074\u0073\u0057\u0069\u0074\u0068'](":atad".split("").reverse().join(""))){_0xe965dd['\u0066\u0069\u006C\u0065']=cloudItem['\u0066\u0069\u006C\u0065'];_0xe965dd['\u0066\u0069\u006C\u0065\u004E\u0061\u006D\u0065']=cloudItem['\u0066\u0069\u006C\u0065\u004E\u0061\u006D\u0065'];_0xc5a3c++;}}});}});_0x24c6d++;}else{window['\u0073\u0069\u0074\u0065\u0073']['\u0070\u0075\u0073\u0068'](cloudSite);_0xddc++;if(cloudSite['\u0072\u0065\u0070\u0061\u0069\u0072\u0073']){cloudSite['\u0072\u0065\u0070\u0061\u0069\u0072\u0073']['\u0066\u006F\u0072\u0045\u0061\u0063\u0068'](repair=>{if(repair['\u0070\u0068\u006F\u0074\u006F']&&repair['\u0070\u0068\u006F\u0074\u006F']['\u0073\u0074\u0061\u0072\u0074\u0073\u0057\u0069\u0074\u0068'](":atad".split("").reverse().join(""))){_0xc5a3c++;}});}if(cloudSite['\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0073']){cloudSite['\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0073']['\u0066\u006F\u0072\u0045\u0061\u0063\u0068'](drawing=>{if(drawing['\u0066\u0069\u006C\u0065']&&drawing['\u0066\u0069\u006C\u0065']['\u0073\u0074\u0061\u0072\u0074\u0073\u0057\u0069\u0074\u0068'](":atad".split("").reverse().join(""))){_0xc5a3c++;}});}}});var _0x8dfbb=(784836^784845)+(190905^190910);const _0x1fd5dc=new Set(window['\u0063\u0068\u0061\u006E\u0067\u0065\u004C\u006F\u0067']['\u006D\u0061\u0070'](log=>`${log['\u0074\u0069\u006D\u0065\u0073\u0074\u0061\u006D\u0070']}-${log['\u0075\u0073\u0065\u0072']}-${log['\u0061\u0063\u0074\u0069\u006F\u006E']}`));_0x8dfbb=(597540^597548)+(911440^911445);cloudChangeLog['\u0066\u006F\u0072\u0045\u0061\u0063\u0068'](log=>{var _0xf_0xdbb=(972820^972828)+(252779^252778);const _0x2526e=`${log['\u0074\u0069\u006D\u0065\u0073\u0074\u0061\u006D\u0070']}-${log['\u0075\u0073\u0065\u0072']}-${log['\u0061\u0063\u0074\u0069\u006F\u006E']}`;_0xf_0xdbb='\u006C\u0067\u0070\u0063\u006B\u0067';if(!_0x1fd5dc['\u0068\u0061\u0073'](_0x2526e)){window['\u0063\u0068\u0061\u006E\u0067\u0065\u004C\u006F\u0067']['\u0075\u006E\u0073\u0068\u0069\u0066\u0074'](log);_0x1fd5dc['\u0061\u0064\u0064'](_0x2526e);}});if(window['\u0063\u0068\u0061\u006E\u0067\u0065\u004C\u006F\u0067']['\u006C\u0065\u006E\u0067\u0074\u0068']>(986938^986322)){window['\u0063\u0068\u0061\u006E\u0067\u0065\u004C\u006F\u0067']=window['\u0063\u0068\u0061\u006E\u0067\u0065\u004C\u006F\u0067']['\u0073\u006C\u0069\u0063\u0065'](184455^184455,327237^327085);}console['\u006C\u006F\u0067'](`数据合并完成: 新增工地 ${_0xddc}, 更新工地 ${_0x24c6d}, 包含图片 ${_0xc5a3c} 个`);return{'\u0061\u0064\u0064\u0065\u0064\u0043\u006F\u0075\u006E\u0074':_0xddc,'\u0075\u0070\u0064\u0061\u0074\u0065\u0064\u0043\u006F\u0075\u006E\u0074':_0x24c6d,'\u0069\u006D\u0061\u0067\u0065\u0043\u006F\u0075\u006E\u0074':_0xc5a3c};}async function loadFromJsContent(content){try{var _0x455d5c=(676964^676966)+(668033^668037);const _0xd4267c=new Function(content+"\u000A\u0072\u0065\u0074\u0075\u0072\u006E\u0020\u0073\u0061\u0076\u0065\u0064\u0044\u0061\u0074\u0061\u003B");_0x455d5c='\u006E\u0061\u006A\u0062\u0067\u0064';const _0x90a=_0xd4267c();if(!_0x90a){throw new Error("\u004A\u0053\u0020\u6587\u4EF6\u4E2D\u6CA1\u6709\u627E\u5230\u0020\u0073\u0061\u0076\u0065\u0064\u0044\u0061\u0074\u0061\u0020\u53D8\u91CF");}window['\u0073\u0069\u0074\u0065\u0073']=_0x90a['\u0073\u0069\u0074\u0065\u0073']||[];window['\u0063\u0068\u0061\u006E\u0067\u0065\u004C\u006F\u0067']=_0x90a['\u0063\u0068\u0061\u006E\u0067\u0065\u004C\u006F\u0067']||[];convertAllTimesToDate();return!![];}catch(error){console['\u0065\u0072\u0072\u006F\u0072'](":\u8D25\u5931\u4EF6\u6587 SJ \u6790\u89E3".split("").reverse().join(""),error);throw new Error("\u89E3\u6790\u0020\u004A\u0053\u0020\u6587\u4EF6\u5931\u8D25\u003A\u0020"+error['\u006D\u0065\u0073\u0073\u0061\u0067\u0065']);}}async function loadFromJsonContent(content,fileName){try{var _0x016e;const _0x6b7bea=JSON['\u0070\u0061\u0072\u0073\u0065'](content);_0x016e=(413096^413096)+(275924^275923);window['\u0073\u0069\u0074\u0065\u0073']=_0x6b7bea['\u0073\u0069\u0074\u0065\u0073']||[];window['\u0063\u0068\u0061\u006E\u0067\u0065\u004C\u006F\u0067']=_0x6b7bea['\u0063\u0068\u0061\u006E\u0067\u0065\u004C\u006F\u0067']||[];convertAllTimesToDate();return!![];}catch(error){console['\u0065\u0072\u0072\u006F\u0072']("\u89E3\u6790\u0020\u004A\u0053\u004F\u004E\u0020\u6587\u4EF6\u5931\u8D25\u003A",error);throw new Error("\u89E3\u6790\u0020\u004A\u0053\u004F\u004E\u0020\u6587\u4EF6\u5931\u8D25\u003A\u0020"+error['\u006D\u0065\u0073\u0073\u0061\u0067\u0065']);}}async function restoreFilesFromZip(zip,_0x79b,_0x8576fg){console['\u006C\u006F\u0067']("...\u4EF6\u6587\u590D\u6062PIZ\u4ECE\u59CB\u5F00".split("").reverse().join(""));_0x79b=824199^824199;var _0x3a9e;_0x8576fg=733710^733710;_0x3a9e=650892^650895;var _0x816c=(587747^587746)+(190136^190143);const _0xg9c7de=zip['\u0066\u0069\u006C\u0065']("nosj.\u606F\u4FE1\u7F6E\u4F4D\u4EF6\u6587".split("").reverse().join(""));_0x816c=(641792^641800)+(725214^725212);if(_0xg9c7de){try{var _0x4e804c=(584431^584430)+(618422^618420);const _0xf9f=JSON['\u0070\u0061\u0072\u0073\u0065'](await _0xg9c7de['\u0061\u0073\u0079\u006E\u0063']("\u0074\u0065\u0078\u0074"));_0x4e804c=(766650^766648)+(215174^215175);console['\u006C\u006F\u0067']("\u627E\u5230\u4F4D\u7F6E\u4FE1\u606F\u6587\u4EF6\u003A",_0xf9f);for(const _0xaf478d of _0xf9f['\u0073\u0069\u0074\u0065\u0073']){const site=window['\u0073\u0069\u0074\u0065\u0073']['\u0066\u0069\u006E\u0064'](s=>{if(s['\u0069\u0064']===_0xaf478d['\u0069\u0064'])return!![];var _0xd_0x735;const _0x9ac=(s['\u006E\u0061\u006D\u0065']||`site_${s['\u0069\u0064']}`)['\u0072\u0065\u0070\u006C\u0061\u0063\u0065'](new RegExp("]|><\"?*:/\\\\[".split("").reverse().join(""),'\u0067'),"\u005F");_0xd_0x735=580380^580379;return _0x9ac===_0xaf478d['\u0066\u006F\u006C\u0064\u0065\u0072'];});if(site){for(const _0x42dda of _0xaf478d['\u0072\u0065\u0070\u0061\u0069\u0072\u0073']){const filePath=`shuju/${_0x42dda['\u0070\u0061\u0074\u0068']}`;const file=zip['\u0066\u0069\u006C\u0065'](filePath);if(file){try{const base64=await file['\u0061\u0073\u0079\u006E\u0063']("\u0062\u0061\u0073\u0065\u0036\u0034");var _0x56e7d=(787083^787084)+(222015^222012);const mimeType=getMimeTypeFromFileName(_0x42dda['\u0066\u0069\u006C\u0065\u004E\u0061\u006D\u0065']);_0x56e7d=766844^766847;var _0x8b_0x3dg;const _0x3ge=site['\u0072\u0065\u0070\u0061\u0069\u0072\u0073']&&site['\u0072\u0065\u0070\u0061\u0069\u0072\u0073']['\u0066\u0069\u006E\u0064'](r=>{return r['\u0069\u0064']===_0x42dda['\u0072\u0065\u0070\u0061\u0069\u0072\u0049\u0064']||r['\u0063\u006F\u006E\u0074\u0065\u006E\u0074']===_0x42dda['\u0072\u0065\u0070\u0061\u0069\u0072\u0043\u006F\u006E\u0074\u0065\u006E\u0074']||r['\u0070\u0068\u006F\u0074\u006F']&&r['\u0070\u0068\u006F\u0074\u006F']['\u0069\u006E\u0063\u006C\u0075\u0064\u0065\u0073'](_0x42dda['\u0066\u0069\u006C\u0065\u004E\u0061\u006D\u0065']);});_0x8b_0x3dg="ghcgem".split("").reverse().join("");if(_0x3ge){if(mimeType['\u0073\u0074\u0061\u0072\u0074\u0073\u0057\u0069\u0074\u0068']("/egami".split("").reverse().join(""))){var _0xe4638b=(240616^240617)+(350642^350642);const _0x2cb5a=await compressImageTo50KB(`data:${mimeType};base64,${base64}`);_0xe4638b=704021^704020;_0x3ge['\u0070\u0068\u006F\u0074\u006F']=_0x2cb5a;}else{_0x3ge['\u0070\u0068\u006F\u0074\u006F']=`data:${mimeType};base64,${base64}`;}_0x3ge['\u0070\u0068\u006F\u0074\u006F\u004E\u0061\u006D\u0065']=_0x42dda['\u0066\u0069\u006C\u0065\u004E\u0061\u006D\u0065'];console['\u006C\u006F\u0067'](`恢复维修图片: ${filePath}`);_0x79b++;}else{console['\u0077\u0061\u0072\u006E'](`未找到对应的维修项: ${_0x42dda['\u0072\u0065\u0070\u0061\u0069\u0072\u0043\u006F\u006E\u0074\u0065\u006E\u0074']}`);_0x8576fg++;}}catch(e){console['\u0077\u0061\u0072\u006E']("\u6062\u590D\u7EF4\u4FEE\u56FE\u7247\u5931\u8D25\u003A",e);_0x8576fg++;}}else{console['\u0077\u0061\u0072\u006E'](`ZIP中未找到文件: ${filePath}`);_0x8576fg++;}}for(const _0x4ac3eb of _0xaf478d['\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0073']){var _0x853fe=(520427^520427)+(251630^251629);const filePath=`shuju/${_0x4ac3eb['\u0070\u0061\u0074\u0068']}`;_0x853fe=(204902^204900)+(218430^218429);const file=zip['\u0066\u0069\u006C\u0065'](filePath);if(file){try{const base64=await file['\u0061\u0073\u0079\u006E\u0063']("46esab".split("").reverse().join(""));var _0x9c63ff;const mimeType=getMimeTypeFromFileName(_0x4ac3eb['\u0066\u0069\u006C\u0065\u004E\u0061\u006D\u0065']);_0x9c63ff=(130876^130868)+(848223^848214);const _0x6_0x779=site['\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0073']&&site['\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0073']['\u0066\u0069\u006E\u0064'](d=>{return d['\u0069\u0064']===_0x4ac3eb['\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0049\u0064']||d['\u0066\u0069\u006C\u0065\u004E\u0061\u006D\u0065']===_0x4ac3eb['\u006F\u0072\u0069\u0067\u0069\u006E\u0061\u006C\u004E\u0061\u006D\u0065']||d['\u0066\u0069\u006C\u0065']&&d['\u0066\u0069\u006C\u0065']['\u0069\u006E\u0063\u006C\u0075\u0064\u0065\u0073'](_0x4ac3eb['\u0066\u0069\u006C\u0065\u004E\u0061\u006D\u0065']);});if(_0x6_0x779){_0x6_0x779['\u0066\u0069\u006C\u0065']=`data:${mimeType};base64,${base64}`;_0x6_0x779['\u0066\u0069\u006C\u0065\u004E\u0061\u006D\u0065']=_0x4ac3eb['\u006F\u0072\u0069\u0067\u0069\u006E\u0061\u006C\u004E\u0061\u006D\u0065']||_0x4ac3eb['\u0066\u0069\u006C\u0065\u004E\u0061\u006D\u0065'];console['\u006C\u006F\u0067'](`恢复图纸文件: ${filePath}`);_0x79b++;}else{console['\u0077\u0061\u0072\u006E'](`未找到对应的图纸: ${_0x4ac3eb['\u006F\u0072\u0069\u0067\u0069\u006E\u0061\u006C\u004E\u0061\u006D\u0065']}`);_0x8576fg++;}}catch(e){console['\u0077\u0061\u0072\u006E']("\u6062\u590D\u56FE\u7EB8\u6587\u4EF6\u5931\u8D25\u003A",e);_0x8576fg++;}}else{console['\u0077\u0061\u0072\u006E'](`ZIP中未找到文件: ${filePath}`);_0x8576fg++;}}}else{console['\u0077\u0061\u0072\u006E'](`未找到对应的工地: ${_0xaf478d['\u0066\u006F\u006C\u0064\u0065\u0072']}`);}}}catch(error){console['\u0077\u0061\u0072\u006E'](":\u8D25\u5931\u4EF6\u6587\u606F\u4FE1\u7F6E\u4F4D\u6790\u89E3".split("").reverse().join(""),error);}}if(_0x79b===(979196^979196)){console['\u006C\u006F\u0067']("\u6309\u6587\u4EF6\u5939\u7ED3\u6784\u6062\u590D\u6587\u4EF6\u002E\u002E\u002E");const _0x2f1f0d=[];zip['\u0066\u006F\u0072\u0045\u0061\u0063\u0068']((relativePath,zipEntry)=>{if(!zipEntry['\u0064\u0069\u0072']){_0x2f1f0d['\u0070\u0075\u0073\u0068'](processZipFile(zipEntry,relativePath));}});const _0xb3ad=await Promise['\u0061\u006C\u006C\u0053\u0065\u0074\u0074\u006C\u0065\u0064'](_0x2f1f0d);_0xb3ad['\u0066\u006F\u0072\u0045\u0061\u0063\u0068'](result=>{if(result['\u0073\u0074\u0061\u0074\u0075\u0073']==="\u0066\u0075\u006C\u0066\u0069\u006C\u006C\u0065\u0064"&&result['\u0076\u0061\u006C\u0075\u0065']){_0x79b++;}else if(result['\u0073\u0074\u0061\u0074\u0075\u0073']==="\u0072\u0065\u006A\u0065\u0063\u0074\u0065\u0064"){_0x8576fg++;}});}if(_0x79b>(317952^317952)){saveData();}console['\u006C\u006F\u0067'](`文件恢复完成: 成功 ${_0x79b} 个, 失败 ${_0x8576fg} 个`);if(new RegExp("iniM arepO|eliboMEI|yrreBkcalB|doPi|daPi|enohPi|SObew|diordnA".split("").reverse().join(""),'\u0069')['\u0074\u0065\u0073\u0074'](navigator['\u0075\u0073\u0065\u0072\u0041\u0067\u0065\u006E\u0074'])){setTimeout(()=>{if(currentSiteId){const site=sites['\u0066\u0069\u006E\u0064'](s=>s['\u0069\u0064']===currentSiteId);if(site){loadSiteData(site);fixMobileUI();}}},127254^127346);}return{"restoredCount":_0x79b,'\u0066\u0061\u0069\u006C\u0065\u0064\u0043\u006F\u0075\u006E\u0074':_0x8576fg};}async function processZipFile(zipEntry,relativePath){if(!relativePath['\u0073\u0074\u0061\u0072\u0074\u0073\u0057\u0069\u0074\u0068']("\u0073\u0068\u0075\u006A\u0075\u002F")){console['\u0077\u0061\u0072\u006E'](`文件不在shuju文件夹内: ${relativePath}`);return false;}var _0xe006e=(954467^954465)+(430008^430015);const _0x4e4gg=relativePath['\u0073\u0075\u0062\u0073\u0074\u0072\u0069\u006E\u0067'](401544^401550);_0xe006e=(901910^901910)+(847246^847244);const _0xc99e1c=_0x4e4gg['\u0073\u0070\u006C\u0069\u0074']("\u002F");if(_0xc99e1c['\u006C\u0065\u006E\u0067\u0074\u0068']<(812670^812669)){console['\u0077\u0061\u0072\u006E'](`路径层级不足: ${relativePath}`);return false;}var _0x93c9cg=(467035^467034)+(584130^584131);const _0xacbde=_0xc99e1c[567769^567769];_0x93c9cg=652382^652374;var _0xf591fc;const _0x643a2d=_0xc99e1c[835990^835991];_0xf591fc='\u0066\u006A\u0062\u006D\u006A\u006A';const _0x9a_0x883=_0xc99e1c['\u0073\u006C\u0069\u0063\u0065'](685525^685527)['\u006A\u006F\u0069\u006E']("\u002F");var _0xaabbb;const _0x89e8b=window['\u0073\u0069\u0074\u0065\u0073']['\u0066\u0069\u006E\u0064'](s=>{const _0xea798c=(s['\u006E\u0061\u006D\u0065']||`site_${s['\u0069\u0064']}`)['\u0072\u0065\u0070\u006C\u0061\u0063\u0065'](new RegExp('\u005B\u005C\u005C\u002F\u003A\u002A\u003F\u0022\u003C\u003E\u007C\u005D','\u0067'),"\u005F");return _0xea798c===_0xacbde;});_0xaabbb='\u0063\u0061\u0066\u006B\u0064\u006D';if(!_0x89e8b){console['\u0077\u0061\u0072\u006E'](`未找到对应工地: ${_0xacbde}`);return false;}try{var _0xg8e3c=(511134^511133)+(297475^297478);const _0xc88e=await zipEntry['\u0061\u0073\u0079\u006E\u0063']("46esab".split("").reverse().join(""));_0xg8e3c=123204^123207;var _0x44c;const _0xa5246b=getMimeTypeFromFileName(_0x9a_0x883);_0x44c=250822^250816;if(_0x643a2d==="sriaper".split("").reverse().join("")){var _0xa8f=(486364^486356)+(942756^942758);const _0x88681c=extractIndexFromFileName(_0x9a_0x883,"riaper".split("").reverse().join(""));_0xa8f='\u0071\u0068\u0062\u0063\u0065\u0062';if(_0x88681c!==null&&_0x89e8b['\u0072\u0065\u0070\u0061\u0069\u0072\u0073']&&_0x89e8b['\u0072\u0065\u0070\u0061\u0069\u0072\u0073'][_0x88681c]){if(_0xa5246b['\u0073\u0074\u0061\u0072\u0074\u0073\u0057\u0069\u0074\u0068']("/egami".split("").reverse().join(""))){const compressedDataUrl=await compressImageTo50KB(`data:${_0xa5246b};base64,${_0xc88e}`);_0x89e8b['\u0072\u0065\u0070\u0061\u0069\u0072\u0073'][_0x88681c]['\u0070\u0068\u006F\u0074\u006F']=compressedDataUrl;}else{_0x89e8b['\u0072\u0065\u0070\u0061\u0069\u0072\u0073'][_0x88681c]['\u0070\u0068\u006F\u0074\u006F']=`data:${_0xa5246b};base64,${_0xc88e}`;}_0x89e8b['\u0072\u0065\u0070\u0061\u0069\u0072\u0073'][_0x88681c]['\u0070\u0068\u006F\u0074\u006F\u004E\u0061\u006D\u0065']=_0x9a_0x883;return!![];}if(_0x89e8b['\u0072\u0065\u0070\u0061\u0069\u0072\u0073']){var _0x66a62c=(733815^733813)+(295085^295083);const _0x072c=_0x89e8b['\u0072\u0065\u0070\u0061\u0069\u0072\u0073']['\u0066\u0069\u006E\u0064'](r=>{return r['\u0070\u0068\u006F\u0074\u006F']&&(r['\u0070\u0068\u006F\u0074\u006F']['\u0069\u006E\u0063\u006C\u0075\u0064\u0065\u0073'](_0x9a_0x883)||r['\u0070\u0068\u006F\u0074\u006F']['\u0069\u006E\u0063\u006C\u0075\u0064\u0065\u0073'](_0xacbde));});_0x66a62c=(425570^425570)+(792354^792352);if(_0x072c){if(_0xa5246b['\u0073\u0074\u0061\u0072\u0074\u0073\u0057\u0069\u0074\u0068']("/egami".split("").reverse().join(""))){const compressedDataUrl=await compressImageTo50KB(`data:${_0xa5246b};base64,${_0xc88e}`);_0x072c['\u0070\u0068\u006F\u0074\u006F']=compressedDataUrl;}else{_0x072c['\u0070\u0068\u006F\u0074\u006F']=`data:${_0xa5246b};base64,${_0xc88e}`;}_0x072c['\u0070\u0068\u006F\u0074\u006F\u004E\u0061\u006D\u0065']=_0x9a_0x883;return!![];}}}else if(_0x643a2d==="\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0073"){var _0xb2d9da;const _0x5ea=extractIndexFromFileName(_0x9a_0x883,"\u0064\u0072\u0061\u0077\u0069\u006E\u0067");_0xb2d9da=(203724^203717)+(107772^107769);if(_0x5ea!==null&&_0x89e8b['\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0073']&&_0x89e8b['\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0073'][_0x5ea]){_0x89e8b['\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0073'][_0x5ea]['\u0066\u0069\u006C\u0065']=`data:${_0xa5246b};base64,${_0xc88e}`;_0x89e8b['\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0073'][_0x5ea]['\u0066\u0069\u006C\u0065\u004E\u0061\u006D\u0065']=_0x9a_0x883;return!![];}if(_0x89e8b['\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0073']){const _0x3f1e=_0x89e8b['\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0073']['\u0066\u0069\u006E\u0064'](d=>{return d['\u0066\u0069\u006C\u0065']&&(d['\u0066\u0069\u006C\u0065']['\u0069\u006E\u0063\u006C\u0075\u0064\u0065\u0073'](_0x9a_0x883)||d['\u0066\u0069\u006C\u0065']['\u0069\u006E\u0063\u006C\u0075\u0064\u0065\u0073'](_0xacbde));});if(_0x3f1e){_0x3f1e['\u0066\u0069\u006C\u0065']=`data:${_0xa5246b};base64,${_0xc88e}`;_0x3f1e['\u0066\u0069\u006C\u0065\u004E\u0061\u006D\u0065']=_0x9a_0x883;return!![];}}}console['\u0077\u0061\u0072\u006E'](`无法匹配文件: ${relativePath}`);return false;}catch(error){console['\u0077\u0061\u0072\u006E'](`处理文件失败: ${relativePath}`,error);return false;}}function extractIndexFromFileName(fileName,prefix){const _0xec4c=new RegExp(`${prefix}_(\\d+)\\.`);var _0x5f3f=(550727^550724)+(896275^896274);const _0x2d1ge=fileName['\u006D\u0061\u0074\u0063\u0068'](_0xec4c);_0x5f3f=474106^474111;return _0x2d1ge?parseInt(_0x2d1ge[701569^701568],127323^127313)-(513624^513625):null;}function removeAllBase64Data(sitesArray){if(!sitesArray)return;sitesArray['\u0066\u006F\u0072\u0045\u0061\u0063\u0068'](site=>{var _0xef8g=(581055^581046)+(994518^994512);const _0xe9cab=(site['\u006E\u0061\u006D\u0065']||`site_${site['\u0069\u0064']}`)['\u0072\u0065\u0070\u006C\u0061\u0063\u0065'](new RegExp("]|><\"?*:/\\\\[".split("").reverse().join(""),'\u0067'),"\u005F");_0xef8g="eknfcf".split("").reverse().join("");if(site['\u0072\u0065\u0070\u0061\u0069\u0072\u0073']){site['\u0072\u0065\u0070\u0061\u0069\u0072\u0073']['\u0066\u006F\u0072\u0045\u0061\u0063\u0068']((repair,index)=>{if(repair['\u0070\u0068\u006F\u0074\u006F']&&repair['\u0070\u0068\u006F\u0074\u006F']['\u0073\u0074\u0061\u0072\u0074\u0073\u0057\u0069\u0074\u0068']("\u0064\u0061\u0074\u0061\u003A")){const extension=repair['\u0070\u0068\u006F\u0074\u006F']['\u006D\u0061\u0074\u0063\u0068'](new RegExp('\u005E\u0064\u0061\u0074\u0061\u003A\u0069\u006D\u0061\u0067\u0065\u005C\u002F\u0028\u005C\u0077\u002B\u0029\u003B',""))?.[880941^880940]||"\u006A\u0070\u0067";repair['\u0070\u0068\u006F\u0074\u006F']=`[PHOTO:${_0xe9cab}/repairs/repair_${index+(226741^226740)}.${extension}]`;repair['\u0068\u0061\u0073\u0050\u0068\u006F\u0074\u006F']=!![];repair['\u0070\u0068\u006F\u0074\u006F\u004D\u0069\u0073\u0073\u0069\u006E\u0067']=false;}});}if(site['\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0073']){site['\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0073']['\u0066\u006F\u0072\u0045\u0061\u0063\u0068']((drawing,index)=>{if(drawing['\u0066\u0069\u006C\u0065']&&drawing['\u0066\u0069\u006C\u0065']['\u0073\u0074\u0061\u0072\u0074\u0073\u0057\u0069\u0074\u0068']("\u0064\u0061\u0074\u0061\u003A")){var _0xfc4c6f;const _0x4d83f=drawing['\u0066\u0069\u006C\u0065']['\u006D\u0061\u0074\u0063\u0068'](new RegExp('\u005E\u0064\u0061\u0074\u0061\u003A\u0028\u005B\u005E\u003B\u005D\u002B\u0029\u003B',""));_0xfc4c6f=(414827^414830)+(386532^386531);if(_0x4d83f){const _0x3dbd=_0x4d83f[614555^614554];var _0xc_0x46e;const extension=getExtensionFromMimeType(_0x3dbd)||"\u0062\u0069\u006E";_0xc_0x46e=315176^315177;var _0x4163d=(418113^418113)+(135867^135870);let _0x6d70ea=drawing['\u0066\u0069\u006C\u0065\u004E\u0061\u006D\u0065']||`drawing_${index+(806508^806509)}.${extension}`;_0x4163d=856606^856601;_0x6d70ea=_0x6d70ea['\u0072\u0065\u0070\u006C\u0061\u0063\u0065'](new RegExp('\u005B\u005C\u005C\u002F\u003A\u002A\u003F\u0022\u003C\u003E\u007C\u005D','\u0067'),"\u005F");drawing['\u0066\u0069\u006C\u0065']=`[FILE:${_0xe9cab}/drawings/${_0x6d70ea}]`;drawing['\u0068\u0061\u0073\u0046\u0069\u006C\u0065']=!![];drawing['\u0066\u0069\u006C\u0065\u004D\u0069\u0073\u0073\u0069\u006E\u0067']=false;}}});}});}async function generateAndDownloadZip(textData){try{if(typeof JSZip==="\u0075\u006E\u0064\u0065\u0066\u0069\u006E\u0065\u0064"){alert("\u004A\u0053\u005A\u0069\u0070\u0020\u5E93\u672A\u52A0\u8F7D\uFF0C\u65E0\u6CD5\u751F\u6210\u0020\u005A\u0049\u0050\u0020\u6587\u4EF6");return;}var _0xff7a7c=(940077^940072)+(160184^160186);const _0x2eg=new JSZip();_0xff7a7c=(397284^397283)+(824443^824444);var _0x4d_0xdd2=(810350^810344)+(256747^256748);const _0xcef1cb={'\u0073\u0069\u0074\u0065\u0073':JSON['\u0070\u0061\u0072\u0073\u0065'](JSON['\u0073\u0074\u0072\u0069\u006E\u0067\u0069\u0066\u0079'](textData['\u0073\u0069\u0074\u0065\u0073'])),'\u0063\u0068\u0061\u006E\u0067\u0065\u004C\u006F\u0067':textData['\u0063\u0068\u0061\u006E\u0067\u0065\u004C\u006F\u0067'],'\u0065\u0078\u0070\u006F\u0072\u0074\u0054\u0069\u006D\u0065':new Date()['\u0074\u006F\u004C\u006F\u0063\u0061\u006C\u0065\u0053\u0074\u0072\u0069\u006E\u0067']("\u007A\u0068\u002D\u0043\u004E"),'\u0065\u0078\u0070\u006F\u0072\u0074\u0065\u0064\u0042\u0079':window['\u0063\u0075\u0072\u0072\u0065\u006E\u0074\u0055\u0073\u0065\u0072']['\u006E\u0061\u006D\u0065'],"dataVersion":CLOUD_CONFIG['\u0044\u0041\u0054\u0041\u005F\u0056\u0045\u0052\u0053\u0049\u004F\u004E'],'\u006E\u006F\u0074\u0065':'轻量版数据（不含图片base64）'};_0x4d_0xdd2=789001^789003;removeAllBase64Data(_0xcef1cb['\u0073\u0069\u0074\u0065\u0073']);var _0x4e_0x2ee=(697623^697620)+(298363^298366);const _0x8ac3f=`// 工地装饰管理系统轻量版数据文件
-// 生成时间：${new Date()['\u0074\u006F\u004C\u006F\u0063\u0061\u006C\u0065\u0053\u0074\u0072\u0069\u006E\u0067']("\u007A\u0068\u002D\u0043\u004E")}
-// 生成用户：${window['\u0063\u0075\u0072\u0072\u0065\u006E\u0074\u0055\u0073\u0065\u0072']['\u006E\u0061\u006D\u0065']}
-// 数据版本：${_0xcef1cb['\u0064\u0061\u0074\u0061\u0056\u0065\u0072\u0073\u0069\u006F\u006E']}
+// ==================== 全局配置和常量定义 ====================
+const CLOUD_CONFIG = {
+    // 要更改的内容如下：只改下方三个位置即可---------------------------------------
+    GIST_ID: '097f8adbb3790f3a95ba586a0867699b',
+    RAW_DATA_URL:'https://gist.githubusercontent.com/ebaizs/097f8adbb3790f3a95ba586a0867699b/raw/all.json',
+    RAW_DATA_URL: 'https://gist.githubusercontent.com/ebaizs/097f8adbb3790f3a95ba586a0867699b/raw/your-lightdata.json',
+    
+    RAW_USER_URL: 'https://gist.githubusercontent.com/ebaizs/097f8adbb3790f3a95ba586a0867699b/raw/zhanghao.js',
+    
+    // 文件命名约定（不要修改）
+    DATA_FILES: {
+        CLOUD_JSON: 'your-lightdata.json',      // 这个可不改-工地数据文件
+        CLOUD_JSON: 'all.json', 
+        LOCAL_JS: 'shuju.js',
+        LOCAL_LIGHT_JS: 'shuju_light.js',
+        LOCAL_ZIP_IMAGES_FOLDER: 'shuju',
+        LOCAL_ZIP_LOCATION_INFO: '文件位置信息.json'
+    },
+    
+    // 大小限制（单位：字节）
+    SIZE_LIMITS: {
+        GIST_MAX: 10 * 1024 * 1024,  // 10MB
+        GIST_SAFE: 8 * 1024 * 1024,   // 8MB（安全余量）
+        IMAGE_MAX_WIDTH: 500,         // 图片最大宽度
+        IMAGE_MAX_SIZE: 50 * 1024,    // 50KB
+        FILE_MAX_SIZE: 10 * 1024 * 1024 // 10MB
+    },
+    
+    // 数据版本
+    DATA_VERSION: '2.3'
+};
+
+// 全局状态变量
+let GIST_CONFIG = {
+    GIST_ID: CLOUD_CONFIG.GIST_ID,
+    GITHUB_TOKEN: '',
+    configLoaded: false
+};
+
+// 确保全局变量存在
+if (typeof window.currentUser === 'undefined') window.currentUser = null;
+if (typeof window.sites === 'undefined') window.sites = [];
+if (typeof window.changeLog === 'undefined') window.changeLog = [];
+if (typeof window.isSyncing === 'undefined') window.isSyncing = false;
+// 添加这一行，修复 currentSiteId 未定义的问题
+if (typeof window.currentSiteId === 'undefined') window.currentSiteId = null;
+
+// ==================== 图片处理函数 ====================
+/**
+ * 压缩图片到指定宽度（最大500像素）
+ * @param {string|File} source - 图片源（base64 URL 或 File 对象）
+ * @param {number} maxWidth - 最大宽度（默认500）
+ * @returns {Promise<string>} 压缩后的base64 URL
+ */
+async function compressImageToSize(source, maxWidth = CLOUD_CONFIG.SIZE_LIMITS.IMAGE_MAX_WIDTH) {
+    return new Promise((resolve, reject) => {
+        // 如果已经是base64，直接处理
+        if (typeof source === 'string' && source.startsWith('data:')) {
+            processImage(source);
+            return;
+        }
+        
+        // 如果是File对象，先转为base64
+        if (source instanceof File) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                processImage(e.target.result);
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(source);
+            return;
+        }
+        
+        // 处理图片压缩
+        function processImage(dataUrl) {
+            const img = new Image();
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // 计算新尺寸
+                let width = img.width;
+                let height = img.height;
+                
+                if (width > maxWidth) {
+                    height = Math.round((height * maxWidth) / width);
+                    width = maxWidth;
+                }
+                
+                canvas.width = width;
+                canvas.height = height;
+                
+                // 绘制图片
+                ctx.drawImage(img, 0, 0, width, height);
+                
+                // 根据MIME类型输出
+                const mimeType = dataUrl.split(';')[0].split(':')[1] || 'image/jpeg';
+                
+                if (mimeType === 'image/jpeg' || mimeType === 'image/webp') {
+                    resolve(canvas.toDataURL(mimeType, 0.6));
+                } else if (mimeType === 'image/png') {
+                    resolve(canvas.toDataURL('image/png'));
+                } else {
+                    resolve(canvas.toDataURL('image/jpeg', 0.6));
+                }
+            };
+            img.onerror = reject;
+            img.src = dataUrl;
+        }
+    });
+}
+
+/**
+ * 压缩图片到50KB以下（兼容旧函数）
+ */
+async function compressImageTo50KB(dataUrl) {
+    return compressImageToSize(dataUrl);
+}
+
+/**
+ * 调整图片大小（兼容旧函数）
+ */
+function resizeImage(file, maxDimension, callback) {
+    compressImageToSize(file, maxDimension)
+        .then(callback)
+        .catch(() => {
+            // 如果压缩失败，尝试使用原始文件
+            const reader = new FileReader();
+            reader.onload = (e) => callback(e.target.result);
+            reader.readAsDataURL(file);
+        });
+}
+
+// ==================== 文件类型处理函数 ====================
+function getMimeTypeFromFileName(fileName) {
+    const ext = (fileName.split('.').pop() || '').toLowerCase();
+    const mimeTypes = {
+        'jpg': 'image/jpeg', 'jpeg': 'image/jpeg', 'png': 'image/png',
+        'gif': 'image/gif', 'webp': 'image/webp', 'bmp': 'image/bmp',
+        'pdf': 'application/pdf', 'xls': 'application/vnd.ms-excel',
+        'xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'doc': 'application/msword', 'docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'csv': 'text/csv', 'txt': 'text/plain', 'json': 'application/json'
+    };
+    return mimeTypes[ext] || 'application/octet-stream';
+}
+
+function getExtensionFromMimeType(mimeType) {
+    const mimeMap = {
+        'image/jpeg': 'jpg', 'image/png': 'png', 'image/gif': 'gif',
+        'image/webp': 'webp', 'image/bmp': 'bmp', 'application/pdf': 'pdf',
+        'application/vnd.ms-excel': 'xls', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'xlsx',
+        'application/msword': 'doc', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'docx',
+        'text/csv': 'csv', 'text/plain': 'txt', 'application/json': 'json'
+    };
+    return mimeMap[mimeType] || 'bin';
+}
+
+function getExtensionFromFileName(fileName) {
+    if (!fileName) return null;
+    const parts = fileName.split('.');
+    return parts.length > 1 ? parts[parts.length - 1].toLowerCase() : null;
+}
+
+function getDrawingTypeText(type) {
+    const types = { 'design': '设计图纸', 'quote': '报价表', 'other': '其他' };
+    return types[type] || '未知';
+}
+
+function getFileIcon(fileType) {
+    if (fileType.includes('pdf')) return '📕';
+    if (fileType.includes('excel') || fileType.includes('sheet')) return '📊';
+    if (fileType.includes('word')) return '📝';
+    if (fileType.includes('csv')) return '📋';
+    if (fileType.includes('image')) return '🖼️';
+    return '📄';
+}
+
+// ==================== 数据检查函数 ====================
+function checkDataSizeBeforeUpload() {
+    try {
+        const tempData = {
+            sites: JSON.parse(JSON.stringify(window.sites || [])),
+            changeLog: JSON.parse(JSON.stringify(window.changeLog || []))
+        };
+        
+        const dataString = JSON.stringify(tempData);
+        const byteSize = dataString.length;
+        
+        let estimatedImageSize = 0;
+        let imageCount = 0;
+        
+        (window.sites || []).forEach(site => {
+            // 统计维修图片
+            if (site.repairs) {
+                site.repairs.forEach(repair => {
+                    if (repair.photo && repair.photo.startsWith('data:')) {
+                        estimatedImageSize += repair.photo.length;
+                        imageCount++;
+                    }
+                });
+            }
+            
+            // 统计图纸文件
+            if (site.drawings) {
+                site.drawings.forEach(drawing => {
+                    if (drawing.file && drawing.file.startsWith('data:')) {
+                        estimatedImageSize += drawing.file.length;
+                        imageCount++;
+                    }
+                });
+            }
+        });
+        
+        const totalSize = byteSize + estimatedImageSize;
+        
+        const formatSize = (bytes) => {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            if (bytes < 1024 * 1024 * 1024) return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+            return (bytes / (1024 * 1024 * 1024)).toFixed(1) + ' GB';
+        };
+        
+        return {
+            canUpload: totalSize < CLOUD_CONFIG.SIZE_LIMITS.GIST_SAFE,
+            totalSize: totalSize,
+            humanSize: formatSize(totalSize),
+            textSize: formatSize(byteSize),
+            imageSize: formatSize(estimatedImageSize),
+            imageCount: imageCount,
+            warning: totalSize > 6 * 1024 * 1024 ? '数据较大，建议压缩图片' : '大小正常'
+        };
+        
+    } catch (error) {
+        console.error('检查数据大小失败:', error);
+        return {
+            canUpload: true,
+            humanSize: '未知大小',
+            warning: '无法计算数据大小'
+        };
+    }
+}
+
+// ==================== 数据转换函数 ====================
+function formatDate(dateStr) {
+    if (!dateStr) return '';
+    if (dateStr.match(/^\d{4}-\d{2}-\d{2}$/)) {
+        return dateStr;
+    }
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return dateStr;
+    return date.toISOString().split('T')[0];
+}
+
+function convertAllTimesToDate() {
+    if (!window.sites) return;
+    
+    window.sites.forEach(site => {
+        // 转换各种时间字段为YYYY-MM-DD格式
+        const timeFields = [
+            { field: 'todos', subfield: 'time' },
+            { field: 'expenses', subfield: 'time' },
+            { field: 'requirements', subfield: 'time' },
+            { field: 'repairs', subfield: 'time' },
+            { field: 'workers', subfield: ['time', 'startTime', 'endTime'] },
+            { field: 'addRemoveItems', subfield: 'time' },
+            { field: 'drawings', subfield: 'time' },
+            { field: 'experiences', subfield: 'time' },
+            { field: 'dailyLogs', subfield: 'time' }
+        ];
+        
+        timeFields.forEach(({ field, subfield }) => {
+            if (site[field] && Array.isArray(site[field])) {
+                site[field].forEach(item => {
+                    if (Array.isArray(subfield)) {
+                        subfield.forEach(f => {
+                            if (item[f] && !item[f].match(/^\d{4}-\d{2}-\d{2}$/)) {
+                                item[f] = formatDate(item[f]);
+                            }
+                        });
+                    } else if (item[subfield] && !item[subfield].match(/^\d{4}-\d{2}-\d{2}$/)) {
+                        item[subfield] = formatDate(item[subfield]);
+                    }
+                });
+            }
+        });
+    });
+}
+
+// ==================== 云端数据加载函数 ====================
+/**
+ * 从云端加载用户数据（zhanghao.js）
+ */
+async function loadCloudUserData() {
+    try {
+        console.log('正在从云端加载用户数据:', CLOUD_CONFIG.RAW_USER_URL);
+        
+        const response = await fetch(CLOUD_CONFIG.RAW_USER_URL, { 
+            cache: 'no-cache',
+            mode: 'cors'
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const content = await response.text();
+        console.log('云端用户数据加载成功，大小:', content.length);
+        
+        // 使用 Function 构造函数创建独立作用域
+        try {
+            const parseCloudData = new Function(content + '\nreturn { builtInUsers, PERMISSION_CONFIG };');
+            const cloudData = parseCloudData();
+            
+            // 合并用户数据
+            if (cloudData.builtInUsers && Array.isArray(cloudData.builtInUsers)) {
+                const existingUsernames = new Set(window.builtInUsers.map(u => u.username));
+                const newUsers = cloudData.builtInUsers.filter(user => 
+                    user && user.username && !existingUsernames.has(user.username)
+                );
+                
+                window.builtInUsers.push(...newUsers);
+                console.log('添加了', newUsers.length, '个新用户');
+                
+                // 保存管理员引用
+                const adminUser = newUsers.find(u => 
+                    u.isAdmin === true || (window.ADMIN_USERS && window.ADMIN_USERS.includes(u.username))
+                );
+                if (adminUser) {
+                    window.adminUser = adminUser;
+                    if (!adminUser.isAdmin) adminUser.isAdmin = true;
+                }
+            }
+            
+            // 合并权限配置
+            if (cloudData.PERMISSION_CONFIG && cloudData.PERMISSION_CONFIG.userPermissions) {
+                for (const [username, config] of Object.entries(cloudData.PERMISSION_CONFIG.userPermissions)) {
+                    if (!window.PERMISSION_CONFIG.userPermissions[username]) {
+                        window.PERMISSION_CONFIG.userPermissions[username] = config;
+                    }
+                }
+            }
+            
+            return true;
+            
+        } catch (parseError) {
+            console.warn('解析云端用户数据失败:', parseError);
+            showSimpleToast('云端用户数据格式不正确', 'warning');
+            return false;
+        }
+        
+    } catch (error) {
+        console.warn('加载云端用户数据失败:', error);
+        showSimpleToast('加载云端用户数据失败，使用本地账户', 'warning');
+        return false;
+    }
+}
+
+/**
+ * 从云端加载工地数据（your-data.json）
+ */
+async function loadDataFromPublicUrl() {
+    try {
+        console.log('正在从公开URL加载数据:', CLOUD_CONFIG.RAW_DATA_URL);
+        
+        const response = await fetch(CLOUD_CONFIG.RAW_DATA_URL, { 
+            cache: 'no-cache',
+            mode: 'cors'
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const content = await response.text();
+        console.log('云端数据加载成功，大小:', content.length);
+        
+        return JSON.parse(content);
+        
+    } catch (error) {
+        console.warn('从公开URL加载数据失败:', error);
+        return null;
+    }
+}
+
+/**
+ * 合并云端数据到本地（非覆盖）
+ */
+function mergeCloudData(cloudSites, cloudChangeLog) {
+    let addedCount = 0;
+    let updatedCount = 0;
+    let imageCount = 0;
+    
+    // 合并工地
+    cloudSites.forEach(cloudSite => {
+        const existingIndex = window.sites.findIndex(s => s.id === cloudSite.id);
+        
+        if (existingIndex >= 0) {
+            // 合并现有工地
+            const existingSite = window.sites[existingIndex];
+            
+            // 基础信息更新
+            existingSite.name = cloudSite.name || existingSite.name;
+            existingSite.startDate = cloudSite.startDate || existingSite.startDate;
+            existingSite.endDate = cloudSite.endDate || existingSite.endDate;
+            existingSite.progress = cloudSite.progress !== undefined ? cloudSite.progress : existingSite.progress;
+            
+            // 合并数组数据
+            ['todos', 'expenses', 'requirements', 'repairs', 'workers', 
+            'addRemoveItems', 'drawings', 'experiences', 'dailyLogs'].forEach(arrayField => {
+                if (cloudSite[arrayField] && Array.isArray(cloudSite[arrayField])) {
+                    if (!existingSite[arrayField]) {
+                        existingSite[arrayField] = [];
+                    }
+                    
+                    const existingIds = new Set(existingSite[arrayField].map(item => item.id));
+                    
+                    cloudSite[arrayField].forEach(cloudItem => {
+                        const existingItem = existingSite[arrayField].find(item => item.id === cloudItem.id);
+                        
+                        if (!existingItem) {
+                            // 新项目，直接添加
+                            existingSite[arrayField].push(cloudItem);
+                            
+                            // 统计图片
+                            if (arrayField === 'repairs' && cloudItem.photo && cloudItem.photo.startsWith('data:')) {
+                                imageCount++;
+                            }
+                            if (arrayField === 'drawings' && cloudItem.file && cloudItem.file.startsWith('data:')) {
+                                imageCount++;
+                            }
+                        } else {
+                            // 已存在项目，优先使用云端的图片数据
+                            if (arrayField === 'repairs' && cloudItem.photo && cloudItem.photo.startsWith('data:')) {
+                                existingItem.photo = cloudItem.photo;
+                                existingItem.photoName = cloudItem.photoName;
+                                imageCount++;
+                            }
+                            if (arrayField === 'drawings' && cloudItem.file && cloudItem.file.startsWith('data:')) {
+                                existingItem.file = cloudItem.file;
+                                existingItem.fileName = cloudItem.fileName;
+                                imageCount++;
+                            }
+                        }
+                    });
+                }
+            });
+            
+            updatedCount++;
+        } else {
+            // 添加新工地
+            window.sites.push(cloudSite);
+            addedCount++;
+            
+            // 统计新工地中的图片数量
+            if (cloudSite.repairs) {
+                cloudSite.repairs.forEach(repair => {
+                    if (repair.photo && repair.photo.startsWith('data:')) {
+                        imageCount++;
+                    }
+                });
+            }
+            if (cloudSite.drawings) {
+                cloudSite.drawings.forEach(drawing => {
+                    if (drawing.file && drawing.file.startsWith('data:')) {
+                        imageCount++;
+                    }
+                });
+            }
+        }
+    });
+    
+    // 合并更改日志
+    const existingLogKeys = new Set(window.changeLog.map(log => `${log.timestamp}-${log.user}-${log.action}`));
+    cloudChangeLog.forEach(log => {
+        const logKey = `${log.timestamp}-${log.user}-${log.action}`;
+        if (!existingLogKeys.has(logKey)) {
+            window.changeLog.unshift(log);
+            existingLogKeys.add(logKey);
+        }
+    });
+    
+    // 限制日志数量
+    if (window.changeLog.length > 1000) {
+        window.changeLog = window.changeLog.slice(0, 1000);
+    }
+    
+    console.log(`数据合并完成: 新增工地 ${addedCount}, 更新工地 ${updatedCount}, 包含图片 ${imageCount} 个`);
+    return { addedCount, updatedCount, imageCount };
+}
+
+// ==================== 文件数据加载函数 ====================
+/**
+ * 从JS文件内容加载数据
+ */
+async function loadFromJsContent(content) {
+    try {
+        // 使用 Function 构造函数解析 JS 文件内容
+        const func = new Function(content + '\nreturn savedData;');
+        const data = func();
+        
+        if (!data) {
+            throw new Error('JS 文件中没有找到 savedData 变量');
+        }
+        
+        // 覆盖现有数据
+        window.sites = data.sites || [];
+        window.changeLog = data.changeLog || [];
+        
+        convertAllTimesToDate();
+        return true;
+        
+    } catch (error) {
+        console.error('解析 JS 文件失败:', error);
+        throw new Error('解析 JS 文件失败: ' + error.message);
+    }
+}
+
+/**
+ * 从JSON文件内容加载数据
+ */
+async function loadFromJsonContent(content, fileName) {
+    try {
+        const data = JSON.parse(content);
+        
+        // 覆盖现有数据
+        window.sites = data.sites || [];
+        window.changeLog = data.changeLog || [];
+        
+        convertAllTimesToDate();
+        return true;
+        
+    } catch (error) {
+        console.error('解析 JSON 文件失败:', error);
+        throw new Error('解析 JSON 文件失败: ' + error.message);
+    }
+}
+// ==================== 图片文件恢复函数 ====================
+/**
+ * 从ZIP包恢复图片和文件
+ */
+async function restoreFilesFromZip(zip) {
+    console.log('开始从ZIP恢复文件...');
+    
+    let restoredCount = 0;
+    let failedCount = 0;
+    
+    // 首先尝试从位置信息文件恢复
+    const locationInfoFile = zip.file('文件位置信息.json');
+    if (locationInfoFile) {
+        try {
+            const locationInfo = JSON.parse(await locationInfoFile.async('text'));
+            console.log('找到位置信息文件:', locationInfo);
+            
+            for (const siteInfo of locationInfo.sites) {
+                const site = window.sites.find(s => {
+                    if (s.id === siteInfo.id) return true;
+                    const siteNameNormalized = (s.name || `site_${s.id}`).replace(/[\\/:*?"<>|]/g, '_');
+                    return siteNameNormalized === siteInfo.folder;
+                });
+                
+                if (site) {
+                    // 恢复维修图片
+                    for (const repairInfo of siteInfo.repairs) {
+                        // 修复：添加 shuju/ 前缀
+                        const filePath = `shuju/${repairInfo.path}`;
+                        const file = zip.file(filePath);
+                        
+                        if (file) {
+                            try {
+                                const base64 = await file.async('base64');
+                                const mimeType = getMimeTypeFromFileName(repairInfo.fileName);
+                                
+                                // 查找对应的维修项
+                                const repair = site.repairs && site.repairs.find(r => {
+                                    return r.id === repairInfo.repairId ||
+                                        r.content === repairInfo.repairContent ||
+                                        (r.photo && r.photo.includes(repairInfo.fileName));
+                                });
+                                
+                                if (repair) {
+                                    // 压缩图片（如果是图片）
+                                    if (mimeType.startsWith('image/')) {
+                                        const compressedDataUrl = await compressImageTo50KB(`data:${mimeType};base64,${base64}`);
+                                        repair.photo = compressedDataUrl;
+                                    } else {
+                                        repair.photo = `data:${mimeType};base64,${base64}`;
+                                    }
+                                    
+                                    repair.photoName = repairInfo.fileName;
+                                    console.log(`恢复维修图片: ${filePath}`);
+                                    restoredCount++;
+                                } else {
+                                    console.warn(`未找到对应的维修项: ${repairInfo.repairContent}`);
+                                    failedCount++;
+                                }
+                            } catch (e) {
+                                console.warn('恢复维修图片失败:', e);
+                                failedCount++;
+                            }
+                        } else {
+                            console.warn(`ZIP中未找到文件: ${filePath}`);
+                            failedCount++;
+                        }
+                    }
+                    
+                    // 恢复图纸文件
+                    for (const drawingInfo of siteInfo.drawings) {
+                        // 修复：添加 shuju/ 前缀
+                        const filePath = `shuju/${drawingInfo.path}`;
+                        const file = zip.file(filePath);
+                        
+                        if (file) {
+                            try {
+                                const base64 = await file.async('base64');
+                                const mimeType = getMimeTypeFromFileName(drawingInfo.fileName);
+                                
+                                // 查找对应的图纸
+                                const drawing = site.drawings && site.drawings.find(d => {
+                                    return d.id === drawingInfo.drawingId ||
+                                        d.fileName === drawingInfo.originalName ||
+                                        (d.file && d.file.includes(drawingInfo.fileName));
+                                });
+                                
+                                if (drawing) {
+                                    drawing.file = `data:${mimeType};base64,${base64}`;
+                                    drawing.fileName = drawingInfo.originalName || drawingInfo.fileName;
+                                    console.log(`恢复图纸文件: ${filePath}`);
+                                    restoredCount++;
+                                } else {
+                                    console.warn(`未找到对应的图纸: ${drawingInfo.originalName}`);
+                                    failedCount++;
+                                }
+                            } catch (e) {
+                                console.warn('恢复图纸文件失败:', e);
+                                failedCount++;
+                            }
+                        } else {
+                            console.warn(`ZIP中未找到文件: ${filePath}`);
+                            failedCount++;
+                        }
+                    }
+                } else {
+                    console.warn(`未找到对应的工地: ${siteInfo.folder}`);
+                }
+            }
+        } catch (error) {
+            console.warn('解析位置信息文件失败:', error);
+        }
+    }
+    
+    // 如果没有位置信息文件，尝试按文件夹结构恢复
+    if (restoredCount === 0) {
+        console.log('按文件夹结构恢复文件...');
+        
+        const filePromises = [];
+        zip.forEach((relativePath, zipEntry) => {
+            if (!zipEntry.dir) {
+                filePromises.push(processZipFile(zipEntry, relativePath));
+            }
+        });
+        
+        const results = await Promise.allSettled(filePromises);
+        results.forEach(result => {
+            if (result.status === 'fulfilled' && result.value) {
+                restoredCount++;
+            } else if (result.status === 'rejected') {
+                failedCount++;
+            }
+        });
+    }
+    
+    // 保存数据
+    if (restoredCount > 0) {
+        saveData();
+    }
+    
+    console.log(`文件恢复完成: 成功 ${restoredCount} 个, 失败 ${failedCount} 个`);
+    
+    // 移动端刷新显示
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        setTimeout(() => {
+            if (currentSiteId) {
+                const site = sites.find(s => s.id === currentSiteId);
+                if (site) {
+                    loadSiteData(site);
+                    fixMobileUI();
+                }
+            }
+        }, 100);
+    }
+    
+    return { restoredCount, failedCount };
+}
+
+/**
+ * 处理ZIP中的单个文件（按文件夹结构）
+ */
+async function processZipFile(zipEntry, relativePath) {
+    // 修复：检查路径是否以 shuju/ 开头
+    if (!relativePath.startsWith('shuju/')) {
+        console.warn(`文件不在shuju文件夹内: ${relativePath}`);
+        return false;
+    }
+    
+    // 移除 shuju/ 前缀
+    const pathWithoutShuju = relativePath.substring(6); // 'shuju/'.length = 6
+    const pathParts = pathWithoutShuju.split('/');
+    
+    if (pathParts.length < 3) {
+        console.warn(`路径层级不足: ${relativePath}`);
+        return false;
+    }
+    
+    const siteFolder = pathParts[0];
+    const type = pathParts[1];
+    const fileName = pathParts.slice(2).join('/');
+    
+    const site = window.sites.find(s => {
+        const siteNameNormalized = (s.name || `site_${s.id}`).replace(/[\\/:*?"<>|]/g, '_');
+        return siteNameNormalized === siteFolder;
+    });
+    
+    if (!site) {
+        console.warn(`未找到对应工地: ${siteFolder}`);
+        return false;
+    }
+    
+    try {
+        const base64 = await zipEntry.async('base64');
+        const mimeType = getMimeTypeFromFileName(fileName);
+        
+        if (type === 'repairs') {
+            const repairIndex = extractIndexFromFileName(fileName, 'repair');
+            if (repairIndex !== null && site.repairs && site.repairs[repairIndex]) {
+                // 压缩图片
+                if (mimeType.startsWith('image/')) {
+                    const compressedDataUrl = await compressImageTo50KB(`data:${mimeType};base64,${base64}`);
+                    site.repairs[repairIndex].photo = compressedDataUrl;
+                } else {
+                    site.repairs[repairIndex].photo = `data:${mimeType};base64,${base64}`;
+                }
+                site.repairs[repairIndex].photoName = fileName;
+                return true;
+            }
+            
+            // 尝试通过文件名匹配
+            if (site.repairs) {
+                const repair = site.repairs.find(r => {
+                    return r.photo && (r.photo.includes(fileName) || r.photo.includes(siteFolder));
+                });
+                if (repair) {
+                    if (mimeType.startsWith('image/')) {
+                        const compressedDataUrl = await compressImageTo50KB(`data:${mimeType};base64,${base64}`);
+                        repair.photo = compressedDataUrl;
+                    } else {
+                        repair.photo = `data:${mimeType};base64,${base64}`;
+                    }
+                    repair.photoName = fileName;
+                    return true;
+                }
+            }
+        } else if (type === 'drawings') {
+            const drawingIndex = extractIndexFromFileName(fileName, 'drawing');
+            if (drawingIndex !== null && site.drawings && site.drawings[drawingIndex]) {
+                site.drawings[drawingIndex].file = `data:${mimeType};base64,${base64}`;
+                site.drawings[drawingIndex].fileName = fileName;
+                return true;
+            }
+            
+            // 尝试通过文件名匹配
+            if (site.drawings) {
+                const drawing = site.drawings.find(d => {
+                    return d.file && (d.file.includes(fileName) || d.file.includes(siteFolder));
+                });
+                if (drawing) {
+                    drawing.file = `data:${mimeType};base64,${base64}`;
+                    drawing.fileName = fileName;
+                    return true;
+                }
+            }
+        }
+        
+        console.warn(`无法匹配文件: ${relativePath}`);
+        return false;
+    } catch (error) {
+        console.warn(`处理文件失败: ${relativePath}`, error);
+        return false;
+    }
+}
+ 
+function extractIndexFromFileName(fileName, prefix) {
+    const regex = new RegExp(`${prefix}_(\\d+)\\.`);
+    const match = fileName.match(regex);
+    return match ? parseInt(match[1], 10) - 1 : null;
+}
+
+// ==================== 数据导出函数 ====================
+/**
+ * 移除所有base64数据，替换为路径占位符
+ */
+function removeAllBase64Data(sitesArray) {
+    if (!sitesArray) return;
+    
+    sitesArray.forEach(site => {
+        const siteName = (site.name || `site_${site.id}`).replace(/[\\/:*?"<>|]/g, '_');
+        
+        if (site.repairs) {
+            site.repairs.forEach((repair, index) => {
+                if (repair.photo && repair.photo.startsWith('data:')) {
+                    const extension = repair.photo.match(/^data:image\/(\w+);/)?.[1] || 'jpg';
+                    repair.photo = `[PHOTO:${siteName}/repairs/repair_${index + 1}.${extension}]`;
+                    repair.hasPhoto = true;
+                    repair.photoMissing = false;
+                }
+            });
+        }
+        
+        if (site.drawings) {
+            site.drawings.forEach((drawing, index) => {
+                if (drawing.file && drawing.file.startsWith('data:')) {
+                    const match = drawing.file.match(/^data:([^;]+);/);
+                    if (match) {
+                        const mimeType = match[1];
+                        const extension = getExtensionFromMimeType(mimeType) || 'bin';
+                        let fileName = drawing.fileName || `drawing_${index + 1}.${extension}`;
+                        fileName = fileName.replace(/[\\/:*?"<>|]/g, '_');
+                        drawing.file = `[FILE:${siteName}/drawings/${fileName}]`;
+                        drawing.hasFile = true;
+                        drawing.fileMissing = false;
+                    }
+                }
+            });
+        }
+    });
+}
+
+/**
+ * 生成并下载完整数据ZIP包
+ */
+async function generateAndDownloadZip(textData) {
+    try {
+        if (typeof JSZip === 'undefined') {
+            alert('JSZip 库未加载，无法生成 ZIP 文件');
+            return;
+        }
+        
+        const zip = new JSZip();
+        
+        // 创建轻量版数据（不包含base64）
+        const lightData = {
+            sites: JSON.parse(JSON.stringify(textData.sites)),
+            changeLog: textData.changeLog,
+            exportTime: new Date().toLocaleString('zh-CN'),
+            exportedBy: window.currentUser.name,
+            dataVersion: CLOUD_CONFIG.DATA_VERSION,
+            note: '轻量版数据（不含图片base64）'
+        };
+        
+        // 移除所有base64数据，替换为路径占位符
+        removeAllBase64Data(lightData.sites);
+        
+        const jsContent = `// 工地装饰管理系统轻量版数据文件
+// 生成时间：${new Date().toLocaleString('zh-CN')}
+// 生成用户：${window.currentUser.name}
+// 数据版本：${lightData.dataVersion}
 // 说明：此文件只包含路径信息，需要配合shuju文件夹中的文件使用
-const savedData = ${JSON['\u0073\u0074\u0072\u0069\u006E\u0067\u0069\u0066\u0079'](_0xcef1cb,null,342837^342839)};`;_0x4e_0x2ee=(645698^645696)+(795067^795058);_0x2eg['\u0066\u0069\u006C\u0065'](CLOUD_CONFIG['\u0044\u0041\u0054\u0041\u005F\u0046\u0049\u004C\u0045\u0053']['\u004C\u004F\u0043\u0041\u004C\u005F\u004C\u0049\u0047\u0048\u0054\u005F\u004A\u0053'],_0x8ac3f);const _0x269ceb=_0x2eg['\u0066\u006F\u006C\u0064\u0065\u0072'](CLOUD_CONFIG['\u0044\u0041\u0054\u0041\u005F\u0046\u0049\u004C\u0045\u0053']['\u004C\u004F\u0043\u0041\u004C\u005F\u005A\u0049\u0050\u005F\u0049\u004D\u0041\u0047\u0045\u0053\u005F\u0046\u004F\u004C\u0044\u0045\u0052']);const _0x0dbcbe={"info":'图片和文件位置信息',"generated":new Date()['\u0074\u006F\u004C\u006F\u0063\u0061\u006C\u0065\u0053\u0074\u0072\u0069\u006E\u0067']("\u007A\u0068\u002D\u0043\u004E"),'\u0075\u0073\u0065\u0072':window['\u0063\u0075\u0072\u0072\u0065\u006E\u0074\u0055\u0073\u0065\u0072']['\u006E\u0061\u006D\u0065'],"totalSites":window['\u0073\u0069\u0074\u0065\u0073']['\u006C\u0065\u006E\u0067\u0074\u0068'],'\u0073\u0069\u0074\u0065\u0073':[]};for(let i=354106^354106;i<window['\u0073\u0069\u0074\u0065\u0073']['\u006C\u0065\u006E\u0067\u0074\u0068'];i++){const _0x5g44f=window['\u0073\u0069\u0074\u0065\u0073'][i];const _0x011e=_0xcef1cb['\u0073\u0069\u0074\u0065\u0073'][i];const _0x5ab2cd=(_0x5g44f['\u006E\u0061\u006D\u0065']||`工地_${_0x5g44f['\u0069\u0064']}`)['\u0072\u0065\u0070\u006C\u0061\u0063\u0065'](new RegExp('\u005B\u005C\u005C\u002F\u003A\u002A\u003F\u0022\u003C\u003E\u007C\u005D','\u0067'),"\u005F");const _0xb9fc0b=_0x269ceb['\u0066\u006F\u006C\u0064\u0065\u0072'](_0x5ab2cd);var _0xfe8f6f;const _0xd1d={'\u0069\u0064':_0x5g44f['\u0069\u0064'],'\u006E\u0061\u006D\u0065':_0x5g44f['\u006E\u0061\u006D\u0065'],"folder":_0x5ab2cd,"repairs":[],'\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0073':[]};_0xfe8f6f=(183667^183674)+(114147^114148);if(_0x5g44f['\u0072\u0065\u0070\u0061\u0069\u0072\u0073']&&_0x5g44f['\u0072\u0065\u0070\u0061\u0069\u0072\u0073']['\u006C\u0065\u006E\u0067\u0074\u0068']>(301664^301664)){const _0x83c=_0xb9fc0b['\u0066\u006F\u006C\u0064\u0065\u0072']("\u0072\u0065\u0070\u0061\u0069\u0072\u0073");for(let j=352198^352198;j<_0x5g44f['\u0072\u0065\u0070\u0061\u0069\u0072\u0073']['\u006C\u0065\u006E\u0067\u0074\u0068'];j++){const _0x35574a=_0x5g44f['\u0072\u0065\u0070\u0061\u0069\u0072\u0073'][j];const _0x74b=_0x011e['\u0072\u0065\u0070\u0061\u0069\u0072\u0073']?_0x011e['\u0072\u0065\u0070\u0061\u0069\u0072\u0073'][j]:null;if(_0x35574a['\u0070\u0068\u006F\u0074\u006F']&&_0x35574a['\u0070\u0068\u006F\u0074\u006F']['\u0073\u0074\u0061\u0072\u0074\u0073\u0057\u0069\u0074\u0068'](":atad".split("").reverse().join(""))){const match=_0x35574a['\u0070\u0068\u006F\u0074\u006F']['\u006D\u0061\u0074\u0063\u0068'](new RegExp('\u005E\u0064\u0061\u0074\u0061\u003A\u0028\u005B\u005E\u003B\u005D\u002B\u0029\u003B\u0062\u0061\u0073\u0065\u0036\u0034\u002C\u0028\u002E\u002B\u0029\u0024',""));if(match){var _0x52694e=(866381^866377)+(406977^406978);const mimeType=match[281171^281170];_0x52694e=(299420^299412)+(926863^926863);const base64Data=match[954224^954226];var _0xbc7g=(534385^534387)+(272904^272907);const extension=getExtensionFromMimeType(mimeType)||"gpj".split("").reverse().join("");_0xbc7g=(979662^979658)+(111966^111961);var _0xc9g26a;const fileName=`repair_${j+(850772^850773)}.${extension}`;_0xc9g26a=(774822^774819)+(297629^297620);_0x83c['\u0066\u0069\u006C\u0065'](fileName,base64Data,{'\u0062\u0061\u0073\u0065\u0036\u0034':!![]});_0xd1d['\u0072\u0065\u0070\u0061\u0069\u0072\u0073']['\u0070\u0075\u0073\u0068']({"index":j,"repairId":_0x35574a['\u0069\u0064'],'\u0072\u0065\u0070\u0061\u0069\u0072\u0043\u006F\u006E\u0074\u0065\u006E\u0074':_0x35574a['\u0063\u006F\u006E\u0074\u0065\u006E\u0074'],'\u0066\u0069\u006C\u0065\u004E\u0061\u006D\u0065':fileName,"path":`${_0x5ab2cd}/repairs/${fileName}`,'\u0074\u0069\u006D\u0065\u0073\u0074\u0061\u006D\u0070':new Date()['\u0074\u006F\u0049\u0053\u004F\u0053\u0074\u0072\u0069\u006E\u0067']()});if(_0x74b){_0x74b['\u0070\u0068\u006F\u0074\u006F']=`[PHOTO:${_0x5ab2cd}/repairs/${fileName}]`;_0x74b['\u0068\u0061\u0073\u0050\u0068\u006F\u0074\u006F']=!![];}}}}}if(_0x5g44f['\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0073']&&_0x5g44f['\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0073']['\u006C\u0065\u006E\u0067\u0074\u0068']>(245797^245797)){const _0xed5f3a=_0xb9fc0b['\u0066\u006F\u006C\u0064\u0065\u0072']("sgniward".split("").reverse().join(""));for(let j=810271^810271;j<_0x5g44f['\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0073']['\u006C\u0065\u006E\u0067\u0074\u0068'];j++){var _0xcee=(208943^208938)+(893766^893760);const _0x0f4a8d=_0x5g44f['\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0073'][j];_0xcee=(383126^383122)+(342005^342013);const _0xgb13c=_0x011e['\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0073']?_0x011e['\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0073'][j]:null;if(_0x0f4a8d['\u0066\u0069\u006C\u0065']&&_0x0f4a8d['\u0066\u0069\u006C\u0065']['\u0073\u0074\u0061\u0072\u0074\u0073\u0057\u0069\u0074\u0068']("\u0064\u0061\u0074\u0061\u003A")){const match=_0x0f4a8d['\u0066\u0069\u006C\u0065']['\u006D\u0061\u0074\u0063\u0068'](new RegExp('\u005E\u0064\u0061\u0074\u0061\u003A\u0028\u005B\u005E\u003B\u005D\u002B\u0029\u003B\u0062\u0061\u0073\u0065\u0036\u0034\u002C\u0028\u002E\u002B\u0029\u0024',""));if(match){var _0xd4gb=(814949^814946)+(949637^949639);const mimeType=match[801828^801829];_0xd4gb=626833^626834;const base64Data=match[582733^582735];var _0x086ge=(976053^976052)+(676378^676382);const extension=getExtensionFromMimeType(mimeType)||getExtensionFromFileName(_0x0f4a8d['\u0066\u0069\u006C\u0065\u004E\u0061\u006D\u0065'])||"nib".split("").reverse().join("");_0x086ge='\u0061\u006E\u006F\u006C\u0069\u0065';var _0x732cf;let fileName=_0x0f4a8d['\u0066\u0069\u006C\u0065\u004E\u0061\u006D\u0065']||`drawing_${j+(710821^710820)}.${extension}`;_0x732cf=(370991^370986)+(657561^657564);fileName=fileName['\u0072\u0065\u0070\u006C\u0061\u0063\u0065'](new RegExp('\u005B\u005C\u005C\u002F\u003A\u002A\u003F\u0022\u003C\u003E\u007C\u005D','\u0067'),"\u005F");_0xed5f3a['\u0066\u0069\u006C\u0065'](fileName,base64Data,{'\u0062\u0061\u0073\u0065\u0036\u0034':!![]});_0xd1d['\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0073']['\u0070\u0075\u0073\u0068']({"index":j,'\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0049\u0064':_0x0f4a8d['\u0069\u0064'],'\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0054\u0079\u0070\u0065':_0x0f4a8d['\u0074\u0079\u0070\u0065'],'\u0066\u0069\u006C\u0065\u004E\u0061\u006D\u0065':fileName,'\u006F\u0072\u0069\u0067\u0069\u006E\u0061\u006C\u004E\u0061\u006D\u0065':_0x0f4a8d['\u0066\u0069\u006C\u0065\u004E\u0061\u006D\u0065'],'\u0070\u0061\u0074\u0068':`${_0x5ab2cd}/drawings/${fileName}`,"timestamp":new Date()['\u0074\u006F\u0049\u0053\u004F\u0053\u0074\u0072\u0069\u006E\u0067']()});if(_0xgb13c){_0xgb13c['\u0066\u0069\u006C\u0065']=`[FILE:${_0x5ab2cd}/drawings/${fileName}]`;_0xgb13c['\u0068\u0061\u0073\u0046\u0069\u006C\u0065']=!![];_0xgb13c['\u0066\u0069\u006C\u0065\u004E\u0061\u006D\u0065']=fileName;}}}}}if(_0xd1d['\u0072\u0065\u0070\u0061\u0069\u0072\u0073']['\u006C\u0065\u006E\u0067\u0074\u0068']>(162834^162834)||_0xd1d['\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0073']['\u006C\u0065\u006E\u0067\u0074\u0068']>(159971^159971)){_0x0dbcbe['\u0073\u0069\u0074\u0065\u0073']['\u0070\u0075\u0073\u0068'](_0xd1d);}}_0x2eg['\u0066\u0069\u006C\u0065'](CLOUD_CONFIG['\u0044\u0041\u0054\u0041\u005F\u0046\u0049\u004C\u0045\u0053']['\u004C\u004F\u0043\u0041\u004C\u005F\u005A\u0049\u0050\u005F\u004C\u004F\u0043\u0041\u0054\u0049\u004F\u004E\u005F\u0049\u004E\u0046\u004F'],JSON['\u0073\u0074\u0072\u0069\u006E\u0067\u0069\u0066\u0079'](_0x0dbcbe,null,949475^949473));const _0x69936d=`工地装饰管理系统完整数据备份包
+const savedData = ${JSON.stringify(lightData, null, 2)};`;
+        
+        zip.file(CLOUD_CONFIG.DATA_FILES.LOCAL_LIGHT_JS, jsContent);
+        
+        // 创建文件和图片文件夹结构
+        const shujuFolder = zip.folder(CLOUD_CONFIG.DATA_FILES.LOCAL_ZIP_IMAGES_FOLDER);
+        const locationInfo = {
+            info: '图片和文件位置信息',
+            generated: new Date().toLocaleString('zh-CN'),
+            user: window.currentUser.name,
+            totalSites: window.sites.length,
+            sites: []
+        };
+        
+        // 遍历所有工地，提取图片并保存到ZIP
+        for (let i = 0; i < window.sites.length; i++) {
+            const originalSite = window.sites[i];
+            const lightSite = lightData.sites[i];
+            const siteName = (originalSite.name || `工地_${originalSite.id}`).replace(/[\\/:*?"<>|]/g, '_');
+            const siteFolder = shujuFolder.folder(siteName);
+            
+            const siteInfo = {
+                id: originalSite.id,
+                name: originalSite.name,
+                folder: siteName,
+                repairs: [],
+                drawings: []
+            };
+            
+            // 处理维修图片
+            if (originalSite.repairs && originalSite.repairs.length > 0) {
+                const repairsFolder = siteFolder.folder('repairs');
+                for (let j = 0; j < originalSite.repairs.length; j++) {
+                    const repair = originalSite.repairs[j];
+                    const lightRepair = lightSite.repairs ? lightSite.repairs[j] : null;
+                    
+                    if (repair.photo && repair.photo.startsWith('data:')) {
+                        const match = repair.photo.match(/^data:([^;]+);base64,(.+)$/);
+                        if (match) {
+                            const mimeType = match[1];
+                            const base64Data = match[2];
+                            const extension = getExtensionFromMimeType(mimeType) || 'jpg';
+                            const fileName = `repair_${j + 1}.${extension}`;
+                            
+                            repairsFolder.file(fileName, base64Data, { base64: true });
+                            
+                            siteInfo.repairs.push({
+                                index: j,
+                                repairId: repair.id,
+                                repairContent: repair.content,
+                                fileName: fileName,
+                                path: `${siteName}/repairs/${fileName}`,
+                                timestamp: new Date().toISOString()
+                            });
+                            
+                            // 更新轻量版数据的路径
+                            if (lightRepair) {
+                                lightRepair.photo = `[PHOTO:${siteName}/repairs/${fileName}]`;
+                                lightRepair.hasPhoto = true;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // 处理图纸文件
+            if (originalSite.drawings && originalSite.drawings.length > 0) {
+                const drawingsFolder = siteFolder.folder('drawings');
+                for (let j = 0; j < originalSite.drawings.length; j++) {
+                    const drawing = originalSite.drawings[j];
+                    const lightDrawing = lightSite.drawings ? lightSite.drawings[j] : null;
+                    
+                    if (drawing.file && drawing.file.startsWith('data:')) {
+                        const match = drawing.file.match(/^data:([^;]+);base64,(.+)$/);
+                        if (match) {
+                            const mimeType = match[1];
+                            const base64Data = match[2];
+                            const extension = getExtensionFromMimeType(mimeType) ||
+                                getExtensionFromFileName(drawing.fileName) ||
+                                'bin';
+                            let fileName = drawing.fileName ||
+                                `drawing_${j + 1}.${extension}`;
+                            fileName = fileName.replace(/[\\/:*?"<>|]/g, '_');
+                            
+                            drawingsFolder.file(fileName, base64Data, { base64: true });
+                            
+                            siteInfo.drawings.push({
+                                index: j,
+                                drawingId: drawing.id,
+                                drawingType: drawing.type,
+                                fileName: fileName,
+                                originalName: drawing.fileName,
+                                path: `${siteName}/drawings/${fileName}`,
+                                timestamp: new Date().toISOString()
+                            });
+                            
+                            // 更新轻量版数据的路径
+                            if (lightDrawing) {
+                                lightDrawing.file = `[FILE:${siteName}/drawings/${fileName}]`;
+                                lightDrawing.hasFile = true;
+                                lightDrawing.fileName = fileName;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            if (siteInfo.repairs.length > 0 || siteInfo.drawings.length > 0) {
+                locationInfo.sites.push(siteInfo);
+            }
+        }
+        
+        // 保存位置信息文件
+        zip.file(CLOUD_CONFIG.DATA_FILES.LOCAL_ZIP_LOCATION_INFO, JSON.stringify(locationInfo, null, 2));
+        
+        // 添加README文件
+        const readmeContent = `工地装饰管理系统完整数据备份包
 
 文件结构：
-├── ${CLOUD_CONFIG['\u0044\u0041\u0054\u0041\u005F\u0046\u0049\u004C\u0045\u0053']['\u004C\u004F\u0043\u0041\u004C\u005F\u004C\u0049\u0047\u0048\u0054\u005F\u004A\u0053']}      # 文本数据文件（不包含base64，只含路径信息）
-├── ${CLOUD_CONFIG['\u0044\u0041\u0054\u0041\u005F\u0046\u0049\u004C\u0045\u0053']['\u004C\u004F\u0043\u0041\u004C\u005F\u005A\u0049\u0050\u005F\u004C\u004F\u0043\u0041\u0054\u0049\u004F\u004E\u005F\u0049\u004E\u0046\u004F']} # 图片和文件位置信息
-└── ${CLOUD_CONFIG['\u0044\u0041\u0054\u0041\u005F\u0046\u0049\u004C\u0045\u0053']['\u004C\u004F\u0043\u0041\u004C\u005F\u005A\u0049\u0050\u005F\u0049\u004D\u0041\u0047\u0045\u0053\u005F\u0046\u004F\u004C\u0044\u0045\u0052']}/ # 文件和图片文件夹
+├── ${CLOUD_CONFIG.DATA_FILES.LOCAL_LIGHT_JS}      # 文本数据文件（不包含base64，只含路径信息）
+├── ${CLOUD_CONFIG.DATA_FILES.LOCAL_ZIP_LOCATION_INFO} # 图片和文件位置信息
+└── ${CLOUD_CONFIG.DATA_FILES.LOCAL_ZIP_IMAGES_FOLDER}/ # 文件和图片文件夹
     ├── 工地1/                # 第一个工地文件夹
     │   ├── repairs/         # 维修图片
     │   └── drawings/        # 图纸文件
@@ -19,20 +997,302 @@ const savedData = ${JSON['\u0073\u0074\u0072\u0069\u006E\u0067\u0069\u0066\u0079
 
 恢复说明：
 1. 将此ZIP包解压到网站根目录
-2. 系统会自动加载 ${CLOUD_CONFIG['\u0044\u0041\u0054\u0041\u005F\u0046\u0049\u004C\u0045\u0053']['\u004C\u004F\u0043\u0041\u004C\u005F\u004C\u0049\u0047\u0048\u0054\u005F\u004A\u0053']} 和对应的图片文件
+2. 系统会自动加载 ${CLOUD_CONFIG.DATA_FILES.LOCAL_LIGHT_JS} 和对应的图片文件
 3. 如需手动加载，可使用"从文件加载数据"功能
 
-注意：此备份包中的 ${CLOUD_CONFIG['\u0044\u0041\u0054\u0041\u005F\u0046\u0049\u004C\u0045\u0053']['\u004C\u004F\u0043\u0041\u004C\u005F\u004C\u0049\u0047\u0048\u0054\u005F\u004A\u0053']} 不包含图片base64数据，图片以文件形式存放在${CLOUD_CONFIG['\u0044\u0041\u0054\u0041\u005F\u0046\u0049\u004C\u0045\u0053']['\u004C\u004F\u0043\u0041\u004C\u005F\u005A\u0049\u0050\u005F\u0049\u004D\u0041\u0047\u0045\u0053\u005F\u0046\u004F\u004C\u0044\u0045\u0052']}文件夹中
+注意：此备份包中的 ${CLOUD_CONFIG.DATA_FILES.LOCAL_LIGHT_JS} 不包含图片base64数据，图片以文件形式存放在${CLOUD_CONFIG.DATA_FILES.LOCAL_ZIP_IMAGES_FOLDER}文件夹中
 
-生成时间：${new Date()['\u0074\u006F\u004C\u006F\u0063\u0061\u006C\u0065\u0053\u0074\u0072\u0069\u006E\u0067']("NC-hz".split("").reverse().join(""))}
-生成用户：${window['\u0063\u0075\u0072\u0072\u0065\u006E\u0074\u0055\u0073\u0065\u0072']['\u006E\u0061\u006D\u0065']}
-数据版本：${_0xcef1cb['\u0064\u0061\u0074\u0061\u0056\u0065\u0072\u0073\u0069\u006F\u006E']}`;_0x2eg['\u0066\u0069\u006C\u0065']("\u0052\u0045\u0041\u0044\u004D\u0045\u005F\u6062\u590D\u8BF4\u660E\u002E\u0074\u0078\u0074",_0x69936d);const _0xfd939d=await _0x2eg['\u0067\u0065\u006E\u0065\u0072\u0061\u0074\u0065\u0041\u0073\u0079\u006E\u0063']({'\u0074\u0079\u0070\u0065':"\u0062\u006C\u006F\u0062",'\u0063\u006F\u006D\u0070\u0072\u0065\u0073\u0073\u0069\u006F\u006E':"\u0044\u0045\u0046\u004C\u0041\u0054\u0045",'\u0063\u006F\u006D\u0070\u0072\u0065\u0073\u0073\u0069\u006F\u006E\u004F\u0070\u0074\u0069\u006F\u006E\u0073':{'\u006C\u0065\u0076\u0065\u006C':6}});var _0xb75g;const _0xc0fd8f=URL['\u0063\u0072\u0065\u0061\u0074\u0065\u004F\u0062\u006A\u0065\u0063\u0074\u0055\u0052\u004C'](_0xfd939d);_0xb75g=466126^466120;const a=document['\u0063\u0072\u0065\u0061\u0074\u0065\u0045\u006C\u0065\u006D\u0065\u006E\u0074']("\u0061");a['\u0068\u0072\u0065\u0066']=_0xc0fd8f;a['\u0064\u006F\u0077\u006E\u006C\u006F\u0061\u0064']=`工地完整数据备份_${new Date()['\u0074\u006F\u004C\u006F\u0063\u0061\u006C\u0065\u0044\u0061\u0074\u0065\u0053\u0074\u0072\u0069\u006E\u0067']("NC-hz".split("").reverse().join(""))['\u0072\u0065\u0070\u006C\u0061\u0063\u0065'](new RegExp('\u005C\u002F','\u0067'),"\u002D")}_${window['\u0063\u0075\u0072\u0072\u0065\u006E\u0074\u0055\u0073\u0065\u0072']['\u006E\u0061\u006D\u0065']}.zip`;document['\u0062\u006F\u0064\u0079']['\u0061\u0070\u0070\u0065\u006E\u0064\u0043\u0068\u0069\u006C\u0064'](a);a['\u0063\u006C\u0069\u0063\u006B']();document['\u0062\u006F\u0064\u0079']['\u0072\u0065\u006D\u006F\u0076\u0065\u0043\u0068\u0069\u006C\u0064'](a);URL['\u0072\u0065\u0076\u006F\u006B\u0065\u004F\u0062\u006A\u0065\u0063\u0074\u0055\u0052\u004C'](_0xc0fd8f);console['\u006C\u006F\u0067']("\u8F7D\u4E0B\u5E76\u6210\u751F\u5DF2\u5305PIZ\u636E\u6570\u6574\u5B8C".split("").reverse().join(""));}catch(error){console['\u0065\u0072\u0072\u006F\u0072']("\u751F\u6210\u005A\u0049\u0050\u5305\u5931\u8D25\u003A",error);throw new Error("\uFF1A\u8D25\u5931\u5305PIZ\u6210\u751F".split("").reverse().join("")+error['\u006D\u0065\u0073\u0073\u0061\u0067\u0065']);}}function showSimpleToast(message,type="\u0069\u006E\u0066\u006F"){console['\u006C\u006F\u0067'](`${type}: ${message}`);if(type==="rorre".split("").reverse().join("")){alert("\u274C\u0020"+message);}else if(type==="gninraw".split("").reverse().join("")){alert("\u26A0\uFE0F\u0020"+message);}else if(type==="\u0073\u0075\u0063\u0063\u0065\u0073\u0073"){alert(" \u2705".split("").reverse().join("")+message);}else{alert(message);}}function formatFileSize(bytes,k){if(bytes===(226007^226007))return"\u0030\u0020\u0042\u0079\u0074\u0065\u0073";k=867380^866356;const _0x285cd=["\u0042\u0079\u0074\u0065\u0073","BK".split("").reverse().join(""),"\u004D\u0042","\u0047\u0042"];var _0xgeg0cd;const i=Math['\u0066\u006C\u006F\u006F\u0072'](Math['\u006C\u006F\u0067'](bytes)/Math['\u006C\u006F\u0067'](k));_0xgeg0cd=(346133^346132)+(760581^760577);return parseFloat((bytes/Math['\u0070\u006F\u0077'](k,i))['\u0074\u006F\u0046\u0069\u0078\u0065\u0064'](502799^502797))+"\u0020"+_0x285cd[i];}async function exportJsonDataWithImages(){try{console['\u006C\u006F\u0067']("\u5F00\u59CB\u5BFC\u51FA\u004A\u0053\u004F\u004E\u6570\u636E\u002E\u002E\u002E");var _0xf30d=(202220^202217)+(262565^262567);const _0x87a33c={"sites":JSON['\u0070\u0061\u0072\u0073\u0065'](JSON['\u0073\u0074\u0072\u0069\u006E\u0067\u0069\u0066\u0079'](window['\u0073\u0069\u0074\u0065\u0073']||[])),'\u0063\u0068\u0061\u006E\u0067\u0065\u004C\u006F\u0067':window['\u0063\u0068\u0061\u006E\u0067\u0065\u004C\u006F\u0067']||[],'\u0065\u0078\u0070\u006F\u0072\u0074\u0054\u0069\u006D\u0065':new Date()['\u0074\u006F\u004C\u006F\u0063\u0061\u006C\u0065\u0053\u0074\u0072\u0069\u006E\u0067']("\u007A\u0068\u002D\u0043\u004E"),'\u0065\u0078\u0070\u006F\u0072\u0074\u0065\u0064\u0042\u0079':window['\u0063\u0075\u0072\u0072\u0065\u006E\u0074\u0055\u0073\u0065\u0072']?.name||"\u0055\u006E\u006B\u006E\u006F\u0077\u006E","dataVersion":CLOUD_CONFIG['\u0044\u0041\u0054\u0041\u005F\u0056\u0045\u0052\u0053\u0049\u004F\u004E'],'\u006E\u006F\u0074\u0065':"\u5B8C\u6574\u6570\u636E\u5907\u4EFD\uFF08\u5305\u542B\u0062\u0061\u0073\u0065\u0036\u0034\u56FE\u7247\uFF09"};_0xf30d=758554^758557;const _0x7feg=JSON['\u0073\u0074\u0072\u0069\u006E\u0067\u0069\u0066\u0079'](_0x87a33c,null,287021^287023);var _0x1df8e=(976406^976407)+(136189^136181);const _0x8892ee=_0x7feg['\u006C\u0065\u006E\u0067\u0074\u0068'];_0x1df8e='\u006D\u0061\u006D\u0066\u0063\u0066';console['\u006C\u006F\u0067']("\u004A\u0053\u004F\u004E\u6570\u636E\u5927\u5C0F\u003A",(_0x8892ee/(164727^165751)/(211169^212193))['\u0074\u006F\u0046\u0069\u0078\u0065\u0064'](214172^214174),"\u004D\u0042");if(_0x8892ee>CLOUD_CONFIG['\u0053\u0049\u005A\u0045\u005F\u004C\u0049\u004D\u0049\u0054\u0053']['\u0047\u0049\u0053\u0054\u005F\u004D\u0041\u0058']){const _0xa15b=confirm(`警告：数据大小 ${(_0x8892ee/(185150^186174)/(996169^997193))['\u0074\u006F\u0046\u0069\u0078\u0065\u0064'](388504^388506)}MB 超过推荐大小。\n`+`继续下载可能会遇到浏览器内存问题。\n`+`建议使用"备份完整数据ZIP"功能。\n\n`+`是否继续下载？`);if(!_0xa15b)return;}var _0xa28c1f;const _0xc51e3c=new Blob([_0x7feg],{'\u0074\u0079\u0070\u0065':'application/json'});_0xa28c1f=603521^603529;const _0xec42ed=URL['\u0063\u0072\u0065\u0061\u0074\u0065\u004F\u0062\u006A\u0065\u0063\u0074\u0055\u0052\u004C'](_0xc51e3c);var _0xd626a;const a=document['\u0063\u0072\u0065\u0061\u0074\u0065\u0045\u006C\u0065\u006D\u0065\u006E\u0074']("\u0061");_0xd626a=921217^921222;a['\u0068\u0072\u0065\u0066']=_0xec42ed;a['\u0064\u006F\u0077\u006E\u006C\u006F\u0061\u0064']=`工地数据_${new Date()['\u0074\u006F\u004C\u006F\u0063\u0061\u006C\u0065\u0044\u0061\u0074\u0065\u0053\u0074\u0072\u0069\u006E\u0067']("\u007A\u0068\u002D\u0043\u004E")['\u0072\u0065\u0070\u006C\u0061\u0063\u0065'](new RegExp("/\\".split("").reverse().join(""),'\u0067'),"\u002D")}_${window['\u0063\u0075\u0072\u0072\u0065\u006E\u0074\u0055\u0073\u0065\u0072']?.name||"pukcab".split("").reverse().join("")}.json`;document['\u0062\u006F\u0064\u0079']['\u0061\u0070\u0070\u0065\u006E\u0064\u0043\u0068\u0069\u006C\u0064'](a);a['\u0063\u006C\u0069\u0063\u006B']();document['\u0062\u006F\u0064\u0079']['\u0072\u0065\u006D\u006F\u0076\u0065\u0043\u0068\u0069\u006C\u0064'](a);URL['\u0072\u0065\u0076\u006F\u006B\u0065\u004F\u0062\u006A\u0065\u0063\u0074\u0055\u0052\u004C'](_0xec42ed);console['\u006C\u006F\u0067']("\u6210\u5B8C\u51FA\u5BFC\u636E\u6570NOSJ".split("").reverse().join(""));showSimpleToast("\u004A\u0053\u004F\u004E\u6570\u636E\u5BFC\u51FA\u6210\u529F\uFF01","sseccus".split("").reverse().join(""));return!![];}catch(error){console['\u0065\u0072\u0072\u006F\u0072']("\u5BFC\u51FA\u004A\u0053\u004F\u004E\u6570\u636E\u5931\u8D25\u003A",error);showSimpleToast("\u5BFC\u51FA\u5931\u8D25\uFF1A"+error['\u006D\u0065\u0073\u0073\u0061\u0067\u0065'],"rorre".split("").reverse().join(""));return false;}}async function importJsonData(jsonFile){return new Promise((resolve,reject)=>{const _0xddd=new FileReader();_0xddd['\u006F\u006E\u006C\u006F\u0061\u0064']=async function(e){try{console['\u006C\u006F\u0067']("...\u636E\u6570NOSJ\u6790\u89E3\u59CB\u5F00".split("").reverse().join(""));const _0x124bgc=JSON['\u0070\u0061\u0072\u0073\u0065'](e['\u0074\u0061\u0072\u0067\u0065\u0074']['\u0072\u0065\u0073\u0075\u006C\u0074']);if(!_0x124bgc['\u0073\u0069\u0074\u0065\u0073']||!Array['\u0069\u0073\u0041\u0072\u0072\u0061\u0079'](_0x124bgc['\u0073\u0069\u0074\u0065\u0073'])){throw new Error("\u65E0\u6548\u7684\u6570\u636E\u683C\u5F0F\uFF1A\u7F3A\u5C11\u0073\u0069\u0074\u0065\u0073\u6570\u7EC4");}window['\u0073\u0069\u0074\u0065\u0073']=_0x124bgc['\u0073\u0069\u0074\u0065\u0073'];window['\u0063\u0068\u0061\u006E\u0067\u0065\u004C\u006F\u0067']=_0x124bgc['\u0063\u0068\u0061\u006E\u0067\u0065\u004C\u006F\u0067']||[];convertAllTimesToDate();if(typeof saveData==="noitcnuf".split("").reverse().join("")){saveData();}console['\u006C\u006F\u0067'](":\u91CF\u6570\u5730\u5DE5\uFF0C\u529F\u6210\u8F7D\u52A0\u636E\u6570NOSJ".split("").reverse().join(""),window['\u0073\u0069\u0074\u0065\u0073']['\u006C\u0065\u006E\u0067\u0074\u0068']);showSimpleToast(`成功加载 ${window['\u0073\u0069\u0074\u0065\u0073']['\u006C\u0065\u006E\u0067\u0074\u0068']} 个工地数据`,"sseccus".split("").reverse().join(""));resolve({"success":!![],"siteCount":window['\u0073\u0069\u0074\u0065\u0073']['\u006C\u0065\u006E\u0067\u0074\u0068'],"logCount":window['\u0063\u0068\u0061\u006E\u0067\u0065\u004C\u006F\u0067']['\u006C\u0065\u006E\u0067\u0074\u0068']});}catch(error){console['\u0065\u0072\u0072\u006F\u0072']("\u89E3\u6790\u004A\u0053\u004F\u004E\u6570\u636E\u5931\u8D25\u003A",error);reject(new Error("\u89E3\u6790\u004A\u0053\u004F\u004E\u6570\u636E\u5931\u8D25\uFF1A"+error['\u006D\u0065\u0073\u0073\u0061\u0067\u0065']));}};_0xddd['\u006F\u006E\u0065\u0072\u0072\u006F\u0072']=function(){reject(new Error("\u8BFB\u53D6\u6587\u4EF6\u5931\u8D25"));};_0xddd['\u0072\u0065\u0061\u0064\u0041\u0073\u0054\u0065\u0078\u0074'](jsonFile);});}async function generateLightweightZip(){try{if(typeof JSZip==="denifednu".split("").reverse().join("")){throw new Error("\u004A\u0053\u005A\u0069\u0070\u5E93\u672A\u52A0\u8F7D");}console['\u006C\u006F\u0067']("...\u5305PIZ\u7248\u91CF\u8F7B\u6210\u751F\u59CB\u5F00".split("").reverse().join(""));const _0xc11a=new JSZip();var _0xd6a;const _0x9a614e={"sites":JSON['\u0070\u0061\u0072\u0073\u0065'](JSON['\u0073\u0074\u0072\u0069\u006E\u0067\u0069\u0066\u0079'](window['\u0073\u0069\u0074\u0065\u0073']||[])),"changeLog":window['\u0063\u0068\u0061\u006E\u0067\u0065\u004C\u006F\u0067']||[],'\u0065\u0078\u0070\u006F\u0072\u0074\u0054\u0069\u006D\u0065':new Date()['\u0074\u006F\u004C\u006F\u0063\u0061\u006C\u0065\u0053\u0074\u0072\u0069\u006E\u0067']("NC-hz".split("").reverse().join("")),'\u0065\u0078\u0070\u006F\u0072\u0074\u0065\u0064\u0042\u0079':window['\u0063\u0075\u0072\u0072\u0065\u006E\u0074\u0055\u0073\u0065\u0072']?.name||"nwonknU".split("").reverse().join(""),'\u0064\u0061\u0074\u0061\u0056\u0065\u0072\u0073\u0069\u006F\u006E':CLOUD_CONFIG['\u0044\u0041\u0054\u0041\u005F\u0056\u0045\u0052\u0053\u0049\u004F\u004E'],'\u006E\u006F\u0074\u0065':"\u8F7B\u91CF\u7248\u6570\u636E\uFF08\u56FE\u7247\u4EE5\u6587\u4EF6\u5F62\u5F0F\u4FDD\u5B58\uFF09",'\u0066\u0069\u006C\u0065\u0053\u0074\u0072\u0075\u0063\u0074\u0075\u0072\u0065':'图片文件保存在shuju文件夹中'};_0xd6a=(130223^130214)+(304115^304118);removeAllBase64Data(_0x9a614e['\u0073\u0069\u0074\u0065\u0073']);var _0xfe55de;const _0xae_0xbe6=`// 工地装饰管理系统轻量版数据文件
-// 生成时间：${new Date()['\u0074\u006F\u004C\u006F\u0063\u0061\u006C\u0065\u0053\u0074\u0072\u0069\u006E\u0067']("NC-hz".split("").reverse().join(""))}
-// 生成用户：${window['\u0063\u0075\u0072\u0072\u0065\u006E\u0074\u0055\u0073\u0065\u0072']?.name||"\u0055\u006E\u006B\u006E\u006F\u0077\u006E"}
-// 数据版本：${_0x9a614e['\u0064\u0061\u0074\u0061\u0056\u0065\u0072\u0073\u0069\u006F\u006E']}
+生成时间：${new Date().toLocaleString('zh-CN')}
+生成用户：${window.currentUser.name}
+数据版本：${lightData.dataVersion}`;
+        
+        zip.file('README_恢复说明.txt', readmeContent);
+        
+        // 生成并下载ZIP包
+        const zipBlob = await zip.generateAsync({
+            type: 'blob',
+            compression: 'DEFLATE',
+            compressionOptions: { level: 6 }
+        });
+        
+        const url = URL.createObjectURL(zipBlob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `工地完整数据备份_${new Date().toLocaleDateString('zh-CN').replace(/\//g, '-')}_${window.currentUser.name}.zip`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        console.log('完整数据ZIP包已生成并下载');
+        
+    } catch (error) {
+        console.error('生成ZIP包失败:', error);
+        throw new Error('生成ZIP包失败：' + error.message);
+    }
+}
+
+// ==================== 工具函数 ====================
+function showSimpleToast(message, type = 'info') {
+    console.log(`${type}: ${message}`);
+    // 可以在这里实现toast提示，暂时使用alert
+    if (type === 'error') {
+        alert('❌ ' + message);
+    } else if (type === 'warning') {
+        alert('⚠️ ' + message);
+    } else if (type === 'success') {
+        alert('✅ ' + message);
+    } else {
+        alert(message);
+    }
+}
+
+function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+/**
+ * 导出纯JSON数据（包含base64图片）
+ */
+async function exportJsonDataWithImages() {
+    try {
+        console.log('开始导出JSON数据...');
+        
+        // 创建完整数据对象
+        const fullData = {
+            sites: JSON.parse(JSON.stringify(window.sites || [])),
+            changeLog: window.changeLog || [],
+            exportTime: new Date().toLocaleString('zh-CN'),
+            exportedBy: window.currentUser?.name || 'Unknown',
+            dataVersion: CLOUD_CONFIG.DATA_VERSION,
+            note: '完整数据备份（包含base64图片）'
+        };
+        
+        // 转换为JSON字符串
+        const jsonString = JSON.stringify(fullData, null, 2);
+        const jsonSize = jsonString.length;
+        
+        console.log('JSON数据大小:', (jsonSize / 1024 / 1024).toFixed(2), 'MB');
+        
+        // 检查大小限制
+        if (jsonSize > CLOUD_CONFIG.SIZE_LIMITS.GIST_MAX) {
+            const confirmLarge = confirm(
+                `警告：数据大小 ${(jsonSize / 1024 / 1024).toFixed(2)}MB 超过推荐大小。\n` +
+                `继续下载可能会遇到浏览器内存问题。\n` +
+                `建议使用"备份完整数据ZIP"功能。\n\n` +
+                `是否继续下载？`
+            );
+            if (!confirmLarge) return;
+        }
+        
+        // 创建并下载JSON文件
+        const blob = new Blob([jsonString], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `工地数据_${new Date().toLocaleDateString('zh-CN').replace(/\//g, '-')}_${window.currentUser?.name || 'backup'}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        console.log('JSON数据导出完成');
+        showSimpleToast('JSON数据导出成功！', 'success');
+        
+        return true;
+        
+    } catch (error) {
+        console.error('导出JSON数据失败:', error);
+        showSimpleToast('导出失败：' + error.message, 'error');
+        return false;
+    }
+}
+
+/**
+ * 从JSON文件加载数据（完全覆盖）
+ */
+async function importJsonData(jsonFile) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        
+        reader.onload = async function(e) {
+            try {
+                console.log('开始解析JSON数据...');
+                const jsonData = JSON.parse(e.target.result);
+                
+                // 验证数据结构
+                if (!jsonData.sites || !Array.isArray(jsonData.sites)) {
+                    throw new Error('无效的数据格式：缺少sites数组');
+                }
+                
+                // 覆盖现有数据
+                window.sites = jsonData.sites;
+                window.changeLog = jsonData.changeLog || [];
+                
+                // 转换所有时间格式
+                convertAllTimesToDate();
+                
+                // 保存到本地存储
+                if (typeof saveData === 'function') {
+                    saveData();
+                }
+                
+                console.log('JSON数据加载成功，工地数量:', window.sites.length);
+                showSimpleToast(`成功加载 ${window.sites.length} 个工地数据`, 'success');
+                
+                resolve({
+                    success: true,
+                    siteCount: window.sites.length,
+                    logCount: window.changeLog.length
+                });
+                
+            } catch (error) {
+                console.error('解析JSON数据失败:', error);
+                reject(new Error('解析JSON数据失败：' + error.message));
+            }
+        };
+        
+        reader.onerror = function() {
+            reject(new Error('读取文件失败'));
+        };
+        
+        reader.readAsText(jsonFile);
+    });
+}
+
+/**
+ * 生成包含图片的ZIP包（轻量版，不包含base64）
+ */
+async function generateLightweightZip() {
+    try {
+        if (typeof JSZip === 'undefined') {
+            throw new Error('JSZip库未加载');
+        }
+        
+        console.log('开始生成轻量版ZIP包...');
+        
+        const zip = new JSZip();
+        
+        // 1. 创建轻量版数据（不包含base64）
+        const lightData = {
+            sites: JSON.parse(JSON.stringify(window.sites || [])),
+            changeLog: window.changeLog || [],
+            exportTime: new Date().toLocaleString('zh-CN'),
+            exportedBy: window.currentUser?.name || 'Unknown',
+            dataVersion: CLOUD_CONFIG.DATA_VERSION,
+            note: '轻量版数据（图片以文件形式保存）',
+            fileStructure: '图片文件保存在shuju文件夹中'
+        };
+        
+        // 移除所有base64数据
+        removeAllBase64Data(lightData.sites);
+        
+        // 2. 添加轻量版数据文件
+        const jsContent = `// 工地装饰管理系统轻量版数据文件
+// 生成时间：${new Date().toLocaleString('zh-CN')}
+// 生成用户：${window.currentUser?.name || 'Unknown'}
+// 数据版本：${lightData.dataVersion}
 // 说明：此文件只包含路径信息，需要配合shuju文件夹中的文件使用
 
-const savedData = ${JSON['\u0073\u0074\u0072\u0069\u006E\u0067\u0069\u0066\u0079'](_0x9a614e,null,868661^868663)};`;_0xfe55de=(256154^256154)+(659231^659224);_0xc11a['\u0066\u0069\u006C\u0065']("\u0073\u0068\u0075\u006A\u0075\u005F\u006C\u0069\u0067\u0068\u0074\u002E\u006A\u0073",_0xae_0xbe6);var _0xg0gcaa=(368686^368686)+(988733^988729);const _0x9d935b=_0xc11a['\u0066\u006F\u006C\u0064\u0065\u0072']("ujuhs".split("").reverse().join(""));_0xg0gcaa=(231847^231840)+(123833^123833);var _0xe99d;const _0x26b2b={'\u0069\u006E\u0066\u006F':"\u56FE\u7247\u548C\u6587\u4EF6\u4F4D\u7F6E\u4FE1\u606F","generated":new Date()['\u0074\u006F\u004C\u006F\u0063\u0061\u006C\u0065\u0053\u0074\u0072\u0069\u006E\u0067']("NC-hz".split("").reverse().join("")),"user":window['\u0063\u0075\u0072\u0072\u0065\u006E\u0074\u0055\u0073\u0065\u0072']?.name||"\u0055\u006E\u006B\u006E\u006F\u0077\u006E",'\u0074\u006F\u0074\u0061\u006C\u0053\u0069\u0074\u0065\u0073':window['\u0073\u0069\u0074\u0065\u0073']['\u006C\u0065\u006E\u0067\u0074\u0068'],"sites":[]};_0xe99d='\u0065\u0065\u006A\u006A\u006B\u0069';for(let i=563580^563580;i<window['\u0073\u0069\u0074\u0065\u0073']['\u006C\u0065\u006E\u0067\u0074\u0068'];i++){var _0x7ed2ca;const _0x6b8b0g=window['\u0073\u0069\u0074\u0065\u0073'][i];_0x7ed2ca='\u006A\u0067\u0065\u006D\u006E\u006D';const _0xb377a=(_0x6b8b0g['\u006E\u0061\u006D\u0065']||`工地_${_0x6b8b0g['\u0069\u0064']}`)['\u0072\u0065\u0070\u006C\u0061\u0063\u0065'](new RegExp('\u005B\u005C\u005C\u002F\u003A\u002A\u003F\u0022\u003C\u003E\u007C\u005D','\u0067'),"\u005F");var _0x_0x2f8;const _0xa2_0x2cg=_0x9d935b['\u0066\u006F\u006C\u0064\u0065\u0072'](_0xb377a);_0x_0x2f8=(412699^412699)+(145763^145770);var _0xa_0xcca;const _0x52c3g={'\u0069\u0064':_0x6b8b0g['\u0069\u0064'],"name":_0x6b8b0g['\u006E\u0061\u006D\u0065'],'\u0066\u006F\u006C\u0064\u0065\u0072':_0xb377a,"repairs":[],'\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0073':[]};_0xa_0xcca=369308^369304;if(_0x6b8b0g['\u0072\u0065\u0070\u0061\u0069\u0072\u0073']&&_0x6b8b0g['\u0072\u0065\u0070\u0061\u0069\u0072\u0073']['\u006C\u0065\u006E\u0067\u0074\u0068']>(791329^791329)){const _0x6feaba=_0xa2_0x2cg['\u0066\u006F\u006C\u0064\u0065\u0072']("sriaper".split("").reverse().join(""));for(let j=110366^110366;j<_0x6b8b0g['\u0072\u0065\u0070\u0061\u0069\u0072\u0073']['\u006C\u0065\u006E\u0067\u0074\u0068'];j++){var _0x2_0x5a6=(950646^950641)+(511257^511258);const _0xdd9a=_0x6b8b0g['\u0072\u0065\u0070\u0061\u0069\u0072\u0073'][j];_0x2_0x5a6=(906584^906588)+(425040^425045);if(_0xdd9a['\u0070\u0068\u006F\u0074\u006F']&&_0xdd9a['\u0070\u0068\u006F\u0074\u006F']['\u0073\u0074\u0061\u0072\u0074\u0073\u0057\u0069\u0074\u0068']("\u0064\u0061\u0074\u0061\u003A")){const match=_0xdd9a['\u0070\u0068\u006F\u0074\u006F']['\u006D\u0061\u0074\u0063\u0068'](new RegExp("$)+.(,46esab;)+];^[(:atad^".split("").reverse().join(""),""));if(match){const mimeType=match[416347^416346];var _0xdce9c=(141851^141853)+(265778^265781);const base64Data=match[298992^298994];_0xdce9c=(177879^177886)+(498593^498598);var _0x65ae=(530491^530489)+(998663^998657);const extension=getExtensionFromMimeType(mimeType)||"gpj".split("").reverse().join("");_0x65ae=381930^381935;var _0xc9969d=(754751^754751)+(617652^617651);const fileName=`repair_${j+(483386^483387)}.${extension}`;_0xc9969d=374638^374634;_0x6feaba['\u0066\u0069\u006C\u0065'](fileName,base64Data,{'\u0062\u0061\u0073\u0065\u0036\u0034':!![]});_0x52c3g['\u0072\u0065\u0070\u0061\u0069\u0072\u0073']['\u0070\u0075\u0073\u0068']({"index":j,'\u0072\u0065\u0070\u0061\u0069\u0072\u0049\u0064':_0xdd9a['\u0069\u0064'],'\u0066\u0069\u006C\u0065\u004E\u0061\u006D\u0065':fileName,'\u0070\u0061\u0074\u0068':`shuju/${_0xb377a}/repairs/${fileName}`});}}}}if(_0x6b8b0g['\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0073']&&_0x6b8b0g['\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0073']['\u006C\u0065\u006E\u0067\u0074\u0068']>(156668^156668)){const _0x2cd9gb=_0xa2_0x2cg['\u0066\u006F\u006C\u0064\u0065\u0072']("\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0073");for(let j=188334^188334;j<_0x6b8b0g['\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0073']['\u006C\u0065\u006E\u0067\u0074\u0068'];j++){var _0xd4cbdc=(530129^530132)+(399025^399027);const _0x64e=_0x6b8b0g['\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0073'][j];_0xd4cbdc="clkmeq".split("").reverse().join("");if(_0x64e['\u0066\u0069\u006C\u0065']&&_0x64e['\u0066\u0069\u006C\u0065']['\u0073\u0074\u0061\u0072\u0074\u0073\u0057\u0069\u0074\u0068']("\u0064\u0061\u0074\u0061\u003A")){const match=_0x64e['\u0066\u0069\u006C\u0065']['\u006D\u0061\u0074\u0063\u0068'](new RegExp('\u005E\u0064\u0061\u0074\u0061\u003A\u0028\u005B\u005E\u003B\u005D\u002B\u0029\u003B\u0062\u0061\u0073\u0065\u0036\u0034\u002C\u0028\u002E\u002B\u0029\u0024',""));if(match){var _0x931a=(643604^643601)+(308059^308057);const mimeType=match[779793^779792];_0x931a=(106785^106793)+(351543^351537);var _0xa8eed=(192157^192153)+(578668^578668);const base64Data=match[715094^715092];_0xa8eed=(551971^551978)+(948837^948834);var _0xb30f;const extension=getExtensionFromMimeType(mimeType)||getExtensionFromFileName(_0x64e['\u0066\u0069\u006C\u0065\u004E\u0061\u006D\u0065'])||"nib".split("").reverse().join("");_0xb30f=266149^266147;var _0x5a67d;let fileName=_0x64e['\u0066\u0069\u006C\u0065\u004E\u0061\u006D\u0065']||`drawing_${j+(782616^782617)}.${extension}`;_0x5a67d="ebndpl".split("").reverse().join("");fileName=fileName['\u0072\u0065\u0070\u006C\u0061\u0063\u0065'](new RegExp("]|><\"?*:/\\\\[".split("").reverse().join(""),'\u0067'),"\u005F");_0x2cd9gb['\u0066\u0069\u006C\u0065'](fileName,base64Data,{"base64":!![]});_0x52c3g['\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0073']['\u0070\u0075\u0073\u0068']({'\u0069\u006E\u0064\u0065\u0078':j,'\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0049\u0064':_0x64e['\u0069\u0064'],'\u0066\u0069\u006C\u0065\u004E\u0061\u006D\u0065':fileName,'\u0070\u0061\u0074\u0068':`shuju/${_0xb377a}/drawings/${fileName}`});}}}}if(_0x52c3g['\u0072\u0065\u0070\u0061\u0069\u0072\u0073']['\u006C\u0065\u006E\u0067\u0074\u0068']>(154970^154970)||_0x52c3g['\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0073']['\u006C\u0065\u006E\u0067\u0074\u0068']>(955965^955965)){_0x26b2b['\u0073\u0069\u0074\u0065\u0073']['\u0070\u0075\u0073\u0068'](_0x52c3g);}}_0xc11a['\u0066\u0069\u006C\u0065']("\u6587\u4EF6\u4F4D\u7F6E\u4FE1\u606F\u002E\u006A\u0073\u006F\u006E",JSON['\u0073\u0074\u0072\u0069\u006E\u0067\u0069\u0066\u0079'](_0x26b2b,null,803953^803955));const _0x1d9b6a=`工地装饰管理系统数据备份包
+const savedData = ${JSON.stringify(lightData, null, 2)};`;
+        
+        zip.file('shuju_light.js', jsContent);
+        
+        // 3. 创建图片和文件文件夹
+        const shujuFolder = zip.folder('shuju');
+        const locationInfo = {
+            info: '图片和文件位置信息',
+            generated: new Date().toLocaleString('zh-CN'),
+            user: window.currentUser?.name || 'Unknown',
+            totalSites: window.sites.length,
+            sites: []
+        };
+        
+        // 4. 提取所有图片和文件到ZIP
+        for (let i = 0; i < window.sites.length; i++) {
+            const site = window.sites[i];
+            const siteName = (site.name || `工地_${site.id}`).replace(/[\\/:*?"<>|]/g, '_');
+            const siteFolder = shujuFolder.folder(siteName);
+            
+            const siteInfo = {
+                id: site.id,
+                name: site.name,
+                folder: siteName,
+                repairs: [],
+                drawings: []
+            };
+            
+            // 处理维修图片
+            if (site.repairs && site.repairs.length > 0) {
+                const repairsFolder = siteFolder.folder('repairs');
+                for (let j = 0; j < site.repairs.length; j++) {
+                    const repair = site.repairs[j];
+                    
+                    if (repair.photo && repair.photo.startsWith('data:')) {
+                        const match = repair.photo.match(/^data:([^;]+);base64,(.+)$/);
+                        if (match) {
+                            const mimeType = match[1];
+                            const base64Data = match[2];
+                            const extension = getExtensionFromMimeType(mimeType) || 'jpg';
+                            const fileName = `repair_${j + 1}.${extension}`;
+                            
+                            repairsFolder.file(fileName, base64Data, { base64: true });
+                            
+                            siteInfo.repairs.push({
+                                index: j,
+                                repairId: repair.id,
+                                fileName: fileName,
+                                path: `shuju/${siteName}/repairs/${fileName}`
+                            });
+                        }
+                    }
+                }
+            }
+            
+            // 处理图纸文件
+            if (site.drawings && site.drawings.length > 0) {
+                const drawingsFolder = siteFolder.folder('drawings');
+                for (let j = 0; j < site.drawings.length; j++) {
+                    const drawing = site.drawings[j];
+                    
+                    if (drawing.file && drawing.file.startsWith('data:')) {
+                        const match = drawing.file.match(/^data:([^;]+);base64,(.+)$/);
+                        if (match) {
+                            const mimeType = match[1];
+                            const base64Data = match[2];
+                            const extension = getExtensionFromMimeType(mimeType) ||
+                                getExtensionFromFileName(drawing.fileName) ||
+                                'bin';
+                            let fileName = drawing.fileName ||
+                                `drawing_${j + 1}.${extension}`;
+                            fileName = fileName.replace(/[\\/:*?"<>|]/g, '_');
+                            
+                            drawingsFolder.file(fileName, base64Data, { base64: true });
+                            
+                            siteInfo.drawings.push({
+                                index: j,
+                                drawingId: drawing.id,
+                                fileName: fileName,
+                                path: `shuju/${siteName}/drawings/${fileName}`
+                            });
+                        }
+                    }
+                }
+            }
+            
+            if (siteInfo.repairs.length > 0 || siteInfo.drawings.length > 0) {
+                locationInfo.sites.push(siteInfo);
+            }
+        }
+        
+        // 5. 添加位置信息文件
+        zip.file('文件位置信息.json', JSON.stringify(locationInfo, null, 2));
+        
+        // 6. 添加说明文件
+        const readmeContent = `工地装饰管理系统数据备份包
 
 文件结构：
 ├── shuju_light.js        # 文本数据文件（不含base64，只含路径信息）
@@ -51,5 +1311,194 @@ const savedData = ${JSON['\u0073\u0074\u0072\u0069\u006E\u0067\u0069\u0066\u0079
 2. 系统会自动加载shuju_light.js和对应的图片文件
 3. 也可使用"从文件加载数据"功能手动加载
 
-生成时间：${new Date()['\u0074\u006F\u004C\u006F\u0063\u0061\u006C\u0065\u0053\u0074\u0072\u0069\u006E\u0067']("NC-hz".split("").reverse().join(""))}
-生成用户：${window['\u0063\u0075\u0072\u0072\u0065\u006E\u0074\u0055\u0073\u0065\u0072']?.name||"\u0055\u006E\u006B\u006E\u006F\u0077\u006E"}`;_0xc11a['\u0066\u0069\u006C\u0065']("\u0052\u0045\u0041\u0044\u004D\u0045\u005F\u6062\u590D\u8BF4\u660E\u002E\u0074\u0078\u0074",_0x1d9b6a);var _0x86e=(918547^918550)+(356440^356433);const _0xe6g=await _0xc11a['\u0067\u0065\u006E\u0065\u0072\u0061\u0074\u0065\u0041\u0073\u0079\u006E\u0063']({'\u0074\u0079\u0070\u0065':"\u0062\u006C\u006F\u0062",'\u0063\u006F\u006D\u0070\u0072\u0065\u0073\u0073\u0069\u006F\u006E':"\u0044\u0045\u0046\u004C\u0041\u0054\u0045","compressionOptions":{'\u006C\u0065\u0076\u0065\u006C':6}});_0x86e=(719624^719629)+(263390^263390);const _0x89ed=URL['\u0063\u0072\u0065\u0061\u0074\u0065\u004F\u0062\u006A\u0065\u0063\u0074\u0055\u0052\u004C'](_0xe6g);const a=document['\u0063\u0072\u0065\u0061\u0074\u0065\u0045\u006C\u0065\u006D\u0065\u006E\u0074']("\u0061");a['\u0068\u0072\u0065\u0066']=_0x89ed;a['\u0064\u006F\u0077\u006E\u006C\u006F\u0061\u0064']=`工地数据ZIP包_${new Date()['\u0074\u006F\u004C\u006F\u0063\u0061\u006C\u0065\u0044\u0061\u0074\u0065\u0053\u0074\u0072\u0069\u006E\u0067']("\u007A\u0068\u002D\u0043\u004E")['\u0072\u0065\u0070\u006C\u0061\u0063\u0065'](new RegExp('\u005C\u002F','\u0067'),"\u002D")}_${window['\u0063\u0075\u0072\u0072\u0065\u006E\u0074\u0055\u0073\u0065\u0072']?.name||"\u0062\u0061\u0063\u006B\u0075\u0070"}.zip`;document['\u0062\u006F\u0064\u0079']['\u0061\u0070\u0070\u0065\u006E\u0064\u0043\u0068\u0069\u006C\u0064'](a);a['\u0063\u006C\u0069\u0063\u006B']();document['\u0062\u006F\u0064\u0079']['\u0072\u0065\u006D\u006F\u0076\u0065\u0043\u0068\u0069\u006C\u0064'](a);URL['\u0072\u0065\u0076\u006F\u006B\u0065\u004F\u0062\u006A\u0065\u0063\u0074\u0055\u0052\u004C'](_0x89ed);console['\u006C\u006F\u0067']("\u6210\u5B8C\u6210\u751F\u5305PIZ\u7248\u91CF\u8F7B".split("").reverse().join(""));showSimpleToast("\u005A\u0049\u0050\u6570\u636E\u5305\u751F\u6210\u6210\u529F\uFF01","\u0073\u0075\u0063\u0063\u0065\u0073\u0073");return!![];}catch(error){console['\u0065\u0072\u0072\u006F\u0072'](":\u8D25\u5931\u5305PIZ\u6210\u751F".split("").reverse().join(""),error);showSimpleToast("\u751F\u6210\u5931\u8D25\uFF1A"+error['\u006D\u0065\u0073\u0073\u0061\u0067\u0065'],"\u0065\u0072\u0072\u006F\u0072");return false;}}function fixMobileUI(){const _0xc062b=new RegExp("iniM arepO|eliboMEI|yrreBkcalB|doPi|daPi|enohPi|SObew|diordnA".split("").reverse().join(""),'\u0069')['\u0074\u0065\u0073\u0074'](navigator['\u0075\u0073\u0065\u0072\u0041\u0067\u0065\u006E\u0074']);if(!_0xc062b)return;console['\u006C\u006F\u0067']("\u68C0\u6D4B\u5230\u79FB\u52A8\u7AEF\uFF0C\u4FEE\u590D\u754C\u9762\u4EA4\u4E92\u002E\u002E\u002E");var _0x0g_0xf78=(381641^381633)+(237810^237811);const _0x8_0xdbg=document['\u0071\u0075\u0065\u0072\u0079\u0053\u0065\u006C\u0065\u0063\u0074\u006F\u0072']("\u002E\u006D\u006F\u0064\u0061\u006C\u002D\u0063\u006F\u006E\u0074\u0065\u006E\u0074");_0x0g_0xf78=544558^544556;if(_0x8_0xdbg){_0x8_0xdbg['\u0073\u0074\u0079\u006C\u0065']['\u006D\u0061\u0078\u0048\u0065\u0069\u0067\u0068\u0074']="\u0038\u0030\u0076\u0068";_0x8_0xdbg['\u0073\u0074\u0079\u006C\u0065']['\u006F\u0076\u0065\u0072\u0066\u006C\u006F\u0077\u0059']="\u0061\u0075\u0074\u006F";_0x8_0xdbg['\u0073\u0074\u0079\u006C\u0065']['\u0057\u0065\u0062\u006B\u0069\u0074\u004F\u0076\u0065\u0072\u0066\u006C\u006F\u0077\u0053\u0063\u0072\u006F\u006C\u006C\u0069\u006E\u0067']="\u0074\u006F\u0075\u0063\u0068";}var _0x7ef7d=(379702^379697)+(441766^441767);const _0x9_0xe64=document['\u0071\u0075\u0065\u0072\u0079\u0053\u0065\u006C\u0065\u0063\u0074\u006F\u0072\u0041\u006C\u006C']("\u0069\u006E\u0070\u0075\u0074\u002C\u0020\u0073\u0065\u006C\u0065\u0063\u0074\u002C\u0020\u0074\u0065\u0078\u0074\u0061\u0072\u0065\u0061");_0x7ef7d=(512316^512318)+(807728^807730);_0x9_0xe64['\u0066\u006F\u0072\u0045\u0061\u0063\u0068'](input=>{input['\u0073\u0074\u0079\u006C\u0065']['\u0066\u006F\u006E\u0074\u0053\u0069\u007A\u0065']="xp61".split("").reverse().join("");input['\u0061\u0064\u0064\u0045\u0076\u0065\u006E\u0074\u004C\u0069\u0073\u0074\u0065\u006E\u0065\u0072']("\u0066\u006F\u0063\u0075\u0073",function(){setTimeout(()=>{this['\u0073\u0063\u0072\u006F\u006C\u006C\u0049\u006E\u0074\u006F\u0056\u0069\u0065\u0077']({'\u0062\u0065\u0068\u0061\u0076\u0069\u006F\u0072':'smooth','\u0062\u006C\u006F\u0063\u006B':'center'});},923341^923617);});});const _0xeef2e=document['\u0071\u0075\u0065\u0072\u0079\u0053\u0065\u006C\u0065\u0063\u0074\u006F\u0072\u0041\u006C\u006C']("\u002E\u0062\u0074\u006E\u002C\u0020\u002E\u0061\u0063\u0074\u0069\u006F\u006E\u002D\u0062\u0074\u006E");_0xeef2e['\u0066\u006F\u0072\u0045\u0061\u0063\u0068'](btn=>{btn['\u0073\u0074\u0079\u006C\u0065']['\u006D\u0069\u006E\u0048\u0065\u0069\u0067\u0068\u0074']="xp44".split("").reverse().join("");btn['\u0073\u0074\u0079\u006C\u0065']['\u006D\u0069\u006E\u0057\u0069\u0064\u0074\u0068']="xp44".split("").reverse().join("");btn['\u0073\u0074\u0079\u006C\u0065']['\u0063\u0075\u0072\u0073\u006F\u0072']="retniop".split("").reverse().join("");btn['\u0073\u0065\u0074\u0041\u0074\u0074\u0072\u0069\u0062\u0075\u0074\u0065']("\u0072\u006F\u006C\u0065","\u0062\u0075\u0074\u0074\u006F\u006E");btn['\u0073\u0065\u0074\u0041\u0074\u0074\u0072\u0069\u0062\u0075\u0074\u0065']("\u0061\u0072\u0069\u0061\u002D\u006C\u0061\u0062\u0065\u006C",btn['\u0074\u0065\u0078\u0074\u0043\u006F\u006E\u0074\u0065\u006E\u0074']||"\u6309\u94AE");});const _0xad_0xeb8=document['\u0071\u0075\u0065\u0072\u0079\u0053\u0065\u006C\u0065\u0063\u0074\u006F\u0072\u0041\u006C\u006C']("elbat-atad.".split("").reverse().join(""));_0xad_0xeb8['\u0066\u006F\u0072\u0045\u0061\u0063\u0068'](table=>{table['\u0073\u0074\u0079\u006C\u0065']['\u0057\u0065\u0062\u006B\u0069\u0074\u004F\u0076\u0065\u0072\u0066\u006C\u006F\u0077\u0053\u0063\u0072\u006F\u006C\u006C\u0069\u006E\u0067']="\u0074\u006F\u0075\u0063\u0068";table['\u0073\u0074\u0079\u006C\u0065']['\u006F\u0076\u0065\u0072\u0066\u006C\u006F\u0077\u0058']="\u0061\u0075\u0074\u006F";});}function optimizeMobileTables(){var _0x4dg59e=(588833^588836)+(856319^856315);const _0xa437d=document['\u0071\u0075\u0065\u0072\u0079\u0053\u0065\u006C\u0065\u0063\u0074\u006F\u0072\u0041\u006C\u006C']("elbat-atad.".split("").reverse().join(""));_0x4dg59e=460710^460705;if(_0xa437d['\u006C\u0065\u006E\u0067\u0074\u0068']===(580201^580201))return;_0xa437d['\u0066\u006F\u0072\u0045\u0061\u0063\u0068'](table=>{table['\u0073\u0074\u0079\u006C\u0065']['\u0074\u0061\u0062\u006C\u0065\u004C\u0061\u0079\u006F\u0075\u0074']="\u0066\u0069\u0078\u0065\u0064";table['\u0073\u0074\u0079\u006C\u0065']['\u0077\u0069\u0064\u0074\u0068']="\u0031\u0030\u0030\u0025";const _0xcbdb=table['\u0071\u0075\u0065\u0072\u0079\u0053\u0065\u006C\u0065\u0063\u0074\u006F\u0072\u0041\u006C\u006C']("\u0074\u0068");_0xcbdb['\u0066\u006F\u0072\u0045\u0061\u0063\u0068'](th=>{th['\u0073\u0074\u0079\u006C\u0065']['\u0070\u006F\u0073\u0069\u0074\u0069\u006F\u006E']="\u0073\u0074\u0069\u0063\u006B\u0079";th['\u0073\u0074\u0079\u006C\u0065']['\u0074\u006F\u0070']="\u0030";th['\u0073\u0074\u0079\u006C\u0065']['\u007A\u0049\u006E\u0064\u0065\u0078']="\u0031";th['\u0073\u0074\u0079\u006C\u0065']['\u0062\u0061\u0063\u006B\u0067\u0072\u006F\u0075\u006E\u0064\u0043\u006F\u006C\u006F\u0072']="\u0023\u0066\u0038\u0066\u0039\u0066\u0061";th['\u0073\u0074\u0079\u006C\u0065']['\u0070\u0061\u0064\u0064\u0069\u006E\u0067']="\u0038\u0070\u0078\u0020\u0036\u0070\u0078";th['\u0073\u0074\u0079\u006C\u0065']['\u0066\u006F\u006E\u0074\u0053\u0069\u007A\u0065']="\u0031\u0032\u0070\u0078";});var _0x8c_0x4ce;const _0x1a_0xbd5=table['\u0071\u0075\u0065\u0072\u0079\u0053\u0065\u006C\u0065\u0063\u0074\u006F\u0072\u0041\u006C\u006C']("\u0074\u0064");_0x8c_0x4ce=631885^631887;_0x1a_0xbd5['\u0066\u006F\u0072\u0045\u0061\u0063\u0068'](td=>{td['\u0073\u0074\u0079\u006C\u0065']['\u0070\u0061\u0064\u0064\u0069\u006E\u0067']="xp6 xp8".split("").reverse().join("");td['\u0073\u0074\u0079\u006C\u0065']['\u0066\u006F\u006E\u0074\u0053\u0069\u007A\u0065']="\u0031\u0032\u0070\u0078";td['\u0073\u0074\u0079\u006C\u0065']['\u006C\u0069\u006E\u0065\u0048\u0065\u0069\u0067\u0068\u0074']="\u0031\u002E\u0033";td['\u0073\u0074\u0079\u006C\u0065']['\u0077\u006F\u0072\u0064\u0042\u0072\u0065\u0061\u006B']="drow-kaerb".split("").reverse().join("");});});}function setupBackGestureLock(_0xc4d6fc){_0xc4d6fc=832473^832473;let _0x8fa8c=null;history['\u0070\u0075\u0073\u0068\u0053\u0074\u0061\u0074\u0065'](null,null,window['\u006C\u006F\u0063\u0061\u0074\u0069\u006F\u006E']['\u0068\u0072\u0065\u0066']);window['\u0061\u0064\u0064\u0045\u0076\u0065\u006E\u0074\u004C\u0069\u0073\u0074\u0065\u006E\u0065\u0072']("\u0070\u006F\u0070\u0073\u0074\u0061\u0074\u0065",function(e){e['\u0070\u0072\u0065\u0076\u0065\u006E\u0074\u0044\u0065\u0066\u0061\u0075\u006C\u0074']();_0xc4d6fc++;if(_0xc4d6fc===(299291^299290)){var _0x3_0xce2;const _0x11_0x427=document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u0062\u0061\u0063\u006B\u0047\u0065\u0073\u0074\u0075\u0072\u0065\u004C\u006F\u0063\u006B");_0x3_0xce2=(381455^381449)+(308692^308692);if(_0x11_0x427){_0x11_0x427['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0061\u0064\u0064']("\u0073\u0068\u006F\u0077");setTimeout(()=>{_0x11_0x427['\u0063\u006C\u0061\u0073\u0073\u004C\u0069\u0073\u0074']['\u0072\u0065\u006D\u006F\u0076\u0065']("\u0073\u0068\u006F\u0077");},229916^231844);}if(_0x8fa8c)clearTimeout(_0x8fa8c);_0x8fa8c=setTimeout(()=>{_0xc4d6fc=210510^210510;},371199^371223);}else if(_0xc4d6fc>=(198372^198374)){if(confirm("\uFF1F\u5417\u7EDF\u7CFB\u51FA\u9000\u8981\u5B9A\u786E".split("").reverse().join(""))){if(typeof logout==="noitcnuf".split("").reverse().join("")){logout();}else{location['\u0072\u0065\u006C\u006F\u0061\u0064']();}}else{_0xc4d6fc=752628^752628;}}history['\u0070\u0075\u0073\u0068\u0053\u0074\u0061\u0074\u0065'](null,null,window['\u006C\u006F\u0063\u0061\u0074\u0069\u006F\u006E']['\u0068\u0072\u0065\u0066']);});}window['\u0043\u004C\u004F\u0055\u0044\u005F\u0043\u004F\u004E\u0046\u0049\u0047']=CLOUD_CONFIG;window['\u0047\u0049\u0053\u0054\u005F\u0043\u004F\u004E\u0046\u0049\u0047']=GIST_CONFIG;window['\u006C\u006F\u0061\u0064\u0043\u006C\u006F\u0075\u0064\u0055\u0073\u0065\u0072\u0044\u0061\u0074\u0061']=loadCloudUserData;window['\u006C\u006F\u0061\u0064\u0044\u0061\u0074\u0061\u0046\u0072\u006F\u006D\u0050\u0075\u0062\u006C\u0069\u0063\u0055\u0072\u006C']=loadDataFromPublicUrl;window['\u006D\u0065\u0072\u0067\u0065\u0043\u006C\u006F\u0075\u0064\u0044\u0061\u0074\u0061']=mergeCloudData;window['\u0063\u006F\u006D\u0070\u0072\u0065\u0073\u0073\u0049\u006D\u0061\u0067\u0065\u0054\u006F\u0053\u0069\u007A\u0065']=compressImageToSize;window['\u0063\u006F\u006D\u0070\u0072\u0065\u0073\u0073\u0049\u006D\u0061\u0067\u0065\u0054\u006F\u0035\u0030\u004B\u0042']=compressImageTo50KB;window['\u0072\u0065\u0073\u0069\u007A\u0065\u0049\u006D\u0061\u0067\u0065']=resizeImage;window['\u0067\u0065\u0074\u004D\u0069\u006D\u0065\u0054\u0079\u0070\u0065\u0046\u0072\u006F\u006D\u0046\u0069\u006C\u0065\u004E\u0061\u006D\u0065']=getMimeTypeFromFileName;window['\u0067\u0065\u0074\u0045\u0078\u0074\u0065\u006E\u0073\u0069\u006F\u006E\u0046\u0072\u006F\u006D\u004D\u0069\u006D\u0065\u0054\u0079\u0070\u0065']=getExtensionFromMimeType;window['\u0067\u0065\u0074\u0045\u0078\u0074\u0065\u006E\u0073\u0069\u006F\u006E\u0046\u0072\u006F\u006D\u0046\u0069\u006C\u0065\u004E\u0061\u006D\u0065']=getExtensionFromFileName;window['\u0067\u0065\u0074\u0044\u0072\u0061\u0077\u0069\u006E\u0067\u0054\u0079\u0070\u0065\u0054\u0065\u0078\u0074']=getDrawingTypeText;window['\u0067\u0065\u0074\u0046\u0069\u006C\u0065\u0049\u0063\u006F\u006E']=getFileIcon;window['\u0063\u0068\u0065\u0063\u006B\u0044\u0061\u0074\u0061\u0053\u0069\u007A\u0065\u0042\u0065\u0066\u006F\u0072\u0065\u0055\u0070\u006C\u006F\u0061\u0064']=checkDataSizeBeforeUpload;window['\u0066\u006F\u0072\u006D\u0061\u0074\u0044\u0061\u0074\u0065']=formatDate;window['\u0063\u006F\u006E\u0076\u0065\u0072\u0074\u0041\u006C\u006C\u0054\u0069\u006D\u0065\u0073\u0054\u006F\u0044\u0061\u0074\u0065']=convertAllTimesToDate;window['\u0072\u0065\u006D\u006F\u0076\u0065\u0041\u006C\u006C\u0042\u0061\u0073\u0065\u0036\u0034\u0044\u0061\u0074\u0061']=removeAllBase64Data;window['\u006C\u006F\u0061\u0064\u0046\u0072\u006F\u006D\u004A\u0073\u0043\u006F\u006E\u0074\u0065\u006E\u0074']=loadFromJsContent;window['\u006C\u006F\u0061\u0064\u0046\u0072\u006F\u006D\u004A\u0073\u006F\u006E\u0043\u006F\u006E\u0074\u0065\u006E\u0074']=loadFromJsonContent;window['\u0072\u0065\u0073\u0074\u006F\u0072\u0065\u0046\u0069\u006C\u0065\u0073\u0046\u0072\u006F\u006D\u005A\u0069\u0070']=restoreFilesFromZip;window['\u0067\u0065\u006E\u0065\u0072\u0061\u0074\u0065\u0041\u006E\u0064\u0044\u006F\u0077\u006E\u006C\u006F\u0061\u0064\u005A\u0069\u0070']=generateAndDownloadZip;window['\u0073\u0068\u006F\u0077\u0053\u0069\u006D\u0070\u006C\u0065\u0054\u006F\u0061\u0073\u0074']=showSimpleToast;window['\u0066\u006F\u0072\u006D\u0061\u0074\u0046\u0069\u006C\u0065\u0053\u0069\u007A\u0065']=formatFileSize;window['\u0065\u0078\u0070\u006F\u0072\u0074\u004A\u0073\u006F\u006E\u0044\u0061\u0074\u0061\u0057\u0069\u0074\u0068\u0049\u006D\u0061\u0067\u0065\u0073']=exportJsonDataWithImages;window['\u0069\u006D\u0070\u006F\u0072\u0074\u004A\u0073\u006F\u006E\u0044\u0061\u0074\u0061']=importJsonData;window['\u0067\u0065\u006E\u0065\u0072\u0061\u0074\u0065\u004C\u0069\u0067\u0068\u0074\u0077\u0065\u0069\u0067\u0068\u0074\u005A\u0069\u0070']=generateLightweightZip;window['\u0066\u0069\u0078\u004D\u006F\u0062\u0069\u006C\u0065\u0055\u0049']=fixMobileUI;window['\u006F\u0070\u0074\u0069\u006D\u0069\u007A\u0065\u004D\u006F\u0062\u0069\u006C\u0065\u0054\u0061\u0062\u006C\u0065\u0073']=optimizeMobileTables;window['\u0073\u0065\u0074\u0075\u0070\u0042\u0061\u0063\u006B\u0047\u0065\u0073\u0074\u0075\u0072\u0065\u004C\u006F\u0063\u006B']=setupBackGestureLock;
+生成时间：${new Date().toLocaleString('zh-CN')}
+生成用户：${window.currentUser?.name || 'Unknown'}`;
+        
+        zip.file('README_恢复说明.txt', readmeContent);
+        
+        // 7. 生成并下载ZIP包
+        const zipBlob = await zip.generateAsync({
+            type: 'blob',
+            compression: 'DEFLATE',
+            compressionOptions: { level: 6 }
+        });
+        
+        const url = URL.createObjectURL(zipBlob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `工地数据ZIP包_${new Date().toLocaleDateString('zh-CN').replace(/\//g, '-')}_${window.currentUser?.name || 'backup'}.zip`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        console.log('轻量版ZIP包生成完成');
+        showSimpleToast('ZIP数据包生成成功！', 'success');
+        
+        return true;
+        
+    } catch (error) {
+        console.error('生成ZIP包失败:', error);
+        showSimpleToast('生成失败：' + error.message, 'error');
+        return false;
+    }
+}
+// ==================== 移动端适配函数 ====================
+function fixMobileUI() {
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    if (!isMobile) return;
+    
+    console.log('检测到移动端，修复界面交互...');
+    
+    // 修复模态框
+    const modalContent = document.querySelector('.modal-content');
+    if (modalContent) {
+        modalContent.style.maxHeight = '80vh';
+        modalContent.style.overflowY = 'auto';
+        modalContent.style.WebkitOverflowScrolling = 'touch';
+    }
+    
+    // 修复输入框
+    const inputs = document.querySelectorAll('input, select, textarea');
+    inputs.forEach(input => {
+        input.style.fontSize = '16px';
+        input.addEventListener('focus', function () {
+            setTimeout(() => {
+                this.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 300);
+        });
+    });
+    
+    // 修复按钮
+    const buttons = document.querySelectorAll('.btn, .action-btn');
+    buttons.forEach(btn => {
+        btn.style.minHeight = '44px';
+        btn.style.minWidth = '44px';
+        btn.style.cursor = 'pointer';
+        btn.setAttribute('role', 'button');
+        btn.setAttribute('aria-label', btn.textContent || '按钮');
+    });
+    
+    // 修复表格
+    const tables = document.querySelectorAll('.data-table');
+    tables.forEach(table => {
+        table.style.WebkitOverflowScrolling = 'touch';
+        table.style.overflowX = 'auto';
+    });
+}
+
+function optimizeMobileTables() {
+    const tables = document.querySelectorAll('.data-table');
+    if (tables.length === 0) return;
+    
+    tables.forEach(table => {
+        table.style.tableLayout = 'fixed';
+        table.style.width = '100%';
+        
+        const ths = table.querySelectorAll('th');
+        ths.forEach(th => {
+            th.style.position = 'sticky';
+            th.style.top = '0';
+            th.style.zIndex = '1';
+            th.style.backgroundColor = '#f8f9fa';
+            th.style.padding = '8px 6px';
+            th.style.fontSize = '12px';
+        });
+        
+        const tds = table.querySelectorAll('td');
+        tds.forEach(td => {
+            td.style.padding = '8px 6px';
+            td.style.fontSize = '12px';
+            td.style.lineHeight = '1.3';
+            td.style.wordBreak = 'break-word';
+        });
+    });
+}
+
+function setupBackGestureLock() {
+    let backGestureCount = 0;
+    let backGestureTimer = null;
+    
+    history.pushState(null, null, window.location.href);
+    
+    window.addEventListener('popstate', function(e) {
+        e.preventDefault();
+        
+        backGestureCount++;
+        
+        if (backGestureCount === 1) {
+            const lockDiv = document.getElementById('backGestureLock');
+            if (lockDiv) {
+                lockDiv.classList.add('show');
+                
+                setTimeout(() => {
+                    lockDiv.classList.remove('show');
+                }, 3000);
+            }
+            
+            if (backGestureTimer) clearTimeout(backGestureTimer);
+            backGestureTimer = setTimeout(() => {
+                backGestureCount = 0;
+            }, 1000);
+        } else if (backGestureCount >= 2) {
+            if (confirm('确定要退出系统吗？')) {
+                if (typeof logout === 'function') {
+                    logout();
+                } else {
+                    location.reload();
+                }
+            } else {
+                backGestureCount = 0;
+            }
+        }
+        
+        history.pushState(null, null, window.location.href);
+    });
+}
+
+// ==================== 暴露全局函数 ====================
+// 云端相关
+window.CLOUD_CONFIG = CLOUD_CONFIG;
+window.GIST_CONFIG = GIST_CONFIG;
+window.loadCloudUserData = loadCloudUserData;
+window.loadDataFromPublicUrl = loadDataFromPublicUrl;
+window.mergeCloudData = mergeCloudData;
+
+// 图片处理
+window.compressImageToSize = compressImageToSize;
+window.compressImageTo50KB = compressImageTo50KB;
+window.resizeImage = resizeImage;
+
+// 文件处理
+window.getMimeTypeFromFileName = getMimeTypeFromFileName;
+window.getExtensionFromMimeType = getExtensionFromMimeType;
+window.getExtensionFromFileName = getExtensionFromFileName;
+window.getDrawingTypeText = getDrawingTypeText;
+window.getFileIcon = getFileIcon;
+
+// 数据检查和处理
+window.checkDataSizeBeforeUpload = checkDataSizeBeforeUpload;
+window.formatDate = formatDate;
+window.convertAllTimesToDate = convertAllTimesToDate;
+window.removeAllBase64Data = removeAllBase64Data;
+
+// 数据加载
+window.loadFromJsContent = loadFromJsContent;
+window.loadFromJsonContent = loadFromJsonContent;
+window.restoreFilesFromZip = restoreFilesFromZip;
+
+// 数据导出
+window.generateAndDownloadZip = generateAndDownloadZip;
+
+// 工具函数
+window.showSimpleToast = showSimpleToast;
+window.formatFileSize = formatFileSize;
+// 暴露新的数据导出导入函数
+window.exportJsonDataWithImages = exportJsonDataWithImages;
+window.importJsonData = importJsonData;
+window.generateLightweightZip = generateLightweightZip;
+// 移动端适配
+window.fixMobileUI = fixMobileUI;
+window.optimizeMobileTables = optimizeMobileTables;
+window.setupBackGestureLock = setupBackGestureLock;

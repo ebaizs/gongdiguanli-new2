@@ -1,1 +1,59 @@
-document['\u0061\u0064\u0064\u0045\u0076\u0065\u006E\u0074\u004C\u0069\u0073\u0074\u0065\u006E\u0065\u0072']("dedaoLtnetnoCMOD".split("").reverse().join(""),function(){console['\u006C\u006F\u0067']("...\u672C\u811A\u590D\u4FEE\u884C\u8FD0".split("").reverse().join(""));setTimeout(function(){if(window['\u0050\u0045\u0052\u004D\u0049\u0053\u0053\u0049\u004F\u004E\u005F\u0043\u004F\u004E\u0046\u0049\u0047']){console['\u006C\u006F\u0067']("\u4FEE\u590D\u6743\u9650\u914D\u7F6E\u002E\u002E\u002E");if(!window['\u0050\u0045\u0052\u004D\u0049\u0053\u0053\u0049\u004F\u004E\u005F\u0043\u004F\u004E\u0046\u0049\u0047']['\u0061\u0076\u0061\u0069\u006C\u0061\u0062\u006C\u0065\u0054\u0061\u0062\u0073']){window['\u0050\u0045\u0052\u004D\u0049\u0053\u0053\u0049\u004F\u004E\u005F\u0043\u004F\u004E\u0046\u0049\u0047']['\u0061\u0076\u0061\u0069\u006C\u0061\u0062\u006C\u0065\u0054\u0061\u0062\u0073']=[{"id":"\u0070\u0072\u006F\u0067\u0072\u0065\u0073\u0073\u0054\u0061\u0062","name":"\u8FDB\u5EA6"},{"id":"todoTab","name":"\u5F85\u529E"},{"id":"\u0065\u0078\u0070\u0065\u006E\u0073\u0065\u0054\u0061\u0062",'\u006E\u0061\u006D\u0065':"\u652F\u51FA"},{'\u0069\u0064':"\u0072\u0065\u0071\u0075\u0069\u0072\u0065\u006D\u0065\u006E\u0074\u0054\u0061\u0062",'\u006E\u0061\u006D\u0065':"\u5BA2\u6237\u8981\u6C42"},{'\u0069\u0064':"repairTab",'\u006E\u0061\u006D\u0065':"\u5F85\u7EF4\u4FEE"},{"id":"\u0077\u006F\u0072\u006B\u0065\u0072\u0054\u0061\u0062","name":"工人"},{"id":"\u0071\u0075\u006F\u0074\u0065\u0054\u0061\u0062",'\u006E\u0061\u006D\u0065':"报价"},{"id":"addRemoveTab",'\u006E\u0061\u006D\u0065':"增减项"},{'\u0069\u0064':"\u0064\u0072\u0061\u0077\u0069\u006E\u0067\u0054\u0061\u0062","name":"\u56FE\u7EB8"},{'\u0069\u0064':"\u0065\u0078\u0070\u0065\u0072\u0069\u0065\u006E\u0063\u0065\u0054\u0061\u0062","name":"\u7ECF\u9A8C\u603B\u7ED3"}];}if(window['\u0050\u0045\u0052\u004D\u0049\u0053\u0053\u0049\u004F\u004E\u005F\u0043\u004F\u004E\u0046\u0049\u0047']['\u0075\u0073\u0065\u0072\u0050\u0065\u0072\u006D\u0069\u0073\u0073\u0069\u006F\u006E\u0073']["\u0031"]){window['\u0050\u0045\u0052\u004D\u0049\u0053\u0053\u0049\u004F\u004E\u005F\u0043\u004F\u004E\u0046\u0049\u0047']['\u0075\u0073\u0065\u0072\u0050\u0065\u0072\u006D\u0069\u0073\u0073\u0069\u006F\u006E\u0073']["\u0031"]['\u0070\u0065\u0072\u006D\u0069\u0073\u0073\u0069\u006F\u006E\u0073']['\u0076\u0069\u0065\u0077\u0041\u006C\u006C\u0054\u0061\u0062\u0073']=!![];window['\u0050\u0045\u0052\u004D\u0049\u0053\u0053\u0049\u004F\u004E\u005F\u0043\u004F\u004E\u0046\u0049\u0047']['\u0075\u0073\u0065\u0072\u0050\u0065\u0072\u006D\u0069\u0073\u0073\u0069\u006F\u006E\u0073']["\u0031"]['\u0070\u0065\u0072\u006D\u0069\u0073\u0073\u0069\u006F\u006E\u0073']['\u0076\u0069\u0065\u0077\u0041\u006C\u006C\u0053\u0069\u0074\u0065\u0073']=!![];window['\u0050\u0045\u0052\u004D\u0049\u0053\u0053\u0049\u004F\u004E\u005F\u0043\u004F\u004E\u0046\u0049\u0047']['\u0075\u0073\u0065\u0072\u0050\u0065\u0072\u006D\u0069\u0073\u0073\u0069\u006F\u006E\u0073']["\u0031"]['\u0070\u0065\u0072\u006D\u0069\u0073\u0073\u0069\u006F\u006E\u0073']['\u0061\u0064\u0064\u0053\u0069\u0074\u0065']=!![];window['\u0050\u0045\u0052\u004D\u0049\u0053\u0053\u0049\u004F\u004E\u005F\u0043\u004F\u004E\u0046\u0049\u0047']['\u0075\u0073\u0065\u0072\u0050\u0065\u0072\u006D\u0069\u0073\u0073\u0069\u006F\u006E\u0073']["\u0031"]['\u0070\u0065\u0072\u006D\u0069\u0073\u0073\u0069\u006F\u006E\u0073']['\u0061\u0064\u0064\u0049\u0074\u0065\u006D\u0073']=!![];}console['\u006C\u006F\u0067']("\u6743\u9650\u914D\u7F6E\u4FEE\u590D\u5B8C\u6210");}},106599^106899);var _0x7cb=(945193^945184)+(561127^561121);const _0xc4b22b=document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("\u006C\u006F\u0067\u0069\u006E\u0046\u006F\u0072\u006D")['\u006F\u006E\u0073\u0075\u0062\u006D\u0069\u0074'];_0x7cb=(150548^150548)+(626515^626512);document['\u0067\u0065\u0074\u0045\u006C\u0065\u006D\u0065\u006E\u0074\u0042\u0079\u0049\u0064']("mroFnigol".split("").reverse().join(""))['\u006F\u006E\u0073\u0075\u0062\u006D\u0069\u0074']=async function(e){e['\u0070\u0072\u0065\u0076\u0065\u006E\u0074\u0044\u0065\u0066\u0061\u0075\u006C\u0074']();if(_0xc4b22b){await _0xc4b22b['\u0063\u0061\u006C\u006C'](this,e);}setTimeout(function(){if(window['\u0063\u0075\u0072\u0072\u0065\u006E\u0074\u0055\u0073\u0065\u0072']&&typeof window['\u0069\u006E\u0069\u0074\u0054\u0061\u0062\u0073']==="\u0066\u0075\u006E\u0063\u0074\u0069\u006F\u006E"){console['\u006C\u006F\u0067']("\u767B\u5F55\u540E\u91CD\u65B0\u521D\u59CB\u5316\u6807\u7B7E\u9875");window['\u0069\u006E\u0069\u0074\u0054\u0061\u0062\u0073']();}},987878^987778);};console['\u006C\u006F\u0067']("\u4FEE\u590D\u811A\u672C\u52A0\u8F7D\u5B8C\u6210");});
+// 修复脚本 - 解决页面显示和权限问题
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('运行修复脚本...');
+    
+    // 修复权限配置
+    setTimeout(function() {
+        if (window.PERMISSION_CONFIG) {
+            console.log('修复权限配置...');
+            
+            // 确保 availableTabs 存在
+            if (!window.PERMISSION_CONFIG.availableTabs) {
+                window.PERMISSION_CONFIG.availableTabs = [
+                    { id: "progressTab", name: "进度" },
+                    { id: "todoTab", name: "待办" },
+                    { id: "expenseTab", name: "支出" },
+                    { id: "requirementTab", name: "客户要求" },
+                    { id: "repairTab", name: "待维修" },
+                    { id: "workerTab", name: "工人" },
+                    { id: "quoteTab", name: "报价" },
+                    { id: "addRemoveTab", name: "增减项" },
+                    { id: "drawingTab", name: "图纸" },
+                    { id: "experienceTab", name: "经验总结" }
+                ];
+            }
+            
+            // 确保测试用户有权限
+            if (window.PERMISSION_CONFIG.userPermissions['1']) {
+                window.PERMISSION_CONFIG.userPermissions['1'].permissions.viewAllTabs = true;
+                window.PERMISSION_CONFIG.userPermissions['1'].permissions.viewAllSites = true;
+                window.PERMISSION_CONFIG.userPermissions['1'].permissions.addSite = true;
+                window.PERMISSION_CONFIG.userPermissions['1'].permissions.addItems = true;
+            }
+            
+            console.log('权限配置修复完成');
+        }
+    }, 500);
+    
+    // 监听登录成功
+    const originalLoginHandler = document.getElementById('loginForm').onsubmit;
+    document.getElementById('loginForm').onsubmit = async function(e) {
+        e.preventDefault();
+        
+        // 执行原始登录逻辑
+        if (originalLoginHandler) {
+            await originalLoginHandler.call(this, e);
+        }
+        
+        // 登录后重新初始化标签页
+        setTimeout(function() {
+            if (window.currentUser && typeof window.initTabs === 'function') {
+                console.log('登录后重新初始化标签页');
+                window.initTabs();
+            }
+        }, 100);
+    };
+    
+    console.log('修复脚本加载完成');
+});
