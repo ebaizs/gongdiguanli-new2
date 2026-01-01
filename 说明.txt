@@ -1,0 +1,330 @@
+云端分两个文件，一个大尺寸的，一个小尺寸的
+登录自动加载小尺寸的
+
+以下为备份的账号信息
+
+
+
+
+// 权限配置数据结构
+const PERMISSION_CONFIG = {
+    "userPermissions": {
+        "1": {
+            "name": "测试",
+            "description": "默认权限",
+            "permissions": {
+                "refreshCloudUsers": false,
+                "showPermissionManager": false,
+                "showChangeLog": false,
+                "viewAllSites": true,
+                "addSite": true,
+                "deleteSite": false,
+                "editAll": true,
+                "exportData": false,
+                "importData": false,
+                "viewLogs": false,
+                "cloudSync": true,
+                "editQuote": true,
+                "deleteItems": false,
+                "viewAllTabs": false,
+                "addItems": true,
+                "allowedSites": [],
+                "allowedTabs": []
+            }
+        },
+        "123": {
+            "name": "睿岩网络",
+            "description": "项目管理权限",
+            "permissions": {
+                "refreshCloudUsers": false,
+                "showPermissionManager": false,
+                "showChangeLog": false,
+                "saveToJsFile": false,
+                "downloadJsonData": false,
+                "loadFromJsFile": true,
+                "loadImagesZipOnly": true,
+                "deleteSite": true,
+                "deleteItems": true,
+                "addSite": true,
+                "addItems": true,
+                "editAll": true,
+                "viewAllSites": true,
+                "viewAllTabs": true,
+                "allowedSites": [],
+                "allowedTabs": [
+                    "progressTab",
+                    "todoTab",
+                    "expenseTab",
+                    "requirementTab",
+                    "repairTab",
+                    "workerTab",
+                    "addRemoveTab",
+                    "drawingTab",
+                    "experienceTab"
+                ],
+                "importData": true,
+                "exportData": true,
+                "cloudSync": true,
+                "isAdmin": true,
+                "viewLogs": true,
+                "editQuote": true
+            }
+        },
+        "qiyu": {
+            "name": "管理员",
+            "description": "独立权限配置",
+            "permissions": {
+                "viewAllSites": true,
+                "showPermissionManager": true,
+                "addSite": true,
+                "deleteSite": true,
+                "editAll": true,
+                "exportData": true,
+                "importData": true,
+                "viewLogs": true,
+                "cloudSync": true,
+                "editQuote": true,
+                "deleteItems": true,
+                "viewAllTabs": true,
+                "addItems": true,
+                "allowedSites": [],
+                "allowedTabs": []
+            }
+        },
+        "yonghu": {
+            "name": "普通用户",
+            "description": "默认权限",
+            "permissions": {
+                "viewAllSites": false,
+                "addSite": false,
+                "deleteSite": false,
+                "editAll": false,
+                "exportData": false,
+                "importData": true,
+                "viewLogs": false,
+                "cloudSync": true,
+                "editQuote": false,
+                "deleteItems": false,
+                "viewAllTabs": false,
+                "addItems": false,
+                "allowedSites": [
+                    "mjdl7258iqr5oqg36m",
+                    "mj6wmq8hapyz07j816r"
+                ],
+                "allowedTabs": [
+                    "progressTab",
+                    "todoTab",
+                    "requirementTab",
+                    "repairTab"
+                ]
+            }
+        },
+        "supervisor2": {
+            "name": "监理",
+            "description": "监督检查权限",
+            "permissions": {
+                "viewAllSites": false,
+                "addSite": true,
+                "deleteSite": false,
+                "editAll": true,
+                "exportData": false,
+                "importData": true,
+                "viewLogs": false,
+                "cloudSync": true,
+                "editQuote": true,
+                "deleteItems": false,
+                "viewAllTabs": true,
+                "addItems": true,
+                "allowedSites": [
+                    "mj6wmq8hapyz07j816r",
+                    "mj6atfvwzk4bg0qicw"
+                ],
+                "allowedTabs": []
+            }
+        },
+        "liutan": {
+            "name": "刘潭",
+            "description": "工人权限",
+            "permissions": {
+                "refreshCloudUsers": false,
+                "showPermissionManager": false,
+                "showChangeLog": false,
+                "saveToJsFile": false,
+                "downloadJsonData": false,
+                "loadFromJsFile": true,
+                "loadImagesZipOnly": true,
+                "deleteSite": false,
+                "deleteItems": false,
+                "addSite": false,
+                "addItems": false,
+                "editAll": false,
+                "viewAllSites": false,
+                "viewAllTabs": false,
+                "allowedSites": [
+                    "mj6wmq8hapyz07j816r",
+                    "mj6atfvwzk4bg0qicw",
+                    "site001"
+                ],
+                "allowedTabs": [
+                    "todoTab",
+                    "requirementTab",
+                    "dailyLogTab",
+                    "repairTab",
+                    "drawingTab"
+                ],
+                "importData": true,
+                "exportData": false,
+                "cloudSync": true
+            }
+        },
+        "wangjie": {
+            "name": "森与城11#王姐",
+            "description": "客户查看权限",
+            "permissions": {
+                "refreshCloudUsers": false,
+                "showPermissionManager": false,
+                "showChangeLog": false,
+                "saveToJsFile": false,
+                "downloadJsonData": false,
+                "loadFromJsFile": true,
+                "loadImagesZipOnly": true,
+                "deleteSite": false,
+                "deleteItems": false,
+                "addSite": false,
+                "addItems": true,
+                "editAll": false,
+                "viewAllSites": false,
+                "viewAllTabs": false,
+                "allowedSites": [
+                    "mj6atfvwzk4bg0qicw"
+                ],
+                "allowedTabs": [
+                    "todoTab",
+                    "requirementTab",
+                    "repairTab",
+                    "drawingTab"
+                ],
+                "importData": true,
+                "exportData": false,
+                "cloudSync": true
+            }
+        },
+        "han": {
+            "name": "森与城3#韩女士",
+            "description": "客户查看权限",
+            "permissions": {
+                "refreshCloudUsers": false,
+                "showPermissionManager": false,
+                "showChangeLog": false,
+                "saveToJsFile": false,
+                "downloadJsonData": false,
+                "loadFromJsFile": true,
+                "loadImagesZipOnly": true,
+                "deleteSite": false,
+                "deleteItems": false,
+                "addSite": false,
+                "addItems": true,
+                "editAll": false,
+                "viewAllSites": false,
+                "viewAllTabs": false,
+                "allowedSites": [
+                    "mjfvajd1eslvh0laapu"
+                ],
+                "allowedTabs": [
+                    "todoTab",
+                    "requirementTab",
+                    "repairTab",
+                    "drawingTab"
+                ],
+                "importData": true,
+                "exportData": false,
+                "cloudSync": true
+            }
+        }
+    },
+    "availableTabs": [
+        {
+            "id": "progressTab",
+            "name": "进度"
+        },
+        {
+            "id": "todoTab",
+            "name": "待办"
+        },
+        {
+            "id": "expenseTab",
+            "name": "支出"
+        },
+        {
+            "id": "requirementTab",
+            "name": "客户要求"
+        },
+        {
+            "id": "dailyLogTab",
+            "name": "日常记录"
+        },
+        {
+            "id": "repairTab",
+            "name": "待维修"
+        },
+        {
+            "id": "workerTab",
+            "name": "工人"
+        },
+        {
+            "id": "quoteTab",
+            "name": "报价"
+        },
+        {
+            "id": "addRemoveTab",
+            "name": "增减项"
+        },
+        {
+            "id": "drawingTab",
+            "name": "图纸"
+        },
+        {
+            "id": "experienceTab",
+            "name": "经验总结"
+        }
+    ]
+};
+
+// ==================== 权限管理系统 ====================
+// 内置用户列表
+const builtInUsers = [
+  {
+    "username": "1",
+    "password": "1234",
+    "name": "测试",
+    "isLocal": true,
+    "isAdmin": false
+  },
+  {
+    "username": "qiyu",
+    "password": "8418",
+    "name": "系统管理员",
+    "isLocal": true,
+    "isAdmin": true
+  },
+  {
+    "username": "123",
+    "password": "123",
+    "name": "睿岩网络"
+  },
+  {
+    "username": "liutan",
+    "password": "1234",
+    "name": "刘潭"
+  },
+  {
+    "username": "wangjie",
+    "password": "1234",
+    "name": "森与城11#王姐"
+  },
+  {
+    "username": "han",
+    "password": "1234",
+    "name": "森与城3#韩女士"
+  }
+];

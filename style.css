@@ -1805,3 +1805,20 @@ button, a, input, select, textarea {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+/* 日常记录样式 */
+.daily-log-textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 80px;
+}
+
+.daily-log-textarea:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+}
