@@ -1,14 +1,14 @@
 // ==================== 全局配置和常量定义 ====================
 const CLOUD_CONFIG = {
     // 要更改的内容如下：只改下方三个位置即可---------------------------------------
-    GIST_ID: '2769a9e28995f23cf9be60dd8f2891ca',
-    RAW_DATA_URL: 'https://gist.githubusercontent.com/ebaizs/2769a9e28995f23cf9be60dd8f2891ca/raw/my-lightdata.json',
-    RAW_USER_URL: 'https://gist.githubusercontent.com/ebaizs/2769a9e28995f23cf9be60dd8f2891ca/raw/my-zhanghao.js',
+    GIST_ID: '097f8adbb3790f3a95ba586a0867699b',
+    RAW_DATA_URL: 'https://gist.githubusercontent.com/ebaizs/097f8adbb3790f3a95ba586a0867699b/raw/your-lightdata.json',
+    RAW_USER_URL: 'https://gist.githubusercontent.com/ebaizs/097f8adbb3790f3a95ba586a0867699b/raw/your-zhanghao.js',
     
     // 文件命名约定（不要修改）
     DATA_FILES: {
-        CLOUD_JSON: 'my-lightdata.json',      // 这个可不改-工地数据文件
-        CLOUD_JSON: 'my-all.json', 
+        CLOUD_JSON: 'your-lightdata.json',      // 这个可不改-工地数据文件
+        CLOUD_JSON: 'your-all.json', 
         LOCAL_JS: 'shuju.js',
         LOCAL_LIGHT_JS: 'shuju_light.js',
         LOCAL_ZIP_IMAGES_FOLDER: 'shuju',
@@ -355,7 +355,7 @@ async function loadCloudUserData() {
 }
 
 /**
- * 从云端加载工地数据（my-data.json）
+ * 从云端加载工地数据（your-data.json）
  */
 async function loadDataFromPublicUrl() {
     try {
