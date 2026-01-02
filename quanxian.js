@@ -736,12 +736,12 @@ function showPermissionManager() {
     <!-- 第一行：两个按钮强制一行 -->
     <div style="display: flex; gap: 8px; margin-bottom: 8px;">
       <button class="btn btn-success" id="addUserBtn" style="padding: 5px 10px; font-size: 14px; flex: 1;">添加用户</button>
-        <button class="btn btn-primary" id="exportPermissionBtn" style="padding: 5px 10px; font-size: 14px; flex: 1;">将权限配置备份到云端</button>
+        <button class="btn btn-primary" id="exportPermissionBtn" style="padding: 5px 10px; font-size: 14px; flex: 1;">将权限配置更新到云端</button>
       
-    </div>
+    
     
     <!-- 第二行：刷新云端账户占满宽度 -->
-    <button class="btn btn-info" onclick="refreshCloudUsers()" style="padding: 5px 10px; font-size: 14px; width: 100%;">从云端载入权限配置</button>
+    <button class="btn btn-info" onclick="refreshCloudUsers()" style="padding: 5px 10px; font-size: 14px;  flex: 1">从云端加载最新的权限配置</button>
 </div>
             </div>
             
@@ -1409,7 +1409,7 @@ async function uploadToCloudDirectly(content) {
             body: JSON.stringify({
                 description: `权限配置文件更新 - ${new Date().toLocaleString()}`,
                 files: {
-                    "zhanghao.js": {  // 使用固定的文件名
+                    "my-zhanghao.js": {  // 使用固定的文件名
                         content: content
                     }
                 }

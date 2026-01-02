@@ -144,7 +144,7 @@ try {
                 setTimeout(async () => {
                     try {
                         // 直接使用 raw URL 加载轻量数据
-                        const lightDataUrl = CLOUD_CONFIG.RAW_DATA_URL.replace('your-data.json', 'my-lightdata.json');
+                        const lightDataUrl = CLOUD_CONFIG.RAW_DATA_URL.replace('your-lightdata.json');
                         console.log('自动加载轻量数据:', lightDataUrl);
                         
                         const response = await fetch(lightDataUrl, {

@@ -1,7 +1,4 @@
-// ==================== 依赖声明 ====================
 
-
-// ==================== GitHub Token 管理函数 ====================
 // （保留原有的 ensureGitHubToken 和 promptForGitHubToken 函数）
 // ==================== GitHub Token 管理函数 ====================
 
@@ -1051,10 +1048,10 @@ async function saveToGitHub() {
             body: JSON.stringify({
                 description: `工地数据备份 - ${new Date().toLocaleString()} (完整:${dataSizeCheck.humanSize})`,
                 files: {
-                    "all.json": {  // 完整数据文件
+                    "my-all.json": {  // 完整数据文件
                         content: fullDataString
                     },
-                    "your-lightdata.json": {  // 轻量数据文件
+                    "my-lightdata.json": {  // 轻量数据文件
                         content: lightDataString
                     }
                 }
@@ -1752,61 +1749,46 @@ function clearChangeLog() {
         addChangeLog('清空日志', '用户清空了所有更改日志');
     }
 }
-
 // 修改 yun.js 中的 loadFromGitHub 函数
 async function loadFromGitHub() {
     try {
-        // 获取 gist 信息查看有哪些文件
-        const gistResponse = await fetch(`https://gist.githubusercontent.com/ebaizs/097f8adbb3790f3a95ba586a0867699b/raw/`, {
-            cache: 'no-cache',
-            mode: 'cors'
-        });
+        console.log('直接从 raw URL 加载数据...');
         
-        if (!gistResponse.ok) {
-            throw new Error(`HTTP ${gistResponse.status}: ${gistResponse.statusText}`);
-        }
+        // 定义两个文件的 raw URL
+        const fullDataUrl = 'https://gist.githubusercontent.com/ebaizs/2769a9e28995f23cf9be60dd8f2891ca/raw/my-all.json';
+        const lightDataUrl = 'https://gist.githubusercontent.com/ebaizs/2769a9e28995f23cf9be60dd8f2891ca/raw/my-lightdata.json';
         
-        const gist = await gistResponse.json();
-        const files = gist.files;
+        let selectedFileUrl = null;
+        let selectedFileName = '';
         
-        // 检查有哪些数据文件可用
-        const availableFiles = {};
-        if (files['all.json']) availableFiles.full = files['all.json'];
-        if (files['your-lightdata.json']) availableFiles.light = files['your-lightdata.json'];
+        // 让用户选择加载哪个文件
+        const choice = prompt(
+            '云端有两个数据文件：\n\n' +
+            '1. my-all.json - 完整数据（含图片）\n' +
+            '2. my-lightdata.json - 轻量数据（不含图片）\n\n' +
+            '请输入数字选择要还原的数据（1 或 2）：'
+        );
         
-        if (Object.keys(availableFiles).length === 0) {
-            throw new Error('云端没有找到数据文件');
-        }
-        
-        let selectedFile = null;
-        
-        // 如果有多个文件，让用户选择
-        if (availableFiles.full && availableFiles.light) {
-            const choice = prompt(
-                '云端有两个数据文件：\n\n' +
-                '1. all.json - 完整数据（含图片）\n' +
-                '2. your-lightdata.json - 轻量数据（不含图片）\n\n' +
-                '请输入数字选择要还原的数据（1 或 2）：'
-            );
-            
-            if (choice === '1') {
-                selectedFile = availableFiles.full;
-            } else if (choice === '2') {
-                selectedFile = availableFiles.light;
-            } else {
-                alert('选择无效，已取消');
-                return false;
-            }
-        } else if (availableFiles.full) {
-            selectedFile = availableFiles.full;
+        if (choice === '1') {
+            selectedFileUrl = fullDataUrl;
+            selectedFileName = 'my-all.json';
+        } else if (choice === '2') {
+            selectedFileUrl = lightDataUrl;
+            selectedFileName = 'my-lightdata.json';
         } else {
-            selectedFile = availableFiles.light;
+            alert('选择无效，已取消');
+            return false;
         }
         
-        // 加载选中的文件
-        const rawResponse = await fetch(selectedFile.raw_url, {
+        console.log('正在加载文件:', selectedFileName);
+        
+        // 直接通过 raw URL 加载数据
+        const rawResponse = await fetch(selectedFileUrl, {
             cache: 'no-cache',
-            mode: 'cors'
+            mode: 'cors',
+            headers: {
+                'Accept': 'application/json'
+            }
         });
         
         if (!rawResponse.ok) {
@@ -1820,38 +1802,83 @@ async function loadFromGitHub() {
         
         console.log('从云端加载数据成功，站点数量:', cloudSites.length);
         
+        if (cloudSites.length === 0) {
+            alert('云端数据为空，没有可加载的数据！');
+            return false;
+        }
+        
+        // 确认是否合并数据（非覆盖）
+        const confirmMessage = `云端有 ${cloudSites.length} 个工地数据，${cloudChangeLog.length} 条更改日志。\n\n` +
+                              '这将把云端数据合并到本地（不会删除本地数据）。\n' +
+                              '是否继续？';
+        
+        if (!confirm(confirmMessage)) {
+            return false;
+        }
+        
         // 合并工地数据
-        mergeCloudData(cloudSites, cloudChangeLog);
-        
-        // 保存数据
-        if (typeof window.saveData === 'function') {
-            window.saveData();
-        }
-        
-        // 刷新显示
-        if (typeof window.renderSiteList === 'function') {
-            window.renderSiteList();
-        }
-        
-        showSimpleToast('云端数据已成功加载并合并到本地！');
-        
-        // 刷新当前工地
-        if (window.currentSiteId && window.sites) {
-            const site = window.sites.find(s => s.id === window.currentSiteId);
-            if (site && typeof window.loadSiteData === 'function') {
-                window.loadSiteData(site);
+        if (typeof window.mergeCloudData === 'function') {
+            const result = window.mergeCloudData(cloudSites, cloudChangeLog);
+            
+            // 保存数据
+            if (typeof window.saveData === 'function') {
+                window.saveData();
             }
+            
+            // 刷新显示
+            if (typeof window.renderSiteList === 'function') {
+                window.renderSiteList();
+            }
+            
+            let message = `云端数据已成功加载并合并到本地！\n\n` +
+                         `新增工地: ${result.addedCount} 个\n` +
+                         `更新工地: ${result.updatedCount} 个`;
+            
+            if (result.imageCount > 0) {
+                message += `\n包含图片: ${result.imageCount} 个`;
+            }
+            
+            if (selectedFileName === 'my-lightdata.json') {
+                message += '\n\n注意：这是轻量数据，不含图片的base64编码。';
+                message += '\n如需加载图片，请使用"加载图片包"功能。';
+            }
+            
+            alert(message);
+            
+            // 刷新当前工地
+            if (window.currentSiteId && window.sites) {
+                const site = window.sites.find(s => s.id === window.currentSiteId);
+                if (site && typeof window.loadSiteData === 'function') {
+                    window.loadSiteData(site);
+                }
+            }
+            
+            // 添加更改日志
+            if (typeof window.addChangeLog === 'function') {
+                window.addChangeLog('从云端加载数据', `从云端${selectedFileName}加载并合并了数据`);
+            }
+            
+            return true;
+        } else {
+            throw new Error('mergeCloudData 函数未找到');
         }
-        
-        return true;
         
     } catch (error) {
         console.error('从云端加载失败:', error);
-        showSimpleToast('云端加载失败: ' + error.message, 'error');
+        
+        let errorMsg = '云端加载失败: ';
+        if (error.message.includes('Failed to fetch')) {
+            errorMsg = '网络连接失败，请检查网络连接。';
+        } else if (error.message.includes('JSON')) {
+            errorMsg = '云端数据格式错误，请检查云端文件。';
+        } else {
+            errorMsg += error.message;
+        }
+        
+        alert(errorMsg);
         return false;
     }
 }
-
 // 添加手动刷新云端账户功能
 function refreshCloudUsers() {
     if (confirm('确定要刷新云端账户数据吗？当前登录状态不会改变。')) {
