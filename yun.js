@@ -1048,10 +1048,10 @@ async function saveToGitHub() {
             body: JSON.stringify({
                 description: `工地数据备份 - ${new Date().toLocaleString()} (完整:${dataSizeCheck.humanSize})`,
                 files: {
-                    "my-all.json": {  // 完整数据文件
+                    "your-all.json": {  // 完整数据文件
                         content: fullDataString
                     },
-                    "my-lightdata.json": {  // 轻量数据文件
+                    "your-lightdata.json": {  // 轻量数据文件
                         content: lightDataString
                     }
                 }
@@ -1755,8 +1755,8 @@ async function loadFromGitHub() {
         console.log('直接从 raw URL 加载数据...');
         
         // 定义两个文件的 raw URL
-        const fullDataUrl = 'https://gist.githubusercontent.com/ebaizs/2769a9e28995f23cf9be60dd8f2891ca/raw/my-all.json';
-        const lightDataUrl = 'https://gist.githubusercontent.com/ebaizs/2769a9e28995f23cf9be60dd8f2891ca/raw/my-lightdata.json';
+        const fullDataUrl = 'https://gist.githubusercontent.com/ebaizs/097f8adbb3790f3a95ba586a0867699b/raw/your-all.json';
+        const lightDataUrl = 'https://gist.githubusercontent.com/ebaizs/097f8adbb3790f3a95ba586a0867699b/raw/your-lightdata.json';
         
         let selectedFileUrl = null;
         let selectedFileName = '';
@@ -1764,17 +1764,17 @@ async function loadFromGitHub() {
         // 让用户选择加载哪个文件
         const choice = prompt(
             '云端有两个数据文件：\n\n' +
-            '1. my-all.json - 完整数据（含图片）\n' +
-            '2. my-lightdata.json - 轻量数据（不含图片）\n\n' +
+            '1. your-all.json - 完整数据（含图片）\n' +
+            '2. your-lightdata.json - 轻量数据（不含图片）\n\n' +
             '请输入数字选择要还原的数据（1 或 2）：'
         );
         
         if (choice === '1') {
             selectedFileUrl = fullDataUrl;
-            selectedFileName = 'my-all.json';
+            selectedFileName = 'your-all.json';
         } else if (choice === '2') {
             selectedFileUrl = lightDataUrl;
-            selectedFileName = 'my-lightdata.json';
+            selectedFileName = 'your-lightdata.json';
         } else {
             alert('选择无效，已取消');
             return false;
@@ -1838,7 +1838,7 @@ async function loadFromGitHub() {
                 message += `\n包含图片: ${result.imageCount} 个`;
             }
             
-            if (selectedFileName === 'my-lightdata.json') {
+            if (selectedFileName === 'your-lightdata.json') {
                 message += '\n\n注意：这是轻量数据，不含图片的base64编码。';
                 message += '\n如需加载图片，请使用"加载图片包"功能。';
             }
