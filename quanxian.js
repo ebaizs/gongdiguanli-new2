@@ -1409,7 +1409,7 @@ async function uploadToCloudDirectly(content) {
             body: JSON.stringify({
                 description: `权限配置文件更新 - ${new Date().toLocaleString()}`,
                 files: {
-                    "my-zhanghao.js": {  // 使用固定的文件名
+                    "your-zhanghao.js": {  // 使用固定的文件名
                         content: content
                     }
                 }
