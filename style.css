@@ -1,7 +1,9 @@
+/* style.css */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+     max-height: 1000000px; /* 防止某些浏览器限制高度 */
 }
 :root {    
     --primary-color: #4361ee;
@@ -116,6 +118,12 @@ body {
     min-height: 100vh;
     background: var(--bg-secondary);
     position: relative;
+    min-height: 100vh;
+    min-height: -webkit-fill-available; /* 移动端兼容 */
+    display: flex;
+    
+    flex-direction: column;
+    background: var(--bg-secondary);
 }
 
 
@@ -451,9 +459,13 @@ margin-top: 8px !important;
 
 /* 主内容区 */
 .main-content {
-    padding: 6x;
-    width: 100%; /* 确保宽度100% */    
-    box-sizing: border-box; /* 确保内边距包含在宽度内 */
+    flex: 1; /* 占据剩余空间 */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* 隐藏溢出，子元素处理滚动 */
+    padding: 6px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 /* 导入导出区域 */
@@ -557,6 +569,7 @@ margin-top: 8px !important;
     border: 1px solid var(--border-color);
     width: 100%; /* 添加宽度100% */
     box-sizing: border-box; /* 确保内边距包含在宽度内 */
+    flex-shrink: 0; /* 防止被压缩 */
 }
 
 #currentUser {
@@ -593,18 +606,47 @@ margin-top: 8px !important;
     min-height: 50px;
     display: block;
     box-sizing: border-box;
+    flex-shrink: 0; /* 防止被压缩 */
 }
 
 .add-site-btn:hover {
     background: #27ae60;
 }
 
-/* 工地卡片 */
-.site-list {
+/* 修改工地列表容器 */
+.site-list-container {
+    flex: 1; /* 占据剩余空间 */
+    overflow-y: auto; /* 允许垂直滚动 */
+    -webkit-overflow-scrolling: touch; /* 移动端平滑滚动 */
     margin-bottom: 20px;
-    width: 100%; /* 确保宽度100% */
+    width: 100%;
+    min-height: 200px; /* 最小高度 */
+    position: relative; /* 相对定位 */
 }
 
+/* 修改工地列表 */
+.site-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* 卡片间距 */
+    padding: 0 4px; /* 添加内边距 */
+    width: 100%;
+    min-height: 100%; /* 最小高度100% */
+    box-sizing: border-box;
+}
+
+/* 如果没有工地数据时的提示 */
+.site-list:empty::before {
+    content: '暂无工地数据，请添加工地';
+    display: block;
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-light);
+    font-size: 14px;
+    width: 100%;
+}
+
+/* 工地卡片 */
 .site-card {
     background: var(--card-bg);
     border: 1px solid var(--border-color);
@@ -618,6 +660,7 @@ margin-top: 8px !important;
     display: block;
     width: 100%; /* 确保宽度100% */
     box-sizing: border-box; /* 确保内边距包含在宽度内 */
+    flex-shrink: 0; /* 防止卡片被压缩 */
 }
 
 .site-card:active {
@@ -908,6 +951,7 @@ margin-top: 8px !important;
     font-size: 12px;
     min-width: 500px;
     display: table;
+    max-height: none !important;
 }
 
 .data-table th,
@@ -1732,6 +1776,21 @@ margin-top: 8px !important;
         font-size: 10px;
         min-height: 22px;
     }
+    
+    /* 移动端工地列表容器优化 */
+    .site-list-container {
+        margin-bottom: 10px;
+        padding-bottom: 20px; /* 添加底部内边距，确保最后一个卡片可见 */
+    }
+    
+    .site-list {
+        gap: 10px;
+        padding: 0 2px;
+    }
+    
+    .site-card {
+        padding: 14px;
+    }
 }
 
 /* 平板优化 */
@@ -1739,6 +1798,7 @@ margin-top: 8px !important;
     .container {
         max-width: 100%;
         margin: 0 auto;
+         min-height: 100vw; /
     }
     
     .modal-content {
@@ -1765,7 +1825,7 @@ margin-top: 8px !important;
         margin: 20px auto;
         border-radius: 12px;
         box-shadow: 0 4px 20px var(--shadow-color);
-        min-height: auto;
+         min-height: 100vw; /
     }
     
     .modal {

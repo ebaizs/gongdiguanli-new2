@@ -39,43 +39,40 @@
                 <h2>装饰项目管理系统</h2>
                 <span>山东睿岩网络.技术支持</span>
             </div>
-  <!-- 在 index.html 的顶部按钮部分，确保配置管理按钮存在 -->
-<div class="header-top-buttons">
-    <!-- 单一云端备份按钮 -->
-    <button class="top-btn btn-success" onclick="saveToGitHub()" title="备份完整数据到云端（包含图片）">
-        备份至云端
-    </button>
-    
-    <!-- 云端加载按钮 -->
-    <button class="top-btn btn-warning" onclick="loadFromGitHub()" title="从云端加载数据（合并）">
-        从云端加载
-    </button>
-    
-    <!-- 本地备份按钮 -->
-    <button class="top-btn btn-danger" onclick="saveToJsFile()" title="备份完整数据到本地ZIP文件">
-        备份数据至本地
-    </button>
-    
-    <!-- 本地加载按钮 -->
-    <button class="top-btn btn-info" onclick="loadFromJsFile()" title="从ZIP文件加载数据（覆盖）">
-        从文件加载
-    </button>
-    
-    
-    
-    <!-- 权限管理（仅管理员可见） -->
-    <button class="top-btn btn-danger permission-manager-btn" onclick="showPermissionManager()" title="权限管理">
-        权限管理
-    </button>
-    
-    <!-- 更改日志（仅管理员可见） -->
-    <button class="top-btn btn-primary change-log-btn" onclick="showChangeLog()">更改日志</button>
-</div>
+            <!-- 在 index.html 的顶部按钮部分，确保配置管理按钮存在 -->
+            <div class="header-top-buttons">
+                <!-- 单一云端备份按钮 -->
+                <button class="top-btn btn-success" onclick="saveToGitHub()" title="备份完整数据到云端（包含图片）">
+                    备份至云端
+                </button>
+                
+                <!-- 云端加载按钮 -->
+                <button class="top-btn btn-warning" onclick="loadFromGitHub()" title="从云端加载数据（合并）">
+                    从云端加载
+                </button>
+                
+                <!-- 本地备份按钮 -->
+                <button class="top-btn btn-danger" onclick="saveToJsFile()" title="备份完整数据到本地ZIP文件">
+                    备份数据至本地
+                </button>
+                
+                <!-- 本地加载按钮 -->
+                <button class="top-btn btn-info" onclick="loadFromJsFile()" title="从ZIP文件加载数据（覆盖）">
+                    从文件加载
+                </button>
+                
+                <!-- 权限管理（仅管理员可见） -->
+                <button class="top-btn btn-danger permission-manager-btn" onclick="showPermissionManager()" title="权限管理">
+                    权限管理
+                </button>
+                
+                <!-- 更改日志（仅管理员可见） -->
+                <button class="top-btn btn-primary change-log-btn" onclick="showChangeLog()">更改日志</button>
+            </div>
+        </div>
+        
         <!-- 主内容区 -->
         <div class="main-content" id="mainContent">
-           
-      
-
             <!-- 用户信息和退出按钮 -->
             <div class="user-info-section">
                 <span id="currentUser"></span>
@@ -85,10 +82,12 @@
             <!-- 添加工地按钮 -->
             <button class="add-site-btn" onclick="showAddSiteModal()">+ 添加工地</button>
 
-            <!-- 工地列表 -->
-            <div class="site-list" id="siteList"></div>
+            <!-- 工地列表容器 -->
+            <div class="site-list-container">
+                <div class="site-list" id="siteList"></div>
+            </div>
         </div>
-
+ 
         <!-- 工地详情模态框 -->
         <div class="modal" id="siteModal">
             <div class="modal-content">
@@ -137,7 +136,7 @@
 
                     <!-- 待办事项标签页 -->
                     <div class="tab-content" id="todoTab">
-                        <h4>待办事项</h4>
+                        
                         <div class="form-row" style="flex-wrap: wrap;">
                             <div class="form-group" style="flex: 0 0 100%;">
                                 <label>事项名称</label>
@@ -154,41 +153,40 @@
                         </div>
                     </div>
 
-                  <!-- 修改支出标签页的这部分代码 -->
-<div class="tab-content" id="expenseTab">
-    <h4>支出记录</h4>
-    
-    <!-- 其他支出相关代码保持不变 -->
-    <div class="form-row">
-        <div class="form-group">
-            <label>支出项目</label>
-            <input type="text" id="expenseItem" maxlength="8" placeholder="8字符">
-        </div>
-        <div class="form-group">
-            <label>  单位</label>
-            <input type="text" id="expenseUnit" maxlength="6" value="项" placeholder="单位" readonly>
-        </div>
-    </div>
-    <div class="form-row">
-        <div class="form-group amount-group">
-            <label>金额</label>
-            <input type="number" id="expenseAmount" min="0" step="0.01" placeholder="金额">
-        </div>
-        <div class="form-group note-group">
-            <label>备注说明</label>
-            <input type="text" id="expenseNote" maxlength="20" class="input-note" placeholder="20字符以内">
-        </div>
-    </div>
-    <button class="btn btn-success" onclick="addExpense()">添加支出</button>
-    <div class="data-table-container">
-        <div id="expenseList"></div>
-    </div>
-</div>
-                   
+                    <!-- 修改支出标签页的这部分代码 -->
+                    <div class="tab-content" id="expenseTab">
+                       
+                        
+                        <!-- 其他支出相关代码保持不变 -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>支出项目</label>
+                                <input type="text" id="expenseItem" maxlength="8" placeholder="8字符">
+                            </div>
+                            <div class="form-group">
+                                <label>  单位</label>
+                                <input type="text" id="expenseUnit" maxlength="6" value="项" placeholder="单位" readonly>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group amount-group">
+                                <label>金额</label>
+                                <input type="number" id="expenseAmount" min="0" step="0.01" placeholder="金额">
+                            </div>
+                            <div class="form-group note-group">
+                                <label>备注说明</label>
+                                <input type="text" id="expenseNote" maxlength="20" class="input-note" placeholder="20字符以内">
+                            </div>
+                        </div>
+                        <button class="btn btn-success" onclick="addExpense()">添加支出</button>
+                        <div class="data-table-container">
+                            <div id="expenseList"></div>
+                        </div>
+                    </div>
 
                     <!-- 客户要求标签页 -->
                     <div class="tab-content" id="requirementTab">
-                        <h4>客户要求</h4>
+                        
                         <div class="form-row">
                             <div class="form-group">
                                 <label>要求内容（15字符以下）</label>
@@ -216,7 +214,7 @@
 
                     <!-- 待维修标签页 -->
                     <div class="tab-content" id="repairTab">
-                        <h4>待维修项</h4>
+                       
                         <div class="form-row">
                             <div class="form-group">
                                 <label>维修内容（10字符以下）</label>
@@ -241,30 +239,28 @@
                         </div>
                     </div>
 
-
-<!-- 日常记录标签页 -->
-<div class="tab-content" id="dailyLogTab">
-    <h4>日常记录</h4>
-    <div class="form-group">
-        <label>记录内容（50字符以内）</label>
-        <textarea id="dailyLogContent" rows="3" class="input-note" maxlength="50" 
-                  placeholder="请输入日常记录内容，50字符以内..."></textarea>
-    </div>
-    <div class="form-group">
-        <label>备注说明（20字符以内）</label>
-        <input type="text" id="dailyLogNote" maxlength="20" class="input-note" 
-               placeholder="20字符以内备注说明">
-    </div>
-    <button class="btn btn-success" onclick="addDailyLog()">添加记录</button>
-    <div class="data-table-container">
-        <div id="dailyLogList"></div>
-    </div>
-</div>
-
+                    <!-- 日常记录标签页 -->
+                    <div class="tab-content" id="dailyLogTab">
+                       
+                        <div class="form-group">
+                            <label>记录内容（50字符以内）</label>
+                            <textarea id="dailyLogContent" rows="3" class="input-note" maxlength="50" 
+                                      placeholder="请输入日常记录内容，50字符以内..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>备注说明（20字符以内）</label>
+                            <input type="text" id="dailyLogNote" maxlength="20" class="input-note" 
+                                   placeholder="20字符以内备注说明">
+                        </div>
+                        <button class="btn btn-success" onclick="addDailyLog()">添加记录</button>
+                        <div class="data-table-container">
+                            <div id="dailyLogList"></div>
+                        </div>
+                    </div>
 
                     <!-- 施工工人标签页 -->
                     <div class="tab-content" id="workerTab">
-                        <h4>施工工人</h4>
+                        
                         <div class="form-row">
                             <div class="form-group">
                                 <label>姓名</label>
@@ -297,7 +293,7 @@
 
                     <!-- 报价管理标签页 -->
                     <div class="tab-content" id="quoteTab">
-                        <h4>报价管理</h4>
+                       
                         <div class="form-row quote-row">
                             <div class="form-group">
                                 <label>基础装修报价</label>
@@ -366,7 +362,7 @@
 
                     <!-- 增减项标签页 -->
                     <div class="tab-content" id="addRemoveTab">
-                        <h4>增减项</h4>
+
                         <div class="form-row">
                             <div class="form-group">
                                 <label>项目名称</label>
@@ -406,9 +402,9 @@
 
                     <!-- 图纸管理标签页 -->
                     <div class="tab-content" id="drawingTab">
-                        <h4>图纸管理</h4>
+                       
                         <div class="form-group">
-                            <label>图纸类型</label>
+                            <label>图纸管理（选择图纸类型）</label>
                             <select id="drawingType">
                                 <option value="design">设计图纸</option>
                                 <option value="quote">报价表</option>
@@ -436,7 +432,7 @@
 
                     <!-- 经验总结标签页 -->
                     <div class="tab-content" id="experienceTab">
-                        <h4>经验总结</h4>
+                        
                         <div class="form-group">
                             <label>经验总结内容</label>
                             <textarea id="experienceContent" rows="3" class="input-note" placeholder="请输入项目经验总结..."></textarea>
@@ -451,7 +447,7 @@
         <!-- 更改日志页面 -->
         <div class="change-log-page" id="changeLogPage">
             <div class="modal-header">
-                <h3>更改日志</h3>
+               
                 <button class="close-btn" onclick="hideChangeLog()">&times;</button>
             </div>
             
@@ -477,15 +473,15 @@
             <img id="viewerImage" src="" alt="查看图片">
         </div>
     </div>
-<!-- 先加载基础库 -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-
-<!-- 然后加载公共基础文件 -->
-<script src="base.js"></script>
-
-<script src="base.js"></script>       <!-- 基础函数 -->
-<script src="quanxian.js"></script>   <!-- 权限系统 -->
-<script src="yun.js"></script>        <!-- 云功能 -->
-<script src="app.js"></script>        <!-- 主应用 -->
-<script src="fix.js"></script>        <!-- 修复脚本 -->
+    
+    <!-- 先加载基础库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    
+    <!-- 然后加载公共基础文件 -->
+    <script src="base.js"></script>
+    <script src="quanxian.js"></script>   <!-- 权限系统 -->
+    <script src="yun.js"></script>        <!-- 云功能 -->
+    <script src="app.js"></script>        <!-- 主应用 -->
+    <script src="fix.js"></script>        <!-- 修复脚本 -->
+</body>
 </html>
