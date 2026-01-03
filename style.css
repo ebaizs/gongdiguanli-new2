@@ -86,11 +86,7 @@
     }
 }
 
-/* 隐藏特定的按钮 */
-.header-top-buttons [onclick*="refreshCloudUsers"],
-.header-top-buttons [onclick*="manageGithubConfig"] {
-    display: none !important;
-}
+
 
 
 /* 基础布局 */
@@ -446,11 +442,7 @@ margin-top: 8px !important;
     opacity: 0.9;
     transform: translateY(-1px);
 }
-/* 隐藏特定的按钮 */
-.header-top-buttons [onclick*="refreshCloudUsers"],
-.header-top-buttons [onclick*="manageGithubConfig"] {
-    display: none !important;
-}
+
 .top-btn.btn-info { background: var(--info-color) !important; color: white !important; }
 .top-btn.btn-warning { background: var(--warning-color) !important; color: white !important; }
 .top-btn.btn-secondary { background: var(--text-light) !important; color: white !important; }
@@ -1798,7 +1790,7 @@ margin-top: 8px !important;
     .container {
         max-width: 100%;
         margin: 0 auto;
-         min-height: 100vw; /
+         min-height: 100vw; 
     }
     
     .modal-content {
@@ -1825,7 +1817,7 @@ margin-top: 8px !important;
         margin: 20px auto;
         border-radius: 12px;
         box-shadow: 0 4px 20px var(--shadow-color);
-         min-height: 100vw; /
+         min-height: 100vw; 
     }
     
     .modal {

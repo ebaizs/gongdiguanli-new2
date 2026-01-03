@@ -21,8 +21,12 @@
             <h2>装饰 项目管理系统</h2>
             
             <form id="loginForm">
-                <input type="text" id="username" placeholder="用户名" required>
-                <input type="password" id="password" placeholder="密码" required>
+                <label for="username" class="sr-only">用户名</label>
+                <input type="text" id="username" name="username" placeholder="用户名" required autocomplete="username">
+                
+                <label for="password" class="sr-only">密码</label>
+                <input type="password" id="password" name="password" placeholder="密码" required autocomplete="current-password">
+                
                 <button type="submit">登录</button> 
             
                 <p> 山东睿岩网络 · 技术支持13515383180</p>             
@@ -93,7 +97,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 id="modalTitle">工地详情</h3>
-                    <button class="close-btn" onclick="closeSiteModal()">&times;</button>
+                    <button class="close-btn" onclick="closeSiteModal()" aria-label="关闭">&times;</button>
                 </div>
 
                 <!-- 标签页容器 -->
@@ -109,22 +113,22 @@
                     <!-- 进度标签页 -->
                     <div class="tab-content" id="progressTab">
                         <div class="form-group">
-                            <label>工地名称</label>
-                            <input type="text" id="siteName" class="form-control" maxlength="25" placeholder="25字符以内">
+                            <label for="siteName">工地名称</label>
+                            <input type="text" id="siteName" name="siteName" class="form-control" maxlength="25" placeholder="25字符以内" autocomplete="off">
                         </div>
                         <div class="form-row">
                             <div class="form-group">
-                                <label>开工时间</label>
-                                <input type="date" id="startDate">
+                                <label for="startDate">开工时间</label>
+                                <input type="date" id="startDate" name="startDate" autocomplete="off">
                             </div>
                             <div class="form-group">
-                                <label>计划完工时间</label>
-                                <input type="date" id="endDate">
+                                <label for="endDate">计划完工时间</label>
+                                <input type="date" id="endDate" name="endDate" autocomplete="off">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label>当前进度: <span id="progressValue">0</span>%</label>
-                            <input type="range" id="progress" min="0" max="100" value="0" oninput="updateProgressValue(this.value)">
+                            <label for="progress">当前进度: <span id="progressValue">0</span>%</label>
+                            <input type="range" id="progress" name="progress" min="0" max="100" value="0" oninput="updateProgressValue(this.value)">
                         </div>
                         
                         <div class="progress-bar">
@@ -139,12 +143,12 @@
                         
                         <div class="form-row" style="flex-wrap: wrap;">
                             <div class="form-group" style="flex: 0 0 100%;">
-                                <label>事项名称</label>
-                                <input type="text" id="todoItem" maxlength="20" placeholder="20字符以内">
+                                <label for="todoItem">事项名称</label>
+                                <input type="text" id="todoItem" name="todoItem" maxlength="20" placeholder="20字符以内" autocomplete="off">
                             </div>
                             <div class="form-group" style="flex: 0 0 100%; margin-top: 15px;">
-                                <label>备注说明（20字符以内）</label>
-                                <input type="text" id="todoNote" maxlength="20" class="input-note" placeholder="20字符以内备注说明">
+                                <label for="todoNote">备注说明（20字符以内）</label>
+                                <input type="text" id="todoNote" name="todoNote" maxlength="20" class="input-note" placeholder="20字符以内备注说明" autocomplete="off">
                             </div>
                         </div>
                         <button class="btn btn-success" onclick="addTodo()">添加待办</button>
@@ -153,29 +157,29 @@
                         </div>
                     </div>
 
-                    <!-- 修改支出标签页的这部分代码 -->
+                    <!-- 支出标签页 -->
                     <div class="tab-content" id="expenseTab">
                        
                         
                         <!-- 其他支出相关代码保持不变 -->
                         <div class="form-row">
                             <div class="form-group">
-                                <label>支出项目</label>
-                                <input type="text" id="expenseItem" maxlength="8" placeholder="8字符">
+                                <label for="expenseItem">支出项目</label>
+                                <input type="text" id="expenseItem" name="expenseItem" maxlength="8" placeholder="8字符" autocomplete="off">
                             </div>
                             <div class="form-group">
-                                <label>  单位</label>
-                                <input type="text" id="expenseUnit" maxlength="6" value="项" placeholder="单位" readonly>
+                                <label for="expenseUnit">单位</label>
+                                <input type="text" id="expenseUnit" name="expenseUnit" maxlength="6" value="项" placeholder="单位" readonly autocomplete="off">
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group amount-group">
-                                <label>金额</label>
-                                <input type="number" id="expenseAmount" min="0" step="0.01" placeholder="金额">
+                                <label for="expenseAmount">金额</label>
+                                <input type="number" id="expenseAmount" name="expenseAmount" min="0" step="0.01" placeholder="金额" autocomplete="off">
                             </div>
                             <div class="form-group note-group">
-                                <label>备注说明</label>
-                                <input type="text" id="expenseNote" maxlength="20" class="input-note" placeholder="20字符以内">
+                                <label for="expenseNote">备注说明</label>
+                                <input type="text" id="expenseNote" name="expenseNote" maxlength="20" class="input-note" placeholder="20字符以内" autocomplete="off">
                             </div>
                         </div>
                         <button class="btn btn-success" onclick="addExpense()">添加支出</button>
@@ -189,12 +193,12 @@
                         
                         <div class="form-row">
                             <div class="form-group">
-                                <label>要求内容（15字符以下）</label>
-                                <input type="text" id="requirementContent" maxlength="15" class="input-content" placeholder="15字符以下要求内容">
+                                <label for="requirementContent">要求内容（15字符以下）</label>
+                                <input type="text" id="requirementContent" name="requirementContent" maxlength="15" class="input-content" placeholder="15字符以下要求内容" autocomplete="off">
                             </div>
                             <div class="form-group">
-                                <label>要求类型</label>
-                                <select id="requirementType">
+                                <label for="requirementType">要求类型</label>
+                                <select id="requirementType" name="requirementType">
                                     <option value="need">需要</option>
                                     <option value="exclude">排除</option>
                                 </select>
@@ -202,8 +206,8 @@
                         </div>
                         <div class="form-row">
                             <div class="form-group" style="flex: 0 0 100%;">
-                                <label>备注说明（20字符以下）</label>
-                                <input type="text" id="requirementNote" maxlength="20" class="input-note" placeholder="20字符以下备注说明">
+                                <label for="requirementNote">备注说明（20字符以下）</label>
+                                <input type="text" id="requirementNote" name="requirementNote" maxlength="20" class="input-note" placeholder="20字符以下备注说明" autocomplete="off">
                             </div>
                         </div>
                         <button class="btn btn-success" onclick="addRequirement()">添加要求</button>
@@ -217,19 +221,19 @@
                        
                         <div class="form-row">
                             <div class="form-group">
-                                <label>维修内容（10字符以下）</label>
-                                <input type="text" id="repairContent" maxlength="10" class="input-content" placeholder="10字符以下维修内容">
+                                <label for="repairContent">维修内容（10字符以下）</label>
+                                <input type="text" id="repairContent" name="repairContent" maxlength="10" class="input-content" placeholder="10字符以下维修内容" autocomplete="off">
                             </div>
                             <div class="form-group">
-                                <label>备注说明（20字符以下）</label>
-                                <input type="text" id="repairNote" maxlength="20" class="input-note" placeholder="20字符以下备注说明">
+                                <label for="repairNote">备注说明（20字符以下）</label>
+                                <input type="text" id="repairNote" name="repairNote" maxlength="20" class="input-note" placeholder="20字符以下备注说明" autocomplete="off">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label>上传照片</label>
+                            <label for="repairPhoto">上传照片</label>
                             <div class="file-upload">
-                                <input type="file" id="repairPhoto" accept="image/*" onchange="previewRepairPhoto(event)">
-                                <label class="file-upload-label">点击上传维修照片</label>
+                                <input type="file" id="repairPhoto" name="repairPhoto" accept="image/*" onchange="previewRepairPhoto(event)">
+                                <label class="file-upload-label" for="repairPhoto">点击上传维修照片</label>
                             </div>
                             <div id="repairPhotoPreview"></div>
                         </div>
@@ -243,14 +247,14 @@
                     <div class="tab-content" id="dailyLogTab">
                        
                         <div class="form-group">
-                            <label>记录内容（50字符以内）</label>
-                            <textarea id="dailyLogContent" rows="3" class="input-note" maxlength="50" 
-                                      placeholder="请输入日常记录内容，50字符以内..."></textarea>
+                            <label for="dailyLogContent">记录内容（50字符以内）</label>
+                            <textarea id="dailyLogContent" name="dailyLogContent" rows="3" class="input-note" maxlength="50" 
+                                      placeholder="请输入日常记录内容，50字符以内..." autocomplete="off"></textarea>
                         </div>
                         <div class="form-group">
-                            <label>备注说明（20字符以内）</label>
-                            <input type="text" id="dailyLogNote" maxlength="20" class="input-note" 
-                                   placeholder="20字符以内备注说明">
+                            <label for="dailyLogNote">备注说明（20字符以内）</label>
+                            <input type="text" id="dailyLogNote" name="dailyLogNote" maxlength="20" class="input-note" 
+                                   placeholder="20字符以内备注说明" autocomplete="off">
                         </div>
                         <button class="btn btn-success" onclick="addDailyLog()">添加记录</button>
                         <div class="data-table-container">
@@ -263,27 +267,27 @@
                         
                         <div class="form-row">
                             <div class="form-group">
-                                <label>姓名</label>
-                                <input type="text" id="workerName" maxlength="8" placeholder="8字符">
+                                <label for="workerName">姓名</label>
+                                <input type="text" id="workerName" name="workerName" maxlength="8" placeholder="8字符" autocomplete="off">
                             </div>
                             <div class="form-group">
-                                <label>工种</label>
-                                <input type="text" id="workerType" maxlength="6" placeholder="6字符">
+                                <label for="workerType">工种</label>
+                                <input type="text" id="workerType" name="workerType" maxlength="6" placeholder="6字符" autocomplete="off">
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
-                                <label>开始时间</label>
-                                <input type="date" id="workerStartTime">
+                                <label for="workerStartTime">开始时间</label>
+                                <input type="date" id="workerStartTime" name="workerStartTime" autocomplete="off">
                             </div>
                             <div class="form-group">
-                                <label>结束时间</label>
-                                <input type="date" id="workerEndTime">
+                                <label for="workerEndTime">结束时间</label>
+                                <input type="date" id="workerEndTime" name="workerEndTime" autocomplete="off">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label>备注说明（20字符以下）</label>
-                            <input type="text" id="workerNote" maxlength="20" class="input-note" placeholder="20字符以下备注说明">
+                            <label for="workerNote">备注说明（20字符以下）</label>
+                            <input type="text" id="workerNote" name="workerNote" maxlength="20" class="input-note" placeholder="20字符以下备注说明" autocomplete="off">
                         </div>
                         <button class="btn btn-success" onclick="addWorker()">添加工人</button>
                         <div class="data-table-container">
@@ -296,32 +300,32 @@
                        
                         <div class="form-row quote-row">
                             <div class="form-group">
-                                <label>基础装修报价</label>
-                                <input type="number" id="basicQuote" min="0" step="0.01" placeholder="基础装修报价" ${!canEditQuote() ? 'readonly' : ''}>
+                                <label for="basicQuote">基础装修报价</label>
+                                <input type="number" id="basicQuote" name="basicQuote" min="0" step="0.01" placeholder="基础装修报价" ${!canEditQuote() ? 'readonly' : ''} autocomplete="off">
                             </div>
                             <div class="form-group">
-                                <label>主材报价</label>
-                                <input type="number" id="materialQuote" min="0" step="0.01" placeholder="主材报价" ${!canEditQuote() ? 'readonly' : ''}>
-                            </div>
-                        </div>
-                        <div class="form-row quote-row">
-                            <div class="form-group">
-                                <label>设备报价</label>
-                                <input type="number" id="equipmentQuote" min="0" step="0.01" placeholder="设备报价" ${!canEditQuote() ? 'readonly' : ''}>
-                            </div>
-                            <div class="form-group">
-                                <label>家具配饰报价</label>
-                                <input type="number" id="furnitureQuote" min="0" step="0.01" placeholder="家具配饰报价" ${!canEditQuote() ? 'readonly' : ''}>
+                                <label for="materialQuote">主材报价</label>
+                                <input type="number" id="materialQuote" name="materialQuote" min="0" step="0.01" placeholder="主材报价" ${!canEditQuote() ? 'readonly' : ''} autocomplete="off">
                             </div>
                         </div>
                         <div class="form-row quote-row">
                             <div class="form-group">
-                                <label>其他报价</label>
-                                <input type="number" id="otherQuote" min="0" step="0.01" placeholder="其他报价" ${!canEditQuote() ? 'readonly' : ''}>
+                                <label for="equipmentQuote">设备报价</label>
+                                <input type="number" id="equipmentQuote" name="equipmentQuote" min="0" step="0.01" placeholder="设备报价" ${!canEditQuote() ? 'readonly' : ''} autocomplete="off">
                             </div>
                             <div class="form-group">
-                                <label>增减项冲减合计</label>
-                                <input type="number" id="addRemoveTotalQuote" min="0" step="0.01" placeholder="增减项冲减合计" readonly>
+                                <label for="furnitureQuote">家具配饰报价</label>
+                                <input type="number" id="furnitureQuote" name="furnitureQuote" min="0" step="0.01" placeholder="家具配饰报价" ${!canEditQuote() ? 'readonly' : ''} autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-row quote-row">
+                            <div class="form-group">
+                                <label for="otherQuote">其他报价</label>
+                                <input type="number" id="otherQuote" name="otherQuote" min="0" step="0.01" placeholder="其他报价" ${!canEditQuote() ? 'readonly' : ''} autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="addRemoveTotalQuote">增减项冲减合计</label>
+                                <input type="number" id="addRemoveTotalQuote" name="addRemoveTotalQuote" min="0" step="0.01" placeholder="增减项冲减合计" readonly autocomplete="off">
                             </div>
                         </div>
                         <div class="summary-section">
@@ -365,12 +369,12 @@
 
                         <div class="form-row">
                             <div class="form-group">
-                                <label>项目名称</label>
-                                <input type="text" id="addRemoveItem" maxlength="8" placeholder="8字符">
+                                <label for="addRemoveItem">项目名称</label>
+                                <input type="text" id="addRemoveItem" name="addRemoveItem" maxlength="8" placeholder="8字符" autocomplete="off">
                             </div>
                             <div class="form-group">
-                                <label>类型</label>
-                                <select id="addRemoveType">
+                                <label for="addRemoveType">类型</label>
+                                <select id="addRemoveType" name="addRemoveType">
                                     <option value="add">增加</option>
                                     <option value="remove">减少</option>
                                 </select>
@@ -378,17 +382,17 @@
                         </div>
                         <div class="form-row">
                             <div class="form-group">
-                                <label>单位</label>
-                                <input type="text" id="addRemoveUnit" maxlength="4" value="项" placeholder="单位" readonly>
+                                <label for="addRemoveUnit">单位</label>
+                                <input type="text" id="addRemoveUnit" name="addRemoveUnit" maxlength="4" value="项" placeholder="单位" readonly autocomplete="off">
                             </div>
                             <div class="form-group">
-                                <label>金额</label>
-                                <input type="number" id="addRemoveAmount" min="0" step="0.01" placeholder="金额">
+                                <label for="addRemoveAmount">金额</label>
+                                <input type="number" id="addRemoveAmount" name="addRemoveAmount" min="0" step="0.01" placeholder="金额" autocomplete="off">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label>备注说明（20字符以下）</label>
-                            <input type="text" id="addRemoveNote" maxlength="20" class="input-note" placeholder="20字符以下备注说明">
+                            <label for="addRemoveNote">备注说明（20字符以下）</label>
+                            <input type="text" id="addRemoveNote" name="addRemoveNote" maxlength="20" class="input-note" placeholder="20字符以下备注说明" autocomplete="off">
                         </div>
                         <button class="btn btn-success" onclick="addAddRemoveItem()">添加增减项</button>
                         <div class="data-table-container">
@@ -404,25 +408,25 @@
                     <div class="tab-content" id="drawingTab">
                        
                         <div class="form-group">
-                            <label>图纸管理（选择图纸类型）</label>
-                            <select id="drawingType">
+                            <label for="drawingType">图纸管理（选择图纸类型）</label>
+                            <select id="drawingType" name="drawingType">
                                 <option value="design">设计图纸</option>
                                 <option value="quote">报价表</option>
                                 <option value="other">其他</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>上传图纸</label>
+                            <label for="drawingFile">上传图纸</label>
                             <div class="file-upload">
-                                <input type="file" id="drawingFile" accept=".pdf,.jpg,.jpeg,.png,.xls,.xlsx,.doc,.docx,.csv" 
+                                <input type="file" id="drawingFile" name="drawingFile" accept=".pdf,.jpg,.jpeg,.png,.xls,.xlsx,.doc,.docx,.csv" 
                                        onchange="previewDrawing(event)">
-                                <label class="file-upload-label">点击上传图纸（支持PDF、图片、表格格式）</label>
+                                <label class="file-upload-label" for="drawingFile">点击上传图纸（支持PDF、图片、表格格式）</label>
                             </div>
                             <div id="drawingPreview"></div>
                         </div>
                         <div class="form-group">
-                            <label>备注说明（20字符以下）</label>
-                            <input type="text" id="drawingNote" maxlength="20" class="input-note" placeholder="20字符以下备注说明">
+                            <label for="drawingNote">备注说明（20字符以下）</label>
+                            <input type="text" id="drawingNote" name="drawingNote" maxlength="20" class="input-note" placeholder="20字符以下备注说明" autocomplete="off">
                         </div>
                         <button class="btn btn-success" onclick="uploadDrawing()">上传图纸</button>
                         <div class="data-table-container">
@@ -434,8 +438,8 @@
                     <div class="tab-content" id="experienceTab">
                         
                         <div class="form-group">
-                            <label>经验总结内容</label>
-                            <textarea id="experienceContent" rows="3" class="input-note" placeholder="请输入项目经验总结..."></textarea>
+                            <label for="experienceContent">经验总结内容</label>
+                            <textarea id="experienceContent" name="experienceContent" rows="3" class="input-note" placeholder="请输入项目经验总结..." autocomplete="off"></textarea>
                         </div>
                         <button class="btn btn-primary" onclick="addExperience()">添加总结</button>
                         <div id="experienceList"></div>
@@ -448,14 +452,14 @@
         <div class="change-log-page" id="changeLogPage">
             <div class="modal-header">
                
-                <button class="close-btn" onclick="hideChangeLog()">&times;</button>
+                <button class="close-btn" onclick="hideChangeLog()" aria-label="关闭">&times;</button>
             </div>
             
             <div class="change-log-content">
                 <div class="import-export">
                     <div class="button-grid">
                         <div class="button-row">
-                            <button class="btn btn-primary" onclick="exportChangeLog()">导出日志</button>
+                           
                             <button class="btn btn-danger" onclick="clearChangeLog()">清空日志</button>
                         </div>
                         <div class="button-row">
@@ -469,19 +473,19 @@
 
         <!-- 图片查看器 -->
         <div class="image-viewer" id="imageViewer" onclick="hideImageViewer()">
-            <span class="close-viewer">&times;</span>
+            <span class="close-viewer" aria-label="关闭图片查看器">&times;</span>
             <img id="viewerImage" src="" alt="查看图片">
         </div>
     </div>
     
-    <!-- 先加载基础库 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    
-    <!-- 然后加载公共基础文件 -->
-    <script src="base.js"></script>
-    <script src="quanxian.js"></script>   <!-- 权限系统 -->
-    <script src="yun.js"></script>        <!-- 云功能 -->
-    <script src="app.js"></script>        <!-- 主应用 -->
-    <script src="fix.js"></script>        <!-- 修复脚本 -->
+<!-- 先加载基础库 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+<!-- 然后加载公共基础文件 -->
+<script src="base.js"></script>        <!-- 基础功能 -->
+<script src="yun.js"></script>         <!-- 云端功能（依赖base.js中的工具函数） -->
+<script src="quanxian.js"></script>    <!-- 权限系统（依赖yun.js中的loadCloudUserData） -->
+<script src="app.js"></script>         <!-- 主应用 -->
+   
 </body>
 </html>
