@@ -21,11 +21,15 @@
             <h2>装饰 项目管理系统</h2>
             
             <form id="loginForm">
-                <label for="username" class="sr-only">用户名</label>
-                <input type="text" id="username" name="username" placeholder="用户名" required autocomplete="username">
+                <div class="form-group">
+                    <label for="username">用户名</label>
+                    <input type="text" id="username" name="username" placeholder="用户名" required autocomplete="username">
+                </div>
                 
-                <label for="password" class="sr-only">密码</label>
-                <input type="password" id="password" name="password" placeholder="密码" required autocomplete="current-password">
+                <div class="form-group">
+                    <label for="password">密码</label>
+                    <input type="password" id="password" name="password" placeholder="密码" required autocomplete="current-password">
+                </div>
                 
                 <button type="submit">登录</button> 
             
@@ -46,32 +50,32 @@
             <!-- 在 index.html 的顶部按钮部分，确保配置管理按钮存在 -->
             <div class="header-top-buttons">
                 <!-- 单一云端备份按钮 -->
-                <button class="top-btn btn-success" onclick="saveToGitHub()" title="备份完整数据到云端（包含图片）">
+                <button class="top-btn btn-success" id="backupToCloudBtn" onclick="saveToGitHub()" title="备份完整数据到云端（包含图片）">
                     备份至云端
                 </button>
                 
                 <!-- 云端加载按钮 -->
-                <button class="top-btn btn-warning" onclick="loadFromGitHub()" title="从云端加载数据（合并）">
+                <button class="top-btn btn-warning" id="loadFromCloudBtn" onclick="loadFromGitHub()" title="从云端加载数据（合并）">
                     从云端加载
                 </button>
                 
                 <!-- 本地备份按钮 -->
-                <button class="top-btn btn-danger" onclick="saveToJsFile()" title="备份完整数据到本地ZIP文件">
+                <button class="top-btn btn-danger" id="backupToLocalBtn" onclick="saveToJsFile()" title="备份完整数据到本地ZIP文件">
                     备份数据至本地
                 </button>
                 
                 <!-- 本地加载按钮 -->
-                <button class="top-btn btn-info" onclick="loadFromJsFile()" title="从ZIP文件加载数据（覆盖）">
+                <button class="top-btn btn-info" id="loadFromLocalBtn" onclick="loadFromJsFile()" title="从ZIP文件加载数据（覆盖）">
                     从文件加载
                 </button>
                 
                 <!-- 权限管理（仅管理员可见） -->
-                <button class="top-btn btn-danger permission-manager-btn" onclick="showPermissionManager()" title="权限管理">
+                <button class="top-btn btn-danger permission-manager-btn" id="permissionManagerBtn" onclick="showPermissionManager()" title="权限管理">
                     权限管理
                 </button>
                 
                 <!-- 更改日志（仅管理员可见） -->
-                <button class="top-btn btn-primary change-log-btn" onclick="showChangeLog()">更改日志</button>
+                <button class="top-btn btn-primary change-log-btn" id="changeLogBtn" onclick="showChangeLog()">更改日志</button>
             </div>
         </div>
         
@@ -80,11 +84,11 @@
             <!-- 用户信息和退出按钮 -->
             <div class="user-info-section">
                 <span id="currentUser"></span>
-                <button class="logout-btn" onclick="logout()">退出登录</button>
+                <button class="logout-btn" id="logoutBtn" onclick="logout()">退出登录</button>
             </div>
 
             <!-- 添加工地按钮 -->
-            <button class="add-site-btn" onclick="showAddSiteModal()">+ 添加工地</button>
+            <button class="add-site-btn" id="addSiteBtn" onclick="showAddSiteModal()">+ 添加工地</button>
 
             <!-- 工地列表容器 -->
             <div class="site-list-container">
@@ -97,7 +101,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 id="modalTitle">工地详情</h3>
-                    <button class="close-btn" onclick="closeSiteModal()" aria-label="关闭">&times;</button>
+                    <button class="close-btn" id="closeModalBtn" onclick="closeSiteModal()">&times;</button>
                 </div>
 
                 <!-- 标签页容器 -->
@@ -128,14 +132,14 @@
                         </div>
                         <div class="form-group">
                             <label for="progress">当前进度: <span id="progressValue">0</span>%</label>
-                            <input type="range" id="progress" name="progress" min="0" max="100" value="0" oninput="updateProgressValue(this.value)">
+                            <input type="range" id="progress" name="progress" min="0" max="100" value="0" oninput="updateProgressValue(this.value)" autocomplete="off">
                         </div>
                         
                         <div class="progress-bar">
                             <div class="progress-fill" id="progressFill" style="width: 0%">0%</div>
                         </div>
                        <br />
-                        <button class="btn btn-primary" onclick="saveSiteInfo()">保存工地信息</button>
+                        <button class="btn btn-primary" id="saveSiteInfoBtn" onclick="saveSiteInfo()">保存工地信息</button>
                     </div>
 
                     <!-- 待办事项标签页 -->
@@ -151,7 +155,7 @@
                                 <input type="text" id="todoNote" name="todoNote" maxlength="20" class="input-note" placeholder="20字符以内备注说明" autocomplete="off">
                             </div>
                         </div>
-                        <button class="btn btn-success" onclick="addTodo()">添加待办</button>
+                        <button class="btn btn-success" id="addTodoBtn" onclick="addTodo()">添加待办</button>
                         <div class="data-table-container">
                             <div id="todoList"></div>
                         </div>
@@ -160,8 +164,6 @@
                     <!-- 支出标签页 -->
                     <div class="tab-content" id="expenseTab">
                        
-                        
-                        <!-- 其他支出相关代码保持不变 -->
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="expenseItem">支出项目</label>
@@ -182,7 +184,7 @@
                                 <input type="text" id="expenseNote" name="expenseNote" maxlength="20" class="input-note" placeholder="20字符以内" autocomplete="off">
                             </div>
                         </div>
-                        <button class="btn btn-success" onclick="addExpense()">添加支出</button>
+                        <button class="btn btn-success" id="addExpenseBtn" onclick="addExpense()">添加支出</button>
                         <div class="data-table-container">
                             <div id="expenseList"></div>
                         </div>
@@ -210,7 +212,7 @@
                                 <input type="text" id="requirementNote" name="requirementNote" maxlength="20" class="input-note" placeholder="20字符以下备注说明" autocomplete="off">
                             </div>
                         </div>
-                        <button class="btn btn-success" onclick="addRequirement()">添加要求</button>
+                        <button class="btn btn-success" id="addRequirementBtn" onclick="addRequirement()">添加要求</button>
                         <div class="data-table-container">
                             <div id="requirementList"></div>
                         </div>
@@ -237,7 +239,7 @@
                             </div>
                             <div id="repairPhotoPreview"></div>
                         </div>
-                        <button class="btn btn-success" onclick="addRepair()">添加维修项</button>
+                        <button class="btn btn-success" id="addRepairBtn" onclick="addRepair()">添加维修项</button>
                         <div class="data-table-container">
                             <div id="repairList"></div>
                         </div>
@@ -256,7 +258,7 @@
                             <input type="text" id="dailyLogNote" name="dailyLogNote" maxlength="20" class="input-note" 
                                    placeholder="20字符以内备注说明" autocomplete="off">
                         </div>
-                        <button class="btn btn-success" onclick="addDailyLog()">添加记录</button>
+                        <button class="btn btn-success" id="addDailyLogBtn" onclick="addDailyLog()">添加记录</button>
                         <div class="data-table-container">
                             <div id="dailyLogList"></div>
                         </div>
@@ -289,7 +291,7 @@
                             <label for="workerNote">备注说明（20字符以下）</label>
                             <input type="text" id="workerNote" name="workerNote" maxlength="20" class="input-note" placeholder="20字符以下备注说明" autocomplete="off">
                         </div>
-                        <button class="btn btn-success" onclick="addWorker()">添加工人</button>
+                        <button class="btn btn-success" id="addWorkerBtn" onclick="addWorker()">添加工人</button>
                         <div class="data-table-container">
                             <div id="workerList"></div>
                         </div>
@@ -361,7 +363,7 @@
                                 <div id="totalQuoteDisplay">¥0.00</div>
                             </div>
                         </div>
-                        <button class="btn btn-primary" onclick="saveQuote()" ${!canEditQuote() ? 'disabled' : ''}>保存报价</button>
+                        <button class="btn btn-primary" id="saveQuoteBtn" onclick="saveQuote()" ${!canEditQuote() ? 'disabled' : ''}>保存报价</button>
                     </div>
 
                     <!-- 增减项标签页 -->
@@ -394,7 +396,7 @@
                             <label for="addRemoveNote">备注说明（20字符以下）</label>
                             <input type="text" id="addRemoveNote" name="addRemoveNote" maxlength="20" class="input-note" placeholder="20字符以下备注说明" autocomplete="off">
                         </div>
-                        <button class="btn btn-success" onclick="addAddRemoveItem()">添加增减项</button>
+                        <button class="btn btn-success" id="addAddRemoveItemBtn" onclick="addAddRemoveItem()">添加增减项</button>
                         <div class="data-table-container">
                             <div id="addRemoveList"></div>
                         </div>
@@ -428,7 +430,7 @@
                             <label for="drawingNote">备注说明（20字符以下）</label>
                             <input type="text" id="drawingNote" name="drawingNote" maxlength="20" class="input-note" placeholder="20字符以下备注说明" autocomplete="off">
                         </div>
-                        <button class="btn btn-success" onclick="uploadDrawing()">上传图纸</button>
+                        <button class="btn btn-success" id="uploadDrawingBtn" onclick="uploadDrawing()">上传图纸</button>
                         <div class="data-table-container">
                             <div id="drawingList"></div>
                         </div>
@@ -441,7 +443,7 @@
                             <label for="experienceContent">经验总结内容</label>
                             <textarea id="experienceContent" name="experienceContent" rows="3" class="input-note" placeholder="请输入项目经验总结..." autocomplete="off"></textarea>
                         </div>
-                        <button class="btn btn-primary" onclick="addExperience()">添加总结</button>
+                        <button class="btn btn-primary" id="addExperienceBtn" onclick="addExperience()">添加总结</button>
                         <div id="experienceList"></div>
                     </div>
                 </div>
@@ -451,19 +453,19 @@
         <!-- 更改日志页面 -->
         <div class="change-log-page" id="changeLogPage">
             <div class="modal-header">
-               
-                <button class="close-btn" onclick="hideChangeLog()" aria-label="关闭">&times;</button>
+                <h3>更改日志</h3>
+                <button class="close-btn" id="closeChangeLogBtn" onclick="hideChangeLog()">&times;</button>
             </div>
             
             <div class="change-log-content">
                 <div class="import-export">
                     <div class="button-grid">
                         <div class="button-row">
-                           
-                            <button class="btn btn-danger" onclick="clearChangeLog()">清空日志</button>
+                            <button class="btn btn-primary" id="exportChangeLogBtn" onclick="exportChangeLog()">导出日志</button>
+                            <button class="btn btn-danger" id="clearChangeLogBtn" onclick="clearChangeLog()">清空日志</button>
                         </div>
                         <div class="button-row">
-                            <button class="btn btn-secondary" onclick="hideChangeLog()">返回</button>
+                            <button class="btn btn-secondary" id="backFromChangeLogBtn" onclick="hideChangeLog()">返回</button>
                         </div>
                     </div>
                 </div>
@@ -473,7 +475,7 @@
 
         <!-- 图片查看器 -->
         <div class="image-viewer" id="imageViewer" onclick="hideImageViewer()">
-            <span class="close-viewer" aria-label="关闭图片查看器">&times;</span>
+            <span class="close-viewer" id="closeImageViewerBtn">&times;</span>
             <img id="viewerImage" src="" alt="查看图片">
         </div>
     </div>
