@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="format-detection" content="telephone=no">
+    <title>装饰项目管理系统</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 手势返回锁定提示 -->
+    <div class="back-gesture-lock" id="backGestureLock">
+        连续2次返回手势可退出
+    </div>
+    
+    <!-- 登录页面 -->
+    <div class="login-page" id="loginPage">
+        <div class="login-box">
+            <h2>装饰 项目管理系统</h2>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">用户名</label>
+                    <input type="text" id="username" name="username" placeholder="用户名" required autocomplete="username">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">密码</label>
+                    <input type="password" id="password" name="password" placeholder="密码" required autocomplete="current-password">
+                </div>
+                
+                <button type="submit" name="loginSubmit">登录</button> 
+            
+                <p> 山东睿岩网络 · 技术支持13515383180</p>             
+                <div class="login-error" id="loginError"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 主容器 -->
+    <div class="container hidden" id="mainContainer">
+        <!-- 头部 -->
+        <div class="header">
+            <div class="header-left">
+                <h2>装饰项目管理系统</h2>
+                <span>山东睿岩网络.技术支持</span>
+            </div>
+            <!-- 在 index.html 的顶部按钮部分，确保配置管理按钮存在 -->
+            <div class="header-top-buttons">
+                <!-- 单一云端备份按钮 -->
+                <button class="top-btn btn-success" id="backupToCloudBtn" onclick="saveToGitHub()" title="备份完整数据到云端（包含图片）" name="backupToCloudBtn">
+                    备份至云端
+                </button>
+                
+                <!-- 云端加载按钮 -->
+                <button class="top-btn btn-warning" id="loadFromCloudBtn" onclick="loadFromGitHub()" title="从云端加载数据（合并）" name="loadFromCloudBtn">
+                    从云端加载
+                </button>
+                
+                <!-- 本地备份按钮 -->
+                <button class="top-btn btn-danger" id="backupToLocalBtn" onclick="saveToJsFile()" title="备份完整数据到本地ZIP文件" name="backupToLocalBtn">
+                    备份数据至本地
+                </button>
+                
+                <!-- 本地加载按钮 -->
+                <button class="top-btn btn-info" id="loadFromLocalBtn" onclick="loadFromJsFile()" title="从ZIP文件加载数据（覆盖）" name="loadFromLocalBtn">
+                    从文件加载
+                </button>
+                
+                <!-- 权限管理（仅管理员可见） -->
+                <button class="top-btn btn-danger permission-manager-btn" id="permissionManagerBtn" onclick="showPermissionManager()" title="权限管理" name="permissionManagerBtn">
+                    权限管理
+                </button>
+                
+                <!-- 更改日志（仅管理员可见） -->
+                <button class="top-btn btn-primary change-log-btn" id="changeLogBtn" onclick="showChangeLog()" name="changeLogBtn">更改日志</button>
+            </div>
+        </div>
+        
+        <!-- 主内容区 -->
+        <div class="main-content" id="mainContent">
+            <!-- 用户信息和退出按钮 -->
+            <div class="user-info-section">
+                <span id="currentUser"></span>
+                <button class="logout-btn" id="logoutBtn" onclick="logout()" name="logoutBtn">退出登录</button>
+            </div>
+
+            <!-- 添加工地按钮 -->
+            <button class="add-site-btn" id="addSiteBtn" onclick="showAddSiteModal()" name="addSiteBtn">+ 添加工地</button>
+
+            <!-- 工地列表容器 -->
+            <div class="site-list-container">
+                <div class="site-list" id="siteList"></div>
+            </div>
+        </div>
+ 
+        <!-- 工地详情模态框 -->
+        <div class="modal" id="siteModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modalTitle">工地详情</h3>
+                    <button class="close-btn" id="closeModalBtn" onclick="closeSiteModal()" name="closeModalBtn">&times;</button>
+                </div>
+
+                <!-- 标签页容器 -->
+                <div class="tabs-container">
+                    <div class="tabs-scroll-wrapper">
+                        <div class="tabs" id="siteTabs">
+                            <!-- 标签页由JS动态生成 -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content-wrapper">
+                    <!-- 进度标签页 -->
+                    <div class="tab-content" id="progressTab">
+                        <div class="form-group">
+                            <label for="siteName">工地名称</label>
+                            <input type="text" id="siteName" name="siteName" class="form-control" maxlength="25" placeholder="25字符以内" autocomplete="off">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="startDate">开工时间</label>
+                                <input type="date" id="startDate" name="startDate" autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="endDate">计划完工时间</label>
+                                <input type="date" id="endDate" name="endDate" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="progress">当前进度: <span id="progressValue">0</span>%</label>
+                            <input type="range" id="progress" name="progress" min="0" max="100" value="0" oninput="updateProgressValue(this.value)" autocomplete="off">
+                        </div>
+                        
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill" style="width: 0%">0%</div>
+                        </div>
+                       <br />
+                        <button class="btn btn-primary" id="saveSiteInfoBtn" onclick="saveSiteInfo()" name="saveSiteInfoBtn">保存工地信息</button>
+                    </div>
+
+                    <!-- 待办事项标签页 -->
+                    <div class="tab-content" id="todoTab">
+                        
+                        <div class="form-row" style="flex-wrap: wrap;">
+                            <div class="form-group" style="flex: 0 0 100%;">
+                                <label for="todoItem">事项名称</label>
+                                <input type="text" id="todoItem" name="todoItem" maxlength="20" placeholder="20字符以内" autocomplete="off">
+                            </div>
+                            <div class="form-group" style="flex: 0 0 100%; margin-top: 15px;">
+                                <label for="todoNote">备注说明（20字符以内）</label>
+                                <input type="text" id="todoNote" name="todoNote" maxlength="20" class="input-note" placeholder="20字符以内备注说明" autocomplete="off">
+                            </div>
+                        </div>
+                        <button class="btn btn-success" id="addTodoBtn" onclick="addTodo()" name="addTodoBtn">添加待办</button>
+                        <div class="data-table-container">
+                            <div id="todoList"></div>
+                        </div>
+                    </div>
+
+                    <!-- 支出标签页 -->
+                    <div class="tab-content" id="expenseTab">
+                       
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="expenseItem">支出项目</label>
+                                <input type="text" id="expenseItem" name="expenseItem" maxlength="8" placeholder="8字符" autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="expenseUnit">单位</label>
+                                <input type="text" id="expenseUnit" name="expenseUnit" maxlength="6" value="项" placeholder="单位" readonly autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group amount-group">
+                                <label for="expenseAmount">金额</label>
+                                <input type="number" id="expenseAmount" name="expenseAmount" min="0" step="0.01" placeholder="金额" autocomplete="off">
+                            </div>
+                            <div class="form-group note-group">
+                                <label for="expenseNote">备注说明</label>
+                                <input type="text" id="expenseNote" name="expenseNote" maxlength="20" class="input-note" placeholder="20字符以内" autocomplete="off">
+                            </div>
+                        </div>
+                        <button class="btn btn-success" id="addExpenseBtn" onclick="addExpense()" name="addExpenseBtn">添加支出</button>
+                        <div class="data-table-container">
+                            <div id="expenseList"></div>
+                        </div>
+                    </div>
+
+                    <!-- 客户要求标签页 -->
+                    <div class="tab-content" id="requirementTab">
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="requirementContent">要求内容（15字符以下）</label>
+                                <input type="text" id="requirementContent" name="requirementContent" maxlength="15" class="input-content" placeholder="15字符以下要求内容" autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="requirementType">要求类型</label>
+                                <select id="requirementType" name="requirementType">
+                                    <option value="need">需要</option>
+                                    <option value="exclude">排除</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group" style="flex: 0 0 100%;">
+                                <label for="requirementNote">备注说明（20字符以下）</label>
+                                <input type="text" id="requirementNote" name="requirementNote" maxlength="20" class="input-note" placeholder="20字符以下备注说明" autocomplete="off">
+                            </div>
+                        </div>
+                        <button class="btn btn-success" id="addRequirementBtn" onclick="addRequirement()" name="addRequirementBtn">添加要求</button>
+                        <div class="data-table-container">
+                            <div id="requirementList"></div>
+                        </div>
+                    </div>
+
+                    <!-- 待维修标签页 -->
+                    <div class="tab-content" id="repairTab">
+                       
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="repairContent">维修内容（10字符以下）</label>
+                                <input type="text" id="repairContent" name="repairContent" maxlength="10" class="input-content" placeholder="10字符以下维修内容" autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="repairNote">备注说明（20字符以下）</label>
+                                <input type="text" id="repairNote" name="repairNote" maxlength="20" class="input-note" placeholder="20字符以下备注说明" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="repairPhoto">上传照片</label>
+                            <div class="file-upload">
+                                <input type="file" id="repairPhoto" name="repairPhoto" accept="image/*" onchange="previewRepairPhoto(event)">
+                                <label class="file-upload-label" for="repairPhoto">点击上传维修照片</label>
+                            </div>
+                            <div id="repairPhotoPreview"></div>
+                        </div>
+                        <button class="btn btn-success" id="addRepairBtn" onclick="addRepair()" name="addRepairBtn">添加维修项</button>
+                        <div class="data-table-container">
+                            <div id="repairList"></div>
+                        </div>
+                    </div>
+
+                    <!-- 日常记录标签页 -->
+                    <div class="tab-content" id="dailyLogTab">
+                       
+                        <div class="form-group">
+                            <label for="dailyLogContent">记录内容（50字符以内）</label>
+                            <textarea id="dailyLogContent" name="dailyLogContent" rows="3" class="input-note" maxlength="50" 
+                                      placeholder="请输入日常记录内容，50字符以内..." autocomplete="off"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="dailyLogNote">备注说明（20字符以内）</label>
+                            <input type="text" id="dailyLogNote" name="dailyLogNote" maxlength="20" class="input-note" 
+                                   placeholder="20字符以内备注说明" autocomplete="off">
+                        </div>
+                        <button class="btn btn-success" id="addDailyLogBtn" onclick="addDailyLog()" name="addDailyLogBtn">添加记录</button>
+                        <div class="data-table-container">
+                            <div id="dailyLogList"></div>
+                        </div>
+                    </div>
+
+                    <!-- 施工工人标签页 -->
+                    <div class="tab-content" id="workerTab">
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="workerName">姓名</label>
+                                <input type="text" id="workerName" name="workerName" maxlength="8" placeholder="8字符" autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="workerType">工种</label>
+                                <input type="text" id="workerType" name="workerType" maxlength="6" placeholder="6字符" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="workerStartTime">开始时间</label>
+                                <input type="date" id="workerStartTime" name="workerStartTime" autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="workerEndTime">结束时间</label>
+                                <input type="date" id="workerEndTime" name="workerEndTime" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="workerNote">备注说明（20字符以下）</label>
+                            <input type="text" id="workerNote" name="workerNote" maxlength="20" class="input-note" placeholder="20字符以下备注说明" autocomplete="off">
+                        </div>
+                        <button class="btn btn-success" id="addWorkerBtn" onclick="addWorker()" name="addWorkerBtn">添加工人</button>
+                        <div class="data-table-container">
+                            <div id="workerList"></div>
+                        </div>
+                    </div>
+
+                    <!-- 报价管理标签页 -->
+                    <div class="tab-content" id="quoteTab">
+                       
+                        <div class="form-row quote-row">
+                            <div class="form-group">
+                                <label for="basicQuote">基础装修报价</label>
+                                <input type="number" id="basicQuote" name="basicQuote" min="0" step="0.01" placeholder="基础装修报价" ${!canEditQuote() ? 'readonly' : ''} autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="materialQuote">主材报价</label>
+                                <input type="number" id="materialQuote" name="materialQuote" min="0" step="0.01" placeholder="主材报价" ${!canEditQuote() ? 'readonly' : ''} autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-row quote-row">
+                            <div class="form-group">
+                                <label for="equipmentQuote">设备报价</label>
+                                <input type="number" id="equipmentQuote" name="equipmentQuote" min="0" step="0.01" placeholder="设备报价" ${!canEditQuote() ? 'readonly' : ''} autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="furnitureQuote">家具配饰报价</label>
+                                <input type="number" id="furnitureQuote" name="furnitureQuote" min="0" step="0.01" placeholder="家具配饰报价" ${!canEditQuote() ? 'readonly' : ''} autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-row quote-row">
+                            <div class="form-group">
+                                <label for="otherQuote">其他报价</label>
+                                <input type="number" id="otherQuote" name="otherQuote" min="0" step="0.01" placeholder="其他报价" ${!canEditQuote() ? 'readonly' : ''} autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="addRemoveTotalQuote">增减项冲减合计</label>
+                                <input type="number" id="addRemoveTotalQuote" name="addRemoveTotalQuote" min="0" step="0.01" placeholder="增减项冲减合计" readonly autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="summary-section">
+                            <h5>报价汇总</h5>
+                            <div class="summary-grid">
+                                <div class="summary-item">
+                                    <div class="summary-label">基础装修报价</div>
+                                    <div class="summary-value" id="basicQuoteDisplay">¥0.00</div>
+                                </div>
+                                <div class="summary-item">
+                                    <div class="summary-label">主材报价</div>
+                                    <div class="summary-value" id="materialQuoteDisplay">¥0.00</div>
+                                </div>
+                                <div class="summary-item">
+                                    <div class="summary-label">设备报价</div>
+                                    <div class="summary-value" id="equipmentQuoteDisplay">¥0.00</div>
+                                </div>
+                                <div class="summary-item">
+                                    <div class="summary-label">家具配饰报价</div>
+                                    <div class="summary-value" id="furnitureQuoteDisplay">¥0.00</div>
+                                </div>
+                                <div class="summary-item">
+                                    <div class="summary-label">其他报价</div>
+                                    <div class="summary-value" id="otherQuoteDisplay">¥0.00</div>
+                                </div>
+                                <div class="summary-item">
+                                    <div class="summary-label">增减项冲减合计</div>
+                                    <div class="summary-value" id="addRemoveTotalQuoteDisplay">¥0.00</div>
+                                </div>
+                            </div>
+                            <div class="total-quote-display">
+                                <div>合同总造价</div>
+                                <div id="totalQuoteDisplay">¥0.00</div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" id="saveQuoteBtn" onclick="saveQuote()" ${!canEditQuote() ? 'disabled' : ''} name="saveQuoteBtn">保存报价</button>
+                    </div>
+
+                    <!-- 增减项标签页 -->
+                    <div class="tab-content" id="addRemoveTab">
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="addRemoveItem">项目名称</label>
+                                <input type="text" id="addRemoveItem" name="addRemoveItem" maxlength="8" placeholder="8字符" autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="addRemoveType">类型</label>
+                                <select id="addRemoveType" name="addRemoveType">
+                                    <option value="add">增加</option>
+                                    <option value="remove">减少</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="addRemoveUnit">单位</label>
+                                <input type="text" id="addRemoveUnit" name="addRemoveUnit" maxlength="4" value="项" placeholder="单位" readonly autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="addRemoveAmount">金额</label>
+                                <input type="number" id="addRemoveAmount" name="addRemoveAmount" min="0" step="0.01" placeholder="金额" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="addRemoveNote">备注说明（20字符以下）</label>
+                            <input type="text" id="addRemoveNote" name="addRemoveNote" maxlength="20" class="input-note" placeholder="20字符以下备注说明" autocomplete="off">
+                        </div>
+                        <button class="btn btn-success" id="addAddRemoveItemBtn" onclick="addAddRemoveItem()" name="addAddRemoveItemBtn">添加增减项</button>
+                        <div class="data-table-container">
+                            <div id="addRemoveList"></div>
+                        </div>
+                        <div class="addremove-summary">
+                            <h5>增减项冲减合计 = 增项 - 减项</h5>
+                            <div id="addRemoveSummary">¥0.00</div>
+                        </div>
+                    </div>
+
+                    <!-- 图纸管理标签页 -->
+                    <div class="tab-content" id="drawingTab">
+                       
+                        <div class="form-group">
+                            <label for="drawingType">图纸管理（选择图纸类型）</label>
+                            <select id="drawingType" name="drawingType">
+                                <option value="design">设计图纸</option>
+                                <option value="quote">报价表</option>
+                                <option value="other">其他</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="drawingFile">上传图纸</label>
+                            <div class="file-upload">
+                                <input type="file" id="drawingFile" name="drawingFile" accept=".pdf,.jpg,.jpeg,.png,.xls,.xlsx,.doc,.docx,.csv" 
+                                       onchange="previewDrawing(event)">
+                                <label class="file-upload-label" for="drawingFile">点击上传图纸（支持PDF、图片、表格格式）</label>
+                            </div>
+                            <div id="drawingPreview"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="drawingNote">备注说明（20字符以下）</label>
+                            <input type="text" id="drawingNote" name="drawingNote" maxlength="20" class="input-note" placeholder="20字符以下备注说明" autocomplete="off">
+                        </div>
+                        <button class="btn btn-success" id="uploadDrawingBtn" onclick="uploadDrawing()" name="uploadDrawingBtn">上传图纸</button>
+                        <div class="data-table-container">
+                            <div id="drawingList"></div>
+                        </div>
+                    </div>
+
+                    <!-- 经验总结标签页 -->
+                    <div class="tab-content" id="experienceTab">
+                        
+                        <div class="form-group">
+                            <label for="experienceContent">经验总结内容</label>
+                            <textarea id="experienceContent" name="experienceContent" rows="3" class="input-note" placeholder="请输入项目经验总结..." autocomplete="off"></textarea>
+                        </div>
+                        <button class="btn btn-primary" id="addExperienceBtn" onclick="addExperience()" name="addExperienceBtn">添加总结</button>
+                        <div id="experienceList"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 更改日志页面 -->
+        <div class="change-log-page" id="changeLogPage">
+            <div class="modal-header">
+                <h3>更改日志</h3>
+                <button class="close-btn" id="closeChangeLogBtn" onclick="hideChangeLog()" name="closeChangeLogBtn">&times;</button>
+            </div>
+            
+            <div class="change-log-content">
+                <div class="import-export">
+                    <div class="button-grid">
+                        <div class="button-row">
+                            <button class="btn btn-danger" id="clearChangeLogBtn" onclick="clearChangeLog()" name="clearChangeLogBtn">清空日志</button>
+                        </div>
+                        <div class="button-row">
+                            <button class="btn btn-secondary" id="backFromChangeLogBtn" onclick="hideChangeLog()" name="backFromChangeLogBtn">返回</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="changeLogList"></div>
+            </div>
+        </div>
+
+        <!-- 图片查看器 -->
+        <div class="image-viewer" id="imageViewer" onclick="hideImageViewer()">
+            <span class="close-viewer" id="closeImageViewerBtn" name="closeImageViewerBtn">&times;</span>
+            <img id="viewerImage" src="" alt="查看图片">
+        </div>
+    </div>
+    
+<!-- 先加载基础库 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+<!-- 然后加载公共基础文件 -->
+<script src="base.js"></script>        <!-- 基础功能 -->
+<script src="yun.js"></script>         <!-- 云端功能（依赖base.js中的工具函数） -->
+<script src="quanxian.js"></script>    <!-- 权限系统（依赖yun.js中的loadCloudUserData） -->
+<script src="app.js"></script>         <!-- 主应用 -->
+   
+</body>
+</html>

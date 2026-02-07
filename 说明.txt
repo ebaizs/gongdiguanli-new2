@@ -1,0 +1,5 @@
+ID与用户文件变量
+app.js 所有页面基础函数
+base.js 所有工具函数
+quanxian.js所有权限相关函数
+yun.js          github云端ID,用户名变量，云端与本地同步函数，
